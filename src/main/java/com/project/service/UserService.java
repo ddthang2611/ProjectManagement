@@ -26,7 +26,7 @@ public class UserService {
             System.out.println(e.getMessage());
 
         }
-        if (userFromDB != null) {
+        if (userFromDB != null && userFromDB.isActive()) {
             System.out.println(userFromDB.getUsername());
             System.out.println(userFromDB.getPassword());
             return true;
@@ -58,21 +58,16 @@ public class UserService {
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(role);
+        user.setActive(true);
 
         return userRepository.save(user);
     }
 
-    public User updateUser(int userId, String newUsername, String newPassword) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setUsername(newUsername);
-        user.setPassword(newPassword);
 
-        return userRepository.save(user);
-    }
 
-    public void deleteUser(int userId){
-        userRepository.deleteById(userId);
+    public void deactivateUser(int userId){
+        userRepository.deactivateUser(userId);
     }
     public User updateUserRole(int userId, UserRole newRole) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -94,8 +89,12 @@ public class UserService {
         List<UserDTO> userDTOs = new ArrayList<>();
 
         for (User user : users) {
-            UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
-            userDTOs.add(userDTO);
+            if(user.getRole() != UserRole.ADMIN) {
+                if (user.isActive()) {
+                    UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
+                    userDTOs.add(userDTO);
+                }
+            }
         }
 
         return userDTOs;

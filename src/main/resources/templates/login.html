@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -9,11 +9,15 @@
           crossorigin="anonymous">
 </head>
 <body>
+
 <div class="container">
+
     <div class="row justify-content-center">
         <div class="col-md-4 mt-5 border">
+
             <h1 class="text-center mb-4 mt-3">Login</h1>
-            <form id="login-form">
+            <form id="login-form" th:action="@{/login}" method="post">
+
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input type="text" class="form-control form-control-sm" id="username" name="username" required>
@@ -21,6 +25,11 @@
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" class="form-control form-control-sm" id="password" name="password" required>
+                </div>
+                <div th:if="${message != null}">
+                    <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                        <span th:text="${message}"></span>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
             </form>
@@ -40,38 +49,5 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
-<script>
-    $(function () {
-        $('#login-form').submit(function (event) {
-            // Prevent the form from submitting normally
-            event.preventDefault();
-
-            // Get form data
-            var formData = {
-                username: $('#username').val(),
-                password: $('#password').val()
-            };
-
-            // Send login request to API
-            $.ajax({
-                type: 'POST',
-                url: '/login',
-                data: JSON.stringify(formData),
-                contentType: 'application/json',
-                success: function (response) {
-                    // Login successful
-                    // Save token to local storage
-                    localStorage.setItem('token', response);
-                    // Redirect to home page
-                    window.location.href = '/';
-                },
-                error: function (xhr, status, error) {
-                    // Login failed
-                    alert('Login failed: ' + error);
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>
