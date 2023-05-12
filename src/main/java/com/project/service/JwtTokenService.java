@@ -1,10 +1,15 @@
 package com.project.service;
+
+import com.project.entity.User;
+import com.project.entity.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Service
@@ -14,10 +19,13 @@ public class JwtTokenService {
 
     @Value("${jwt.expiration}")
     private long expirationTime;
+    @Autowired
+    private UserService userService;
 
-    public String generateToken(String username) {
+    public String generateToken(int userId, UserRole role) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(userId))
+                .claim("role", role)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
@@ -32,9 +40,20 @@ public class JwtTokenService {
         }
     }
 
-    public String getUsernameFromToken(String token) {
+    public User getUserFromToken(HttpServletRequest request) throws Exception {
+        try {
+            String token = request.getHeader("Authorization").replace("Bearer ", "");
+            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            int id = Integer.parseInt(claims.getSubject());
+            System.out.println("id "+id);
+            return userService.getUserById(id);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public UserRole getRoleFromToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-        return claims.getSubject();
+        return UserRole.valueOf(claims.get("role").toString());
     }
 }
-

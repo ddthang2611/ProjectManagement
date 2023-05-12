@@ -1,9 +1,15 @@
 package com.project.service;
 
 import com.project.entity.User;
+import com.project.entity.UserDTO;
+import com.project.entity.enums.UserRole;
 import com.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -31,6 +37,70 @@ public class UserService {
         }
     }
     public User getUserByUsername(String username){
-        return userRepository.getUserByUsername(username);
+        Optional<User> user = userRepository.getUserByUsername(username);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
+
+    public User getUserById(int id){
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+    public User addUser(String username, String password, UserRole role) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setRole(role);
+
+        return userRepository.save(user);
+    }
+
+    public User updateUser(int userId, String newUsername, String newPassword) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setUsername(newUsername);
+        user.setPassword(newPassword);
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(int userId){
+        userRepository.deleteById(userId);
+    }
+    public User updateUserRole(int userId, UserRole newRole) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setRole(newRole);
+
+        return userRepository.save(user);
+    }
+
+    public User updatePassword(int userId, String newPassword) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPassword(newPassword);
+
+        return userRepository.save(user);
+    }
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
+            userDTOs.add(userDTO);
+        }
+
+        return userDTOs;
+    }
+
+
+
 }

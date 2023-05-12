@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.entity.User;
+import com.project.entity.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,23 +29,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String jwtToken = authorizationHeader.substring(7);
-            if (jwtTokenService.validateToken(jwtToken)) {
+
+            String authorizationHeader = request.getHeader("Authorization");
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String jwtToken = authorizationHeader.substring(7);
                 if (jwtTokenService.validateToken(jwtToken)) {
-                    String username = jwtTokenService.getUsernameFromToken(jwtToken);
-                    User user = userService.getUserByUsername(username);
-                    List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    if (jwtTokenService.validateToken(jwtToken)) {
+                        User user = null;
+                        try {
+                            user = jwtTokenService.getUserFromToken(request);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                        UserRole userRole = jwtTokenService.getRoleFromToken(jwtToken);
+                        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_"+userRole.name());
+                        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+
                 }
 
             }
 
-        }
+            filterChain.doFilter(request, response);
 
-        filterChain.doFilter(request, response);
     }
 }

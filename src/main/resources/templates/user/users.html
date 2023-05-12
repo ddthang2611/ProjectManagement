@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="container">
+
+        <h1>User List</h1>
+        <div th:if="${message != null}">
+            <div class="alert alert-info" role="alert">
+                <span th:text="${message}"></span>
+                <button type="button" class="btn-close border-0" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Change Role</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}"  class="align-items-center">
+                <td th:text="${user.userId}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.role}"></td>
+                <td>
+                    <form method="POST" th:action="@{/user/update-role/{id}(id=${user.userId})}" class="mt-n1">
+                        <div class="d-flex align-items-center">
+                        <select class="form-control" name="newRole">
+                            <option value="USER" th:text="USER" th:selected="${user.role == 'USER'}"></option>
+                            <option value="ADMIN" th:text="ADMIN" th:selected="${user.role == 'ADMIN'}"></option>
+                            <option value="MANAGER" th:text="MANAGER" th:selected="${user.role == 'MANAGER'}"></option>
+                        </select>
+                        <button class="btn btn-primary ml-3" type="submit" name="userId" th:value="${user.userId}">Save</button>
+                        </div>
+                    </form>
+
+                </td>
+                <td>
+                    <form method="POST" th:action="@{/user/delete/{id}(id=${user.userId})}">
+                        <button class="btn btn-danger" type="submit" name="userId" th:value="${user.userId}">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary" onclick="window.location.href='/add'" type="button">Add User</button>
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    </div>
+</div>
+</body>
+</html>

@@ -27,7 +27,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    // constructors, getters, setters, etc.
+
 
 
 }
