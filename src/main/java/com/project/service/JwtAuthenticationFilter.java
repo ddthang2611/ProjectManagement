@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,30 +30,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("===============================");
+        System.out.println("doFilterInternal");
+        System.out.println("path: " + request.getServletPath());
 
 
-            String authorizationHeader = request.getHeader("Authorization");
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String jwtToken = authorizationHeader.substring(7);
-                if (jwtTokenService.validateToken(jwtToken)) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("jwtToken")) {
+                    String jwtToken = cookie.getValue();
+                    System.out.println("Token: " + jwtToken);
                     if (jwtTokenService.validateToken(jwtToken)) {
-                        User user = null;
-                        try {
-                            user = jwtTokenService.getUserFromToken(request);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        if (jwtTokenService.validateToken(jwtToken)) {
+                            User user = null;
+                            try {
+                                user = jwtTokenService.getUserFromToken(jwtToken);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            UserRole userRole = jwtTokenService.getRoleFromToken(jwtToken);
+                            List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_" + userRole.name());
+                            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
                         }
-                        UserRole userRole = jwtTokenService.getRoleFromToken(jwtToken);
-                        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_"+userRole.name());
-                        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
+
                     }
 
+                    filterChain.doFilter(request, response);
                 }
 
             }
-
-            filterChain.doFilter(request, response);
-
+        }
     }
 }

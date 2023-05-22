@@ -40,9 +40,8 @@ public class JwtTokenService {
         }
     }
 
-    public User getUserFromToken(HttpServletRequest request) throws Exception {
+    public User getUserFromToken(String token) throws Exception {
         try {
-            String token = request.getHeader("Authorization").replace("Bearer ", "");
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             int id = Integer.parseInt(claims.getSubject());
             System.out.println("id "+id);

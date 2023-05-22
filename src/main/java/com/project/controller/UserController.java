@@ -83,18 +83,19 @@ public class UserController {
 
     @PutMapping("/update-password")
     public ResponseEntity<?> updateUserPassword(@RequestBody String password, HttpServletRequest request) {
-        try {
-            // Lấy người dùng hiện tại từ token
-            User currentUser = jwtTokenService.getUserFromToken(request);
-
-            // Cập nhật mật khẩu của người dùng
-            User updatedUser = userService.updatePassword(currentUser.getUserId(), password);
-
-            return ResponseEntity.ok(updatedUser);
-        } catch (Exception e) {
-            String errorMessage = e.getMessage();
-            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        try {
+//            // Lấy người dùng hiện tại từ token
+//            User currentUser = jwtTokenService.getUserFromToken(request);
+//
+//            // Cập nhật mật khẩu của người dùng
+//            User updatedUser = userService.updatePassword(currentUser.getUserId(), password);
+//
+//            return ResponseEntity.ok(updatedUser);
+//        } catch (Exception e) {
+//            String errorMessage = e.getMessage();
+//            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+        return  null;
     }
     @GetMapping
     public String getAllUsers(Model model,HttpServletRequest request, HttpServletResponse response) {

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -40,14 +41,26 @@ public class LoginController {
     }
 
     @PostMapping
-    public String login(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         boolean isAuthenticated = userService.checkLogin(user);
         if (isAuthenticated) {
-            user = userService.getUserByUsername(user.getUsername());
-            String jwtToken = jwtTokenService.generateToken(user.getUserId(), user.getRole());
-            JwtResponse response = new JwtResponse(jwtToken);
-            redirectAttributes.addFlashAttribute("response", response);
-            System.out.println("hi"+jwtToken);
+            User userDetail = userService.getUserByUsername(user.getUsername());
+            System.out.println(userDetail.getRole());
+            String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
+            System.out.println("Role "+ userDetail.getRole());
+//            JwtResponse jwtResponse = new JwtResponse(jwtToken,userDetail.getUserId(), String.valueOf(userDetail.getRole()));
+//            System.out.println(String.valueOf(userDetail.getRole()));
+//            System.out.println("token"+jwtResponse.token);
+//            System.out.println("id"+jwtResponse.userId);
+//            System.out.println("role "+ jwtResponse.userRole);
+            // Tạo cookie chứa token
+            Cookie cookie = new Cookie("jwtToken", jwtToken);
+            cookie.setPath("/");
+            cookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
+
+            response.addCookie(cookie);
             return "redirect:/user";
         } else {
             System.out.println("redirect to login");

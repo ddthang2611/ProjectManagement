@@ -24,11 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/user/hi").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
+                .antMatchers( "/user").hasRole("ADMIN")
 //                .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/user/**/update-role").hasRole("ADMIN")
                 .anyRequest().authenticated()
-//                .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
