@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
@@ -49,6 +50,19 @@ public class JwtTokenService {
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
+    }
+    public String getTokenFromRequest(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("jwtToken")) {
+                    String jwtToken = cookie.getValue();
+                    return jwtToken;
+                }
+            }
+        }
+        return null;
+
     }
 
     public UserRole getRoleFromToken(String token) {

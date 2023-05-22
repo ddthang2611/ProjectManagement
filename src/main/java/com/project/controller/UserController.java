@@ -80,10 +80,28 @@ public class UserController {
             return "redirect:/user";
         }
     }
-
-    @PutMapping("/update-password")
-    public ResponseEntity<?> updateUserPassword(@RequestBody String password, HttpServletRequest request) {
-//        try {
+    @GetMapping("/password")
+    public String showChangePasswordForm(Model model) {
+        model.addAttribute("password");
+        return "user/password";
+    }
+    @PostMapping("/password")
+    public String updateUserPassword(@RequestParam("oldPass") String oldPass,
+                                                @RequestParam("newPass") String newPass,
+                                                Model model, HttpServletRequest request) throws Exception {
+    String token = jwtTokenService.getTokenFromRequest(request);
+    User user = jwtTokenService.getUserFromToken(token);
+    user.setPassword(oldPass);
+        boolean isAuthenticated = userService.checkLogin(user);
+        if (isAuthenticated) {
+            // Gọi hàm updatePassword với id là 1 và password mới
+            int id = user.getUserId();
+            User updatedUser = userService.updatePassword(id, newPass);
+            model.addAttribute("successMessage", "Update successful!");
+        } else {
+            model.addAttribute("errorMessage", "Current Password is wrong!");
+        }
+        //        try {
 //            // Lấy người dùng hiện tại từ token
 //            User currentUser = jwtTokenService.getUserFromToken(request);
 //
@@ -95,7 +113,7 @@ public class UserController {
 //            String errorMessage = e.getMessage();
 //            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
-        return  null;
+        return "user/password";
     }
     @GetMapping
     public String getAllUsers(Model model,HttpServletRequest request, HttpServletResponse response) {

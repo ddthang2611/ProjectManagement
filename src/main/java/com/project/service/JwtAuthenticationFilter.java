@@ -33,13 +33,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("===============================");
         System.out.println("doFilterInternal");
         System.out.println("path: " + request.getServletPath());
-
-
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("jwtToken")) {
                     String jwtToken = cookie.getValue();
+
+                    //   String jwtToken = jwtTokenService.getTokenFromRequest(request);
                     System.out.println("Token: " + jwtToken);
                     if (jwtTokenService.validateToken(jwtToken)) {
                         if (jwtTokenService.validateToken(jwtToken)) {
@@ -61,6 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
             }
+
         }
     }
 }
+
