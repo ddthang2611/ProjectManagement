@@ -16,7 +16,7 @@ public class ProjectVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_version_id")
-    private Long projectVersionId;
+    private Integer projectVersionId;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -43,7 +43,8 @@ public class ProjectVersion {
 
     @Column(name = "progress")
     private Integer progress;
-
+    @Column(name = "enable")
+    private boolean enable;
 
 }
 

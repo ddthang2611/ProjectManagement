@@ -1,9 +1,9 @@
 package com.project.entity.enums;
 
 public enum Status {
-        IN_PROGRESS,
+        PROCESSING,
         COMPLETED,
-        NOT_STARTED,
-        POSTPONED
+        PENDING,
+        POSTPONED,
 
 }

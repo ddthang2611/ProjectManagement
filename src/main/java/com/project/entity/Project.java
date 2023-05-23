@@ -16,13 +16,15 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
-    private Long projectId;
+    private int projectId;
 
     @Column(name = "project_name")
     private String projectName;
 
     @Column(name = "project_description")
     private String projectDescription;
+    @Column(name = "enable")
+    private boolean enable;
 
 }
 

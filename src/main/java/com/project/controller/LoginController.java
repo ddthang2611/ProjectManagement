@@ -61,11 +61,15 @@ public class LoginController {
             cookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
 
             response.addCookie(cookie);
-            return "redirect:/user";
+            if(userDetail.getRole().equals(UserRole.ADMIN)){
+                return "redirect:/user";
+            } else {
+                return "redirect:/project";
+            }
         } else {
             System.out.println("redirect to login");
-            redirectAttributes.addFlashAttribute("message", "Invalid username or password");
-            return "redirect:/login";
+            model.addAttribute("message", "Invalid username or password");
+            return "login";
         }
     }
 

@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>User List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div class="container">
-        <h2></h2>
-        <h2>User List</h2>
+        <h2 class="mb-3">User List</h2>
         <div th:if="${message != null}">
             <div class="alert alert-dark alert-dismissible fade show" role="alert">
                 <span th:text="${message}"></span>
@@ -45,9 +46,11 @@
 
                 </td>
                 <td>
-                    <form method="POST" th:action="@{/user/deactivate/{id}(id=${user.userId})}">
+                    <form method="POST" th:action="@{/user/deactivate/{id}(id=${user.userId})}" onsubmit="return confirmDelete(event)">
                         <button class="btn btn-danger mt-n1" type="submit" name="userId" th:value="${user.userId}">Delete</button>
                     </form>
+
+
                 </td>
             </tr>
             </tbody>
@@ -61,5 +64,27 @@
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    function confirmDelete(event) {
+        event.preventDefault(); // Prevent form submission
+        Swal.fire({
+                title: 'Are you sure to delete?',
+                // text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                event.target.submit(); // Submit the form if confirmed
+            }
+        });
+    }
+</script>
+
+
 </body>
 </html>
