@@ -29,12 +29,10 @@ public class ProjectController {
 
     @GetMapping
     public String getAllProjects(Model model) {
-        System.out.println("getAllProjects");
         List<Project> projects = projectService.getAllProjects();
         List<ProjectDTO> projectDTOs = new ArrayList<>();
         for (Project project : projects) {
             List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
-            System.out.println(project.getProjectName());
             ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
             projectDTOs.add(projectDTO);
         }
@@ -46,8 +44,10 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public String getProjectById(@PathVariable Integer projectId, Model model) {
         Project project = projectService.getProjectById(projectId);
-        model.addAttribute("project", project);
-        return "project/details";
+        List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
+        ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
+        model.addAttribute("projectDTO", projectDTO);
+        return "project/project";
     }
 
     @GetMapping("/create")
@@ -66,7 +66,9 @@ public class ProjectController {
     @GetMapping("/{projectId}/edit")
     public String showEditProjectForm(@PathVariable Integer projectId, Model model) {
         Project project = projectService.getProjectById(projectId);
-        model.addAttribute("project", project);
+        List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
+        ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
+        model.addAttribute("projectDTO", projectDTO);
         return "project/edit";
     }
 

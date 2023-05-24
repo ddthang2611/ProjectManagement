@@ -20,14 +20,14 @@
   <div th:each="projectDTO : ${projectDTOs}">
     <div class="card mb-3">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <a th:href="@{/projects/{projectId}/versions(projectId=${projectDTO.project.projectId})}" class="no-underline">
+        <a th:href="@{/project/{projectId}(projectId=${projectDTO.project.projectId})}" class="no-underline">
           <h5 th:text="${projectDTO.project.projectName}"></h5>
         </a>
         <div>
-          <a class="btn btn-primary" th:href="@{/projects/{projectId}/edit(projectId=${projectDTO.project.projectId})}">
+          <a class="btn btn-primary" th:href="@{/project/{projectId}/edit(projectId=${projectDTO.project.projectId})}">
             Edit
           </a>
-          <form th:action="@{/projects/{projectId}/disable(projectId=${projectDTO.project.projectId})}" method="post" class="d-inline">
+          <form th:action="@{/project/{projectId}/disable(projectId=${projectDTO.project.projectId})}" method="post" class="d-inline">
             <button type="submit" class="btn btn-danger">Disable</button>
           </form>
         </div>
@@ -37,15 +37,13 @@
         <h6>Project Versions:</h6>
         <ul class="list-group">
           <li th:each="version : ${projectDTO.projectVersions}" class="list-group-item">
-            <a th:href="@{/projects/{projectId}/versions(projectId=${projectDTO.project.projectId})}" class="no-underline">
+            <a th:href="@{/project/{projectId}/version/{versionId}(projectId=${projectDTO.project.projectId},versionId=${version.projectVersionId})}" class="no-underline">
               <div class="d-flex justify-content-between align-items-center">
                 <p>Status: <span th:text="${version.status}"></span></p>
                 <p>Version: <span th:text="${version.version}"></span></p>
               </div>
               <p>Description: <span th:text="${version.versionDescription}"></span></p>
-            </a>
-            <a th:href="@{/projects/{projectId}/{versionId}(projectId=${projectDTO.project.projectId},versionId=${version.projectVersionId})}" class="no-underline">
-              <div class="progress">
+             <div class="progress">
                 <div class="progress-bar" role="progressbar" th:style="'width: ' + ${version.progress} + '%'"
                      th:attr="aria-valuenow=${version.progress}, aria-valuemin='0', aria-valuemax='100'">
                   <span th:text="${version.progress + '%'}"></span>
