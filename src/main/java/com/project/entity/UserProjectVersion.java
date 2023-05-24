@@ -6,14 +6,14 @@ import lombok.ToString;
 
 import javax.persistence.*;
 @Entity
-@Table(name = "user_project")
+@Table(name = "user_project_version")
 @Getter
 @Setter
 @ToString
-public class UserProject {
+public class UserProjectVersion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_project_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public String login(@ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String login(HttpSession session, @ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         boolean isAuthenticated = userService.checkLogin(user);
         if (isAuthenticated) {
             User userDetail = userService.getUserByUsername(user.getUsername());
@@ -64,11 +65,15 @@ public class LoginController {
             if(userDetail.getRole().equals(UserRole.ADMIN)){
                 return "redirect:/user";
             } else {
+                String userRole = "ADMIN"; // Giá trị userRole bạn muốn truyền
+                        session.setAttribute("userRole", userRole);
+
                 return "redirect:/project";
             }
         } else {
             System.out.println("redirect to login");
             model.addAttribute("message", "Invalid username or password");
+            model.addAttribute("messageType","error");
             return "login";
         }
     }

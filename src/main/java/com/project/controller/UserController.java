@@ -49,6 +49,8 @@ public class UserController {
                 throw new Exception("You do not right to create Admin account");
             }
             User user = userService.addUser(userRequest.getUsername(), userRequest.getPassword(), userRequest.getRole());    redirectAttributes.addFlashAttribute("message", "User has been added successfully");
+            redirectAttributes.addFlashAttribute("message", "Added successfully");
+            redirectAttributes.addFlashAttribute("messageType","success");
             return "redirect:/user";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
@@ -56,11 +58,6 @@ public class UserController {
             return "redirect:/user";
         }
     }
-
-
-
-
-
 
     @PostMapping("/update-role/{id}")
     public String updateUserRole(HttpServletRequest request, @PathVariable Integer id,
@@ -73,10 +70,12 @@ public class UserController {
             }
             User updatedUser = userService.updateUserRole(id, newRole);
             redirectAttributes.addFlashAttribute("message", "User role has been updated successfully");
+            redirectAttributes.addFlashAttribute("messageType","success");
             return "redirect:/user";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType","error");
             return "redirect:/user";
         }
     }
@@ -97,9 +96,11 @@ public class UserController {
             // Gọi hàm updatePassword với id là 1 và password mới
             int id = user.getUserId();
             User updatedUser = userService.updatePassword(id, newPass);
-            model.addAttribute("successMessage", "Update successful!");
+            model.addAttribute("message", "Update successful!");
+            model.addAttribute("messageType","success");
         } else {
-            model.addAttribute("errorMessage", "Current Password is wrong!");
+            model.addAttribute("message", "Current Password is wrong!");
+            model.addAttribute("messageType","error");
         }
         //        try {
 //            // Lấy người dùng hiện tại từ token
@@ -127,10 +128,12 @@ public class UserController {
         try {
             userService.deactivateUser(id);
             redirectAttributes.addFlashAttribute("message", "User has been deactivated successfully");
+            redirectAttributes.addFlashAttribute("messageType","success");
             return "redirect:/user";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType","success");
             return "redirect:/user";
         }
     }
