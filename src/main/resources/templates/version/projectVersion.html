@@ -26,9 +26,23 @@
                 <h5 th:text="${projectVersion.project.projectName}"></h5>
                 <h5 th:text="${projectVersion.version}"></h5>
                 <div>
-                    <a class="btn btn-primary" th:href="@{/version/{projectVersionId}/edit(projectVersionId=${projectVersion.projectVersionId})}">
-                        Edit
-                    </a>
+
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-primary rounded-right mr-1" th:href="@{/version/{projectVersionId}/edit(projectVersionId=${projectVersion.projectVersionId})}">
+                            Edit
+                        </a>
+                        <form th:action="@{'/version/' + ${projectVersionId} + '/disable'}" method="post">
+                            <button type="submit" class="btn btn-danger">Disable</button>
+                        </form>
+                    </div>
+
+
+
+
+
+
+
+
                 </div>
             </div>
             <div class="card-body">

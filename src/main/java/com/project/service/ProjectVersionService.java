@@ -37,6 +37,9 @@ public class ProjectVersionService {
     public void updateProjectVersion(ProjectVersion projectVersion) {
         projectVersionRepository.save(projectVersion);
     }
+    public void addProjectVersion(ProjectVersion projectVersion) {
+        projectVersionRepository.save(projectVersion);
+    }
 
 
     public List<ProjectVersion> getProjectVersionsByProjectId(Integer projectId) {

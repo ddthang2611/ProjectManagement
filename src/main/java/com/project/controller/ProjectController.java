@@ -128,6 +128,30 @@ public class ProjectController {
         return "redirect:/project";
     }
 
+    @GetMapping("/{projectId}/add-version")
+    public String showAddProjectVersionForm(@PathVariable Integer projectId, Model model) {
+        ProjectVersion projectVersion = new ProjectVersion();
+        projectVersion.setProject(projectService.getProjectById(projectId));
+        model.addAttribute("projectVersion", projectVersion);
+        return "version/add";
+    }
+
+    @PostMapping("/{projectId}/add-version")
+    public String addProjectVersion(@PathVariable Integer projectId,
+                                    @ModelAttribute("projectVersion") ProjectVersion projectVersion,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            projectVersion.setProject(projectService.getProjectById(projectId)); // Set Project cho ProjectVersion
+            projectVersionService.addProjectVersion(projectVersion);
+            redirectAttributes.addFlashAttribute("message", "Added Successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/" + projectId+"/add-version";
+        }
+        return "redirect:/project";
+    }
 
 
 

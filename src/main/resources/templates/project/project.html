@@ -29,6 +29,9 @@
                         Edit
                     </a>
                 </div>
+                <a class="btn btn-success ml-1" th:href="@{/project/{projectId}/add-version(projectId=${projectDTO.project.projectId})}">
+                    Add Version
+                </a>
             </div>
             <div class="card-body">
                 <p th:text="${projectDTO.project.projectDescription}"></p>

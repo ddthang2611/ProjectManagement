@@ -44,7 +44,6 @@ public class ProjectVersionController {
     @GetMapping("/{projectVersionId}/edit")
     public String showEditProjectVersionForm(@PathVariable Integer projectVersionId, Model model) {
         ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
-        System.out.println("x"+projectVersion.getProject().toString());
         model.addAttribute("projectVersion", projectVersion);
         return "version/edit";
     }
@@ -53,12 +52,7 @@ public class ProjectVersionController {
     public String updateProjectVersion(@PathVariable Integer projectVersionId,
                                        @ModelAttribute("projectVersion") ProjectVersion projectVersion,
                                        RedirectAttributes redirectAttributes) {
-        System.out.println("hi");
-        System.out.println(projectVersion.getProjectVersionId());
-        System.out.println(projectVersion.getProject());
         try {
-
-
             projectVersion.setProjectVersionId(projectVersionId);
             projectVersionService.updateProjectVersion(projectVersion);
 
@@ -75,6 +69,7 @@ public class ProjectVersionController {
 
     @PostMapping("/{projectVersionId}/disable")
     public String disableProjectVersion(@PathVariable Integer projectVersionId, RedirectAttributes redirectAttributes) {
+        System.out.println("hi");
         try {
             projectVersionService.disableProjectVersion(projectVersionId);
             redirectAttributes.addFlashAttribute("message", "Disabled Successfully");
@@ -83,7 +78,7 @@ public class ProjectVersionController {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/version";
+        return "redirect:/project";
     }
 
 }
