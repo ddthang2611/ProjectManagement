@@ -16,7 +16,7 @@ public class Feature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feature_id")
-    private Long id;
+    private int id;
 
     @Column(name = "feature_name", nullable = false)
     private String name;

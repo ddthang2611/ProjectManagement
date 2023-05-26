@@ -1,8 +1,6 @@
 package com.project.controller;
 
-import com.project.entity.Project;
-import com.project.entity.ProjectDTO;
-import com.project.entity.ProjectVersion;
+import com.project.entity.*;
 import com.project.service.ProjectService;
 import com.project.service.ProjectVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +15,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/project")
 public class ProjectController {
-
+    @Autowired
     private ProjectService projectService;
-
+    @Autowired
     private ProjectVersionService projectVersionService;
 
     @Autowired
@@ -127,5 +125,15 @@ public class ProjectController {
         }
         return "redirect:/project";
     }
+    @GetMapping("/{projectId}/version/{projectVersionId}")
+    public String getProjectVersionById(@PathVariable Integer projectId, @PathVariable Integer projectVersionId, Model model) {
+        ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
+        List<FeatureDTO> features = projectVersionService.findByProjectVersionId(projectVersionId);
+        model.addAttribute("projectVersion", projectVersion);
+        model.addAttribute("features", features);
+        return "project/projectVersion";
+    }
+
+
 
 }

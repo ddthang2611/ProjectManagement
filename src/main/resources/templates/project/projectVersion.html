@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project Version Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Project Version Details</h1>
+    <p>User Role: <span th:text="${session.userRole}"></span></p>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 th:text="${projectVersion.project.projectName}"></h5>
+                <h5 th:text="${projectVersion.version}"></h5>
+                <div>
+                    <a class="btn btn-primary" th:href="@{/project/{projectId}/version/{projectVersionId}/edit(projectId=${projectVersion.project.projectId},projectVersionId=${projectVersion.projectVersionId})}">
+                        Edit
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
+                <ul class="list-group">
+                    <li th:each="feature : ${features}" class="list-group-item">
+                        <h5>Feature: <span th:text="${feature.feature.name}"></span></h5>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" role="progressbar" th:style="'width: ' + ${feature.feature.progress} + '%'"
+                                 th:attr="aria-valuenow=${feature.feature.progress}, aria-valuemin='0', aria-valuemax='100'">
+                                <span th:text="${feature.feature.progress + '%'}"></span>
+                            </div>
+                        </div>
+                        <ul class="list-group">
+                            <li th:each="task : ${feature.task}" class="list-group-item">
+                                <p>Task ID: <span th:text="${task.taskId}"></span></p>
+                                <p>Task Name: <span th:text="${task.taskName}"></span></p>
+                                <p>Progress: <span th:text="${task.progress}"></span></p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
