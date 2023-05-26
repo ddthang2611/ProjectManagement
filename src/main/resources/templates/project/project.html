@@ -35,7 +35,7 @@
                 <h6>Project Versions:</h6>
                 <ul class="list-group">
                     <li th:each="version : ${projectDTO.projectVersions}" class="list-group-item">
-                        <a th:href="@{/project/{projectId}/version/{versionId}(projectId=${projectDTO.project.projectId},versionId=${version.projectVersionId})}" class="no-underline">
+                        <a th:href="@{/version/{versionId}(versionId=${version.projectVersionId})}" class="no-underline">
                             <div class="d-flex justify-content-between align-items-center">
                                 <p>Status: <span th:text="${version.status}"></span></p>
                                 <p>Version: <span th:text="${version.version}"></span></p>

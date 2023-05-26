@@ -1,4 +1,4 @@
-package com.project.controller;
+package com.project.config;
 
 import com.project.service.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;

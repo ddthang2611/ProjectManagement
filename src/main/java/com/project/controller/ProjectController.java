@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/edit")
-    public String updateProject(@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes) {
+    public String updateProject(@PathVariable Integer projectId,@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes) {
         try {
             projectService.updateProject(project);
             redirectAttributes.addFlashAttribute("message", "Updated Successfully");
@@ -87,6 +88,7 @@ public class ProjectController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/"+projectId+"/edit";
         }
         return "redirect:/project";
     }
@@ -125,14 +127,7 @@ public class ProjectController {
         }
         return "redirect:/project";
     }
-    @GetMapping("/{projectId}/version/{projectVersionId}")
-    public String getProjectVersionById(@PathVariable Integer projectId, @PathVariable Integer projectVersionId, Model model) {
-        ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
-        List<FeatureDTO> features = projectVersionService.findByProjectVersionId(projectVersionId);
-        model.addAttribute("projectVersion", projectVersion);
-        model.addAttribute("features", features);
-        return "project/projectVersion";
-    }
+
 
 
 

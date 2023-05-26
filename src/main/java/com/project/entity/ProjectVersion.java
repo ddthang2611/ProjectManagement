@@ -3,9 +3,11 @@ import com.project.entity.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "project_version")
@@ -21,21 +23,24 @@ public class ProjectVersion {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
-
     @Column(name = "version")
     private String version;
+
 
     @Column(name = "version_description")
     private String versionDescription;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;
 
     @Column(name = "estimated_end_date")
-    private LocalDateTime estimatedEndDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date estimatedEndDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Edit Project Version</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Edit Project Version</h1>
+
+    <form th:action="@{/version/{projectVersionId}/edit(projectVersionId=${projectVersion.projectVersionId})}" method="post">
+
+        <div class="form-group" hidden>
+            <input type="text" name="projectVersionId" th:value="${projectVersion.projectVersionId}">
+        </div>
+
+        <div class="form-group" hidden>
+            <input type="text" name="project.projectId" th:value="${projectVersion.project.projectId}">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="project.projectName" th:value="${projectVersion.project.projectName}" hidden>
+        </div>
+
+        <div class="form-group" hidden>
+            <input type="text" name="project.enable" th:value="${projectVersion.project.enable}">
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="project.projectDescription" th:value="${projectVersion.project.projectDescription}" hidden>
+        </div>
+        <div class="form-group">
+            <input type="text" name="projectVersion.progress" th:value="${projectVersion.progress}" th:attr="value=${projectVersion.progress}, hidden=true">
+        </div>
+
+        <div class="form-group">
+            <label for="version">Version:</label>
+            <input type="text" class="form-control" id="version" name="version" th:field="${projectVersion.version}">
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" th:field="${projectVersion.startDate}">
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="estimatedEndDate">Estimated End Date:</label>
+                    <input type="date" class="form-control" id="estimatedEndDate" name="estimatedEndDate" th:field="${projectVersion.estimatedEndDate}">
+                </div>
+            </div>
+        </div>
+
+
+
+
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select class="form-control" id="status" name="status">
+                        <option value="PROCESSING" th:selected="${projectVersion.status == 'PROCESSING'}" th:field="${projectVersion.status}">Processing</option>
+                        <option value="COMPLETED" th:selected="${projectVersion.status == 'COMPLETED'}" th:field="${projectVersion.status}">Completed</option>
+                        <option value="PENDING" th:selected="${projectVersion.status == 'PENDING'}" th:field="${projectVersion.status}">Pending</option>
+                        <option value="POSTPONED" th:selected="${projectVersion.status == 'POSTPONED'}" th:field="${projectVersion.status}">Postponed</option>
+                    </select>
+                </div>
+<!--            <div class="col">-->
+<!--                <div class="form-group dropup">-->
+<!--                    <label for="progress">Progress:</label>-->
+<!--                    <div class="dropdown">-->
+<!--                        <select class="form-control" id="progress" name="progress" th:field="${projectVersion.progress}">-->
+<!--                            <option th:each="percentage : ${#numbers.sequence(10, 100, 10)}" th:value="${percentage}" th:text="${percentage}"></option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+
+
+
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/version/{projectVersionId}(projectVersionId=${projectVersion.projectVersionId})}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
