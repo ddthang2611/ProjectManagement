@@ -50,10 +50,10 @@
                 <ul class="list-group">
                     <li th:each="feature : ${features}" class="list-group-item">
                         <h5>Feature: <span th:text="${feature.feature.name}"></span></h5>
-                        <p>Start date: <span th:text="${feature.feature.startDate}"></span></p>
-                        <p>End date: <span th:text="${feature.feature.endDate}"></span></p>
-                        <p>Estimated end date: <span th:text="${feature.feature.estimatedEndDate}"></span></p>
-                        <p>Status: <span th:text="${feature.feature.status}"></span></p>
+<!--                        <p>Start date: <span th:text="${feature.feature.startDate}"></span></p>-->
+<!--                        <p>End date: <span th:text="${feature.feature.endDate}"></span></p>-->
+<!--                        <p>Estimated end date: <span th:text="${feature.feature.estimatedEndDate}"></span></p>-->
+<!--                        <p>Status: <span th:text="${feature.feature.status}"></span></p>-->
 
                         <div class="progress mb-2">
 
@@ -64,9 +64,12 @@
                         </div>
                         <ul class="list-group">
                             <li th:each="task : ${feature.task}" class="list-group-item">
-                                <p>Task ID: <span th:text="${task.taskId}"></span></p>
-                                <p>Task Name: <span th:text="${task.taskName}"></span></p>
-                                <p>Progress: <span th:text="${task.progress}"></span></p>
+<!--                                <p>Task ID: <span th:text="${task.taskId}"></span></p>-->
+                                <div class="d-flex justify-content-between">
+                                    <p><span th:text="${task.taskName}"></span></p>
+                                    <p><span th:text="'Progress: ' + ${task.progress}"></span></p>
+                                </div>
+
                             </li>
                         </ul>
                     </li>
