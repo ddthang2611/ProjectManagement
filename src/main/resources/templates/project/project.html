@@ -28,10 +28,13 @@
                     <a class="btn btn-primary" th:href="@{/project/{projectId}/edit(projectId=${projectDTO.project.projectId})}">
                         Edit
                     </a>
+                    <form th:action="@{/project/{projectId}/disable(projectId=${projectDTO.project.projectId})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Disable</button>
+                    </form>
+                    <a class="btn btn-success" th:href="@{/project/{projectId}/add-version(projectId=${projectDTO.project.projectId})}">
+                        Add Version
+                    </a>
                 </div>
-                <a class="btn btn-success ml-1" th:href="@{/project/{projectId}/add-version(projectId=${projectDTO.project.projectId})}">
-                    Add Version
-                </a>
             </div>
             <div class="card-body">
                 <p th:text="${projectDTO.project.projectDescription}"></p>
