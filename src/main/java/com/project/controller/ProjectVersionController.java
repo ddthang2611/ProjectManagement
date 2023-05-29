@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.entity.*;
+import com.project.service.FeatureService;
 import com.project.service.ProjectVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import java.util.List;
 public class ProjectVersionController {
     @Autowired
     private ProjectVersionService projectVersionService;
+    @Autowired
+    private FeatureService featureService;
 
     @Autowired
     public ProjectVersionController(ProjectVersionService projectVersionService) {
@@ -53,7 +56,7 @@ public class ProjectVersionController {
     public String updateProjectVersion(@PathVariable Integer projectVersionId,
                                        @ModelAttribute("projectVersion") ProjectVersion projectVersion,
                                        RedirectAttributes redirectAttributes) {
-
+        System.out.println(projectVersion.toString());
         try {
             projectVersion.setProjectVersionId(projectVersionId);
             projectVersionService.updateProjectVersion(projectVersion);
@@ -71,7 +74,6 @@ public class ProjectVersionController {
 
     @PostMapping("/{projectVersionId}/disable")
     public String disableProjectVersion(@PathVariable Integer projectVersionId, RedirectAttributes redirectAttributes) {
-        System.out.println("hi");
         try {
             projectVersionService.disableProjectVersion(projectVersionId);
             redirectAttributes.addFlashAttribute("message", "Disabled Successfully");
@@ -82,6 +84,33 @@ public class ProjectVersionController {
         }
         return "redirect:/project";
     }
+    @GetMapping("/{projectVersionId}/add-feature")
+    public String showAddFeatureForm(@PathVariable Integer projectVersionId, Model model) {
+        Feature feature = new Feature();
+        feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
+        model.addAttribute("feature", feature);
+        return "feature/add";
+    }
+
+    @PostMapping("/{projectVersionId}/add-feature")
+    public String addFeature(@PathVariable Integer projectVersionId,
+                             @ModelAttribute("feature") Feature feature,
+                             RedirectAttributes redirectAttributes) {
+        System.out.println("hi");
+        System.out.println("post add feture"+ feature.toString());
+        try {
+            feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
+            featureService.addFeature(feature);
+            redirectAttributes.addFlashAttribute("message", "Added Successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/version/" + projectVersionId + "/add-feature";
+        }
+        return "redirect:/version/"+projectVersionId;
+    }
+
 
 }
 

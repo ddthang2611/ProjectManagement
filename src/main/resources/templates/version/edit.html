@@ -34,6 +34,9 @@
         <div class="form-group">
             <input type="text" name="projectVersion.progress" th:value="${projectVersion.progress}" th:attr="value=${projectVersion.progress}, hidden=true">
         </div>
+        <div class="form-group" hidden>
+            <input type="text" name="enable" th:value="${projectVersion.enable}">
+        </div>
 
         <div class="form-group">
             <label for="version">Version:</label>
@@ -71,17 +74,6 @@
                         <option value="POSTPONED" th:selected="${projectVersion.status == 'POSTPONED'}" th:field="${projectVersion.status}">Postponed</option>
                     </select>
                 </div>
-<!--            <div class="col">-->
-<!--                <div class="form-group dropup">-->
-<!--                    <label for="progress">Progress:</label>-->
-<!--                    <div class="dropdown">-->
-<!--                        <select class="form-control" id="progress" name="progress" th:field="${projectVersion.progress}">-->
-<!--                            <option th:each="percentage : ${#numbers.sequence(10, 100, 10)}" th:value="${percentage}" th:text="${percentage}"></option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-
 
 
 
