@@ -96,8 +96,7 @@ public class ProjectVersionController {
     public String addFeature(@PathVariable Integer projectVersionId,
                              @ModelAttribute("feature") Feature feature,
                              RedirectAttributes redirectAttributes) {
-        System.out.println("hi");
-        System.out.println("post add feture"+ feature.toString());
+
         try {
             feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
             featureService.addFeature(feature);

@@ -47,12 +47,7 @@
                                 <p>Version: <span th:text="${version.version}"></span></p>
                             </div>
                             <p>Description: <span th:text="${version.versionDescription}"></span></p>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${version.progress} + '%'"
-                                     th:attr="aria-valuenow=${version.progress}, aria-valuemin='0', aria-valuemax='100'">
-                                    <span th:text="${version.progress + '%'}"></span>
-                                </div>
-                            </div>
+                            <div th:replace="fragments/progressbar :: div(progress=${version.progress})"></div>
                         </a>
                     </li>
                 </ul>

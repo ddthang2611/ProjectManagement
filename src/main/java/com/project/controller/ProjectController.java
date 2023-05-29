@@ -88,7 +88,7 @@ public class ProjectController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/"+projectId+"/edit";
+            return "redirect:/project/"+projectId+"/edit";
         }
         return "redirect:/project";
     }

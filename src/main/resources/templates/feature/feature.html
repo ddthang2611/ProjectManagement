@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Feature Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Feature Details</h1>
+    <p>User Role: <span th:text="${session.userRole}"></span></p>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 th:text="${feature.name}"></h5>
+                <div>
+                    <a class="btn btn-primary" th:href="@{/feature/{featureId}/edit(featureId=${feature.id})}">
+                        Edit
+                    </a>
+                    <form th:action="@{/feature/{featureId}/delete(featureId=${feature.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <div class="card-body">
+                <p th:text="${feature.description}"></p>
+                <h6>Feature Tasks:</h6>
+                <ul class="list-group">
+                    <li th:each="task : ${tasks}" class="list-group-item">
+                        <a th:href="@{/task/{taskId}(taskId=${task.taskId})}" class="no-underline">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p>Status: <span th:text="${task.status}"></span></p>
+                                <p>Task: <span th:text="${task.taskName}"></span></p>
+                            </div>
+                            <p>Description: <span th:text="${task.taskDescription}"></span></p>
+                            <div th:replace="fragments/progressbar :: div(progress=${task.progress})"></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -49,27 +49,28 @@
                 <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
                 <ul class="list-group">
                     <li th:each="feature : ${features}" class="list-group-item">
-                        <h5>Feature: <span th:text="${feature.feature.name}"></span></h5>
+                        <a th:href="@{/feature/{id}(id=${feature.feature.id})}" class="no-underline">
+                            <h5>Feature: <span th:text="${feature.feature.name}"></span></h5>
+
+                                <div th:replace="fragments/progressbar :: div(progress=${feature.feature.progress})"></div>
+
+                        </a>
+
 <!--                        <p>Start date: <span th:text="${feature.feature.startDate}"></span></p>-->
 <!--                        <p>End date: <span th:text="${feature.feature.endDate}"></span></p>-->
 <!--                        <p>Estimated end date: <span th:text="${feature.feature.estimatedEndDate}"></span></p>-->
 <!--                        <p>Status: <span th:text="${feature.feature.status}"></span></p>-->
 
-                        <div class="progress mb-2">
-
-                            <div class="progress-bar bg-success" role="progressbar" th:style="'width: ' + ${feature.feature.progress} + '%'"
-                                 th:attr="aria-valuenow=${feature.feature.progress}, aria-valuemin='0', aria-valuemax='100'">
-                                <span th:text="${feature.feature.progress + '%'}"></span>
-                            </div>
-                        </div>
                         <ul class="list-group">
                             <li th:each="task : ${feature.task}" class="list-group-item">
 <!--                                <p>Task ID: <span th:text="${task.taskId}"></span></p>-->
+
+                                <a th:href="@{/task/{id}(id=${task.taskId})}" class="no-underline">
                                 <div class="d-flex justify-content-between">
                                     <p><span th:text="${task.taskName}"></span></p>
                                     <p><span th:text="'Progress: ' + ${task.progress}"></span></p>
                                 </div>
-
+                                </a>
                             </li>
                         </ul>
                     </li>
