@@ -36,6 +36,7 @@ public class ProjectVersionController {
     public String getProjectVersionById(@PathVariable Integer projectVersionId, Model model) {
         ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
         List<FeatureDTO> features = projectVersionService.findByProjectVersionId(projectVersionId);
+        System.out.println(projectVersion.toString());
         model.addAttribute("projectVersion", projectVersion);
         model.addAttribute("features", features);
         return "version/projectVersion";
@@ -52,6 +53,7 @@ public class ProjectVersionController {
     public String updateProjectVersion(@PathVariable Integer projectVersionId,
                                        @ModelAttribute("projectVersion") ProjectVersion projectVersion,
                                        RedirectAttributes redirectAttributes) {
+
         try {
             projectVersion.setProjectVersionId(projectVersionId);
             projectVersionService.updateProjectVersion(projectVersion);
