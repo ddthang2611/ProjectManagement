@@ -40,8 +40,7 @@ public class FeatureService {
             taskRepository.delete(task);
         }
 
-        // Xóa Feature
-        featureRepository.delete(feature);
+        featureRepository.deleteById(featureId);
     }
 
     public void updateFeature(Feature feature) {
@@ -64,17 +63,5 @@ public class FeatureService {
         return taskRepository.findTasksByFeatureId(featureId);
     }
 
-    public List<FeatureDTO> getFeatureDTOsByProjectVersionId(Integer projectVersionId) {
-        List<Feature> features = featureRepository.findByProjectVersionId(projectVersionId);
-        List<FeatureDTO> featureDTOs = new ArrayList<>();
-
-        for (Feature feature : features) {
-            List<Task> tasks = taskRepository.findTasksByFeatureId(feature.getId());
-            FeatureDTO featureDTO = new FeatureDTO(feature, tasks);
-            featureDTOs.add(featureDTO);
-        }
-
-        return featureDTOs;
-    }
 }
 

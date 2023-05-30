@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Feature Details</title>
+    <title>Task Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .no-underline {
@@ -16,38 +16,37 @@
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
-    <h1>Feature Details</h1>
+    <h1>Task Details</h1>
     <p>User Role: <span th:text="${session.userRole}"></span></p>
 
     <div th:replace="fragments/message :: div"></div>
     <div>
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 th:text="${feature.name}"></h5>
+                <h5 th:text="${task.taskName}"></h5>
                 <div>
-                    <a class="btn btn-primary" th:href="@{/feature/{featureId}/edit(featureId=${feature.id})}">
+                    <a class="btn btn-primary" th:href="@{/task/{taskId}/edit(taskId=${task.taskId})}">
                         Edit
                     </a>
-                    <form th:action="@{/feature/{featureId}/delete(featureId=${feature.id})}" method="post" class="d-inline">
+                    <form th:action="@{/task/{taskId}/delete(taskId=${task.taskId})}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
-                    <a class="btn btn-success" th:href="@{/feature/{featureId}/add-task(featureId=${feature.id})}">
-                        Add Task
+                    <a class="btn btn-success" th:href="@{/task/{taskId}/add-issue(taskId=${task.taskId})}">
+                        Add Issue
                     </a>
                 </div>
             </div>
             <div class="card-body">
-                <p th:text="${feature.description}"></p>
-                <h6>Feature Tasks:</h6>
+                <p th:text="${task.taskDescription}"></p>
+                <h6>Task Issues:</h6>
                 <ul class="list-group">
-                    <li th:each="task : ${tasks}" class="list-group-item">
-                        <a th:href="@{/task/{taskId}(taskId=${task.taskId})}" class="no-underline">
+                    <li th:each="issue : ${issues}" class="list-group-item">
+                        <a th:href="@{/issue/{issueId}(issueId=${issue.issueId})}" class="no-underline">
                             <div class="d-flex justify-content-between align-items-center">
-                                <p>Status: <span th:text="${task.status}"></span></p>
-                                <p>Task: <span th:text="${task.taskName}"></span></p>
+                                <p>Type: <span th:text="${issue.issueType}"></span></p>
+                                <p>Priority: <span th:text="${issue.priority}"></span></p>
                             </div>
-                            <p>Description: <span th:text="${task.taskDescription}"></span></p>
-                            <div th:replace="fragments/progressbar :: div(progress=${task.progress})"></div>
+                            <p>Summary: <span th:text="${issue.summary}"></span></p>
                         </a>
                     </li>
                 </ul>

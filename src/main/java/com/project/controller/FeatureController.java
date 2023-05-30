@@ -4,6 +4,7 @@ package com.project.controller;
 import com.project.entity.*;
 import com.project.service.FeatureService;
 import com.project.service.ProjectVersionService;
+import com.project.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +18,14 @@ import java.util.List;
 public class FeatureController {
     private FeatureService featureService;
     private ProjectVersionService projectVersionService;
+    private TaskService taskService;
+
 
     @Autowired
-    public FeatureController(FeatureService featureService, ProjectVersionService projectVersionService) {
+    public FeatureController(FeatureService featureService, ProjectVersionService projectVersionService, TaskService taskService) {
         this.featureService = featureService;
         this.projectVersionService = projectVersionService;
+        this.taskService = taskService;
     }
 
     @GetMapping("/{featureId}")
@@ -86,8 +90,7 @@ public class FeatureController {
                           RedirectAttributes redirectAttributes) {
         try {
             task.setFeature(featureService.getFeatureById(featureId));
-            // Lưu task vào database
-            // ...
+            taskService.addTask(task);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (Exception e) {
