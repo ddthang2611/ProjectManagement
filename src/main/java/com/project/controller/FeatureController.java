@@ -48,7 +48,6 @@ public class FeatureController {
     public String updateFeature(@PathVariable Integer featureId,
                                 @ModelAttribute("feature") Feature feature,
                                 RedirectAttributes redirectAttributes) {
-        System.out.println("post "+feature.toString());
         try {
             feature.setId(featureId);
             featureService.updateFeature(feature);
@@ -65,15 +64,16 @@ public class FeatureController {
 
     @PostMapping("/{featureId}/delete")
     public String deleteFeature(@PathVariable Integer featureId, RedirectAttributes redirectAttributes) {
+        Integer projectVersionId = featureService.getFeatureById(featureId).getProjectVersion().getProjectVersionId();
         try {
-            featureService.deleteFeature(featureId);
+             featureService.deleteFeature(featureId);
             redirectAttributes.addFlashAttribute("message", "Deleted Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/project";
+        return "redirect:/version/"+ projectVersionId ;
     }
 
     @GetMapping("/{featureId}/add-task")

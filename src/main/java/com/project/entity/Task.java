@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "task")
@@ -40,6 +41,11 @@ public class Task {
     @JoinColumn(name = "assigned_to", referencedColumnName = "user_id")
     private User assignedTo;
 
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CheckIn> checkIns;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Issue> issues;
     @Column(name = "start_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
