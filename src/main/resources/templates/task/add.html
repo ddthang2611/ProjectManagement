@@ -57,7 +57,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
-        <a th:href="@{/feature/{featureId}}" class="btn btn-secondary">Back</a>
+        <a th:href="@{/feature/{featureId}(featureId=${task.feature.id})}" class="btn btn-secondary">Back</a>
     </form>
 </div>
 

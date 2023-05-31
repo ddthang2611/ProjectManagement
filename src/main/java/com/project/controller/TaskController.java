@@ -60,7 +60,10 @@ public class TaskController {
 
     @PostMapping("/{taskId}/delete")
     public String deleteTask(@PathVariable Integer taskId, RedirectAttributes redirectAttributes) {
+        Task task = taskService.getTaskById(taskId);
+        int featureId = task.getFeature().getId();
         try {
+
             taskService.deleteTask(taskId);
             redirectAttributes.addFlashAttribute("message", "Deleted Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -68,7 +71,7 @@ public class TaskController {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/task";
+        return "redirect:/feature/"+featureId;
     }
 
     // Other methods related to TaskController

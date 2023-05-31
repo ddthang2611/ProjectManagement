@@ -47,8 +47,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
-        <a th:href="@{/version/{projectVersionId}/add-feature(projectVersionId=${projectVersionId})}" class="btn btn-secondary">Back</a>
+        <a th:href="@{/version/{projectVersionId}(projectVersionId=${feature.projectVersion.projectVersionId})}" class="btn btn-secondary">Back</a>
     </form>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
