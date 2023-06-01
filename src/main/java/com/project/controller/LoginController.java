@@ -49,25 +49,24 @@ public class LoginController {
             System.out.println(userDetail.getRole());
             String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
             System.out.println("Role "+ userDetail.getRole());
-//            JwtResponse jwtResponse = new JwtResponse(jwtToken,userDetail.getUserId(), String.valueOf(userDetail.getRole()));
-//            System.out.println(String.valueOf(userDetail.getRole()));
-//            System.out.println("token"+jwtResponse.token);
-//            System.out.println("id"+jwtResponse.userId);
-//            System.out.println("role "+ jwtResponse.userRole);
             // Tạo cookie chứa token
-            Cookie cookie = new Cookie("jwtToken", jwtToken);
-            cookie.setPath("/");
-            cookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
+            Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
+            tokenCookie.setPath("/");
+            tokenCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+            tokenCookie.setHttpOnly(true);
+            tokenCookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
 
-            response.addCookie(cookie);
+            Cookie userCookie = new Cookie("user", String.valueOf(userDetail.getUserId()));
+            userCookie.setPath("/");
+            userCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+            userCookie.setHttpOnly(true);
+            userCookie.setSecure(true);
+
+            response.addCookie(tokenCookie);
+            response.addCookie(userCookie);
             if(userDetail.getRole().equals(UserRole.ADMIN)){
                 return "redirect:/user";
             } else {
-                String userRole = "ADMIN"; // Giá trị userRole bạn muốn truyền
-                        session.setAttribute("userRole", userRole);
-
                 return "redirect:/project";
             }
         } else {
