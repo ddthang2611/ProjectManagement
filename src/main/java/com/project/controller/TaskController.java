@@ -87,6 +87,7 @@ public class TaskController {
         Issue issue = new Issue();
         issue.setTask(taskService.getTaskById(taskId));
         model.addAttribute("issue", issue);
+        System.out.println("hi");
         return "issue/add";
     }
 

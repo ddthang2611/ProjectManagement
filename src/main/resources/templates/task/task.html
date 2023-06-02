@@ -42,12 +42,14 @@
                 <h6>Task Issues:</h6>
                 <ul class="list-group">
                     <li th:each="issue : ${issues}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/issue/{issueId}/edit(issueId=${issue.issueId})}">
                         <div class="d-flex justify-content-between align-items-center">
                             <p>Type: <span th:text="${issue.issueType}"></span></p>
                             <p>Priority: <span th:text="${issue.priority}"></span></p>
                         </div>
                         <p>Summary: <span th:text="${issue.summary}"></span></p>
                         <p>Reporter: <span th:text="${issue.reporter.username}"></span> </p>
+                        </a>
                     </li>
                 </ul>
 
