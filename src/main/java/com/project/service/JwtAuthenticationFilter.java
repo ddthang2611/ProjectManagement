@@ -33,6 +33,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("===============================");
         System.out.println("doFilterInternal");
         System.out.println("path: " + request.getServletPath());
+        if ("/login".equals(request.getServletPath())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
