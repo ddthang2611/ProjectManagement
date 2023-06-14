@@ -1,6 +1,7 @@
 package com.project.repository;
 
 import com.project.entity.Feature;
+import com.project.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,9 @@ import java.util.List;
 public interface FeatureRepository extends JpaRepository<Feature, Integer> {
     @Query("SELECT f FROM Feature f WHERE f.projectVersion.projectVersionId = :projectVersionId")
     List<Feature> findByProjectVersionId(@Param("projectVersionId") Integer projectVersionId);
+
+    @Query("SELECT t FROM Task t WHERE t.feature.id = :featureId")
+    List<Task> findTasksByFeatureId(@Param("featureId") Integer featureId);
 
 
 }

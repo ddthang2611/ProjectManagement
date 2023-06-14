@@ -1,9 +1,9 @@
 package com.project.service;
 
-import com.project.entity.Issue;
-import com.project.entity.Task;
-import com.project.entity.TaskDTO;
+import com.project.entity.*;
+import com.project.repository.FeatureRepository;
 import com.project.repository.IssueRepository;
+import com.project.repository.ProjectVersionRepository;
 import com.project.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,11 @@ public class TaskService {
     @Autowired
     private IssueRepository issueRepository;
 
+    @Autowired
+    private FeatureRepository featureRepository;
+    @Autowired
+    private ProjectVersionRepository projectVersionRepository;
+
 
 
     @Transactional
@@ -32,7 +37,9 @@ public class TaskService {
     }
 
     public void addTask(Task task) {
+
         taskRepository.save(task);
+        updateProgress(task);
     }
 
 
@@ -74,6 +81,34 @@ public class TaskService {
             task.setPriority(taskDTO.getPriority());
             taskRepository.save(task);
         }
+        updateProgress(task);
+    }
+
+    public void updateProgress(Task task) {
+//        Task savedTask = taskRepository.save(task);
+
+        // Tính toán progress mới cho Feature
+        Feature feature = task.getFeature();
+        List<Task> featureTasks = featureRepository.findTasksByFeatureId(feature.getId());
+        int totalProgress = 0;
+        for (Task featureTask : featureTasks) {
+            totalProgress += featureTask.getProgress();
+        }
+        int averageProgress = featureTasks.isEmpty() ? 0 : totalProgress / featureTasks.size();
+        feature.setProgress(averageProgress);
+        featureRepository.save(feature);
+
+        // Tính toán progress mới cho ProjectVersion
+        ProjectVersion projectVersion = feature.getProjectVersion();
+        List<Feature> projectVersionFeatures = featureRepository.findByProjectVersionId(projectVersion.getProjectVersionId());
+        totalProgress = 0;
+        for (Feature projectVersionFeature : projectVersionFeatures) {
+            totalProgress += projectVersionFeature.getProgress();
+        }
+        averageProgress = projectVersionFeatures.isEmpty() ? 0 : totalProgress / projectVersionFeatures.size();
+        projectVersion.setProgress(averageProgress);
+        projectVersionRepository.save(projectVersion);
+
     }
 
 }
