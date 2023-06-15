@@ -156,6 +156,29 @@ public class ProjectVersionController {
         }
         return "redirect:/version/" + projectVersionId;
     }
+    @GetMapping("/user/{userId}")
+    public String getProjectVersionsByUserId(@PathVariable Integer userId, Model model) {
+        List<ProjectVersion> projectVersions = userProjectVersionService.findProjectVersionsByUserId(userId);
+        List<ProjectVersionDTO> projectVersionDTOs = new ArrayList<>(); // Danh sách ProjectVersionDTO
+
+        for (ProjectVersion projectVersion : projectVersions) {
+
+            // Lấy danh sách Feature của ProjectVersion
+            List<FeatureDTO> features = projectVersionService.findByProjectVersionId(projectVersion.getProjectVersionId());
+
+            List<UserDTO> attendees = userProjectVersionService.findUsersByProjectVersionId(projectVersion.getProjectVersionId());
+
+            ProjectVersionDTO projectVersionDTO = new ProjectVersionDTO(projectVersion, features, attendees);
+            projectVersionDTOs.add(projectVersionDTO);
+        }
+
+
+
+        model.addAttribute("projectVersionDTOs", projectVersionDTOs); // Truyền danh sách ProjectVersionDTO
+
+        return "version/userProjectVersion";
+    }
+
 
 
 }
