@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.entity.Issue;
 import com.project.entity.Task;
 import com.project.entity.User;
+import com.project.helper.CookieHelper;
 import com.project.service.IssueService;
 import com.project.service.TaskService;
 import com.project.service.UserService;
@@ -25,6 +26,8 @@ public class IssueController {
     private TaskService taskService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CookieHelper cookieHelper;
 
 
     @PostMapping("/{issueId}/delete")
@@ -45,7 +48,8 @@ public class IssueController {
     }
 
     @GetMapping("/{issueId}/edit")
-    public String showEditIssueForm(@PathVariable Integer issueId, Model model) {
+    public String showEditIssueForm(@PathVariable Integer issueId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Issue issue = issueService.getIssueById(issueId);
         System.out.println("hi"+issue.getTask().getTaskId());
         model.addAttribute("issue", issue);
@@ -81,7 +85,8 @@ public class IssueController {
     }
 
     @GetMapping("/{issueId}")
-    public String getIssueById(@PathVariable Integer issueId, Model model) {
+    public String getIssueById(@PathVariable Integer issueId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Issue issue = issueService.getIssueById(issueId);
         model.addAttribute("issue", issue);
         return "issue/issue";

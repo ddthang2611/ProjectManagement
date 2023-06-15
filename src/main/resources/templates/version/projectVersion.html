@@ -49,7 +49,7 @@
                 <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
                 <div class="row">
                     <div class="col-md-6">
-                        <p class="mb-0">Attendee: <span th:each="attendee : ${attendees}" class="d-inline" th:text="${attendee.username} + ' '"></span></p>
+                        <p class="mb-0">Attendee(s): <span th:each="attendee : ${attendees}" class="d-inline" th:text="${attendee.username} + ' '"></span></p>
                     </div>
                     <div class="col-md-6">
                         <form th:action="@{/version/{projectVersionId}/add-attendee(projectVersionId=${projectVersion.projectVersionId})}" method="post">

@@ -2,6 +2,7 @@ package com.project.controller;
 
 
 import com.project.entity.*;
+import com.project.helper.CookieHelper;
 import com.project.service.FeatureService;
 import com.project.service.ProjectVersionService;
 import com.project.service.TaskService;
@@ -11,25 +12,25 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 @RequestMapping("/feature")
 public class FeatureController {
+    @Autowired
     private FeatureService featureService;
+    @Autowired
     private ProjectVersionService projectVersionService;
+    @Autowired
     private TaskService taskService;
 
-
     @Autowired
-    public FeatureController(FeatureService featureService, ProjectVersionService projectVersionService, TaskService taskService) {
-        this.featureService = featureService;
-        this.projectVersionService = projectVersionService;
-        this.taskService = taskService;
-    }
+    private CookieHelper cookieHelper;
 
     @GetMapping("/{featureId}")
-    public String getFeatureById(@PathVariable Integer featureId, Model model) {
+    public String getFeatureById(@PathVariable Integer featureId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Feature feature = featureService.getFeatureById(featureId);
         List<Task> tasks = featureService.getTasksByFeatureId(featureId);
         model.addAttribute("feature", feature);
@@ -38,7 +39,8 @@ public class FeatureController {
     }
 
     @GetMapping("/{featureId}/edit")
-    public String showEditFeatureForm(@PathVariable Integer featureId, Model model) {
+    public String showEditFeatureForm(@PathVariable Integer featureId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Feature feature = featureService.getFeatureById(featureId);
         model.addAttribute("feature", feature);
         return "feature/edit";
@@ -77,7 +79,8 @@ public class FeatureController {
     }
 
     @GetMapping("/{featureId}/add-task")
-    public String showAddTaskForm(@PathVariable Integer featureId, Model model) {
+    public String showAddTaskForm(@PathVariable Integer featureId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Task task = new Task();
         task.setFeature(featureService.getFeatureById(featureId));
         model.addAttribute("task", task);

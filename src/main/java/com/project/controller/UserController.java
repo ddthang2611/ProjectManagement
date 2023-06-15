@@ -4,6 +4,7 @@ import com.project.entity.JwtResponse;
 import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.entity.enums.UserRole;
+import com.project.helper.CookieHelper;
 import com.project.service.JwtTokenService;
 import com.project.service.UserService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -34,9 +35,12 @@ public class UserController {
     private UserService userService;
     @Autowired
     JwtTokenService jwtTokenService;
+    @Autowired
+    private CookieHelper cookieHelper;
 
     @GetMapping("/add")
-    public String addUser(Model model) {
+    public String addUser(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         User userRequest = new User();
         model.addAttribute("userRequest", userRequest);
         return "user/add";
@@ -80,7 +84,8 @@ public class UserController {
         }
     }
     @GetMapping("/password")
-    public String showChangePasswordForm(Model model) {
+    public String showChangePasswordForm(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         model.addAttribute("password");
         return "user/password";
     }
@@ -117,7 +122,7 @@ public class UserController {
         return "user/password";
     }
     @GetMapping
-    public String getAllUsers(Model model,HttpServletRequest request, HttpServletResponse response) {
+    public String getAllUsers(Model model, HttpServletRequest request) {
         List<UserDTO> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "user/users";

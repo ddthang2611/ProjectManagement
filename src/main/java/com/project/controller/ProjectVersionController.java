@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.entity.*;
+import com.project.helper.CookieHelper;
 import com.project.service.FeatureService;
 import com.project.service.ProjectVersionService;
 import com.project.service.UserProjectVersionService;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,11 +31,10 @@ public class ProjectVersionController {
     private UserProjectVersionService userProjectVersionService;
     @Autowired
     private UserService userService;
-
     @Autowired
-    public ProjectVersionController(ProjectVersionService projectVersionService) {
-        this.projectVersionService = projectVersionService;
-    }
+    private CookieHelper cookieHelper;
+
+
 
 //    @GetMapping
 //    public String getAllProjectVersions(Model model) {
@@ -43,7 +44,8 @@ public class ProjectVersionController {
 //    }
 
     @GetMapping("/{projectVersionId}")
-    public String getProjectVersionById(@PathVariable Integer projectVersionId, Model model) {
+    public String getProjectVersionById(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
         List<FeatureDTO> features = projectVersionService.findByProjectVersionId(projectVersionId);
         List<UserDTO> attendees = userProjectVersionService.findUsersByProjectVersionId(projectVersionId);
@@ -71,7 +73,8 @@ public class ProjectVersionController {
     }
 
     @GetMapping("/{projectVersionId}/edit")
-    public String showEditProjectVersionForm(@PathVariable Integer projectVersionId, Model model) {
+    public String showEditProjectVersionForm(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
         model.addAttribute("projectVersion", projectVersion);
         return "version/edit";
@@ -111,7 +114,8 @@ public class ProjectVersionController {
     }
 
     @GetMapping("/{projectVersionId}/add-feature")
-    public String showAddFeatureForm(@PathVariable Integer projectVersionId, Model model) {
+    public String showAddFeatureForm(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Feature feature = new Feature();
         feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
         model.addAttribute("feature", feature);
@@ -157,7 +161,8 @@ public class ProjectVersionController {
         return "redirect:/version/" + projectVersionId;
     }
     @GetMapping("/user/{userId}")
-    public String getProjectVersionsByUserId(@PathVariable Integer userId, Model model) {
+    public String getProjectVersionsByUserId(@PathVariable Integer userId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         List<ProjectVersion> projectVersions = userProjectVersionService.findProjectVersionsByUserId(userId);
         List<ProjectVersionDTO> projectVersionDTOs = new ArrayList<>(); // Danh sách ProjectVersionDTO
 

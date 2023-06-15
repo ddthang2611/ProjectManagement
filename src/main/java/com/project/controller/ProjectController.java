@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.entity.*;
+import com.project.helper.CookieHelper;
 import com.project.service.ProjectService;
 import com.project.service.ProjectVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +23,13 @@ public class ProjectController {
     private ProjectService projectService;
     @Autowired
     private ProjectVersionService projectVersionService;
-
     @Autowired
-    public ProjectController(ProjectService projectService, ProjectVersionService projectVersionService) {
-        this.projectService = projectService;
-        this.projectVersionService = projectVersionService;
-    }
+    private CookieHelper cookieHelper;
+
 
     @GetMapping
-    public String getAllProjects(Model model) {
+    public String getAllProjects(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         List<Project> projects = projectService.getAllProjects();
         List<ProjectDTO> projectDTOs = new ArrayList<>();
         for (Project project : projects) {
@@ -42,7 +43,8 @@ public class ProjectController {
 
 
     @GetMapping("/{projectId}")
-    public String getProjectById(@PathVariable Integer projectId, Model model) {
+    public String getProjectById(@PathVariable Integer projectId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Project project = projectService.getProjectById(projectId);
         List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
         ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
@@ -50,15 +52,17 @@ public class ProjectController {
         return "project/project";
     }
 
-    @GetMapping("/create")
-    public String showCreateProjectForm(Model model) {
+    @GetMapping("/add")
+    public String showCreateProjectForm(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Project project = new Project();
         model.addAttribute("project", project);
-        return "project/create";
+        return "project/add";
     }
 
-    @PostMapping("/create")
-    public String createProject(@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes) {
+    @PostMapping("/add")
+    public String createProject(@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes,HttpServletRequest request, Model model) {
+        cookieHelper.addCookieAttributes(request, model);
         try {
             projectService.createProject(project);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
@@ -71,7 +75,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/edit")
-    public String showEditProjectForm(@PathVariable Integer projectId, Model model) {
+    public String showEditProjectForm(@PathVariable Integer projectId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Project project = projectService.getProjectById(projectId);
         List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
         ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
@@ -109,7 +114,8 @@ public class ProjectController {
 
 
     @GetMapping("/{projectId}/versions")
-    public String getProjectVersionsByProjectId(@PathVariable Integer projectId, Model model) {
+    public String getProjectVersionsByProjectId(@PathVariable Integer projectId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         List<ProjectVersion> projectVersions = projectService.getProjectVersionsByProjectId(projectId);
         model.addAttribute("projectVersions", projectVersions);
         return "project/versions";
@@ -129,7 +135,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/add-version")
-    public String showAddProjectVersionForm(@PathVariable Integer projectId, Model model) {
+    public String showAddProjectVersionForm(@PathVariable Integer projectId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         ProjectVersion projectVersion = new ProjectVersion();
         projectVersion.setProject(projectService.getProjectById(projectId));
         model.addAttribute("projectVersion", projectVersion);

@@ -56,18 +56,28 @@ public class LoginController {
             tokenCookie.setHttpOnly(true);
             tokenCookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
 
-            Cookie userCookie = new Cookie("user", String.valueOf(userDetail.getUserId()));
+            Cookie userCookie = new Cookie("userId", String.valueOf(userDetail.getUserId()));
             userCookie.setPath("/");
             userCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
             userCookie.setHttpOnly(true);
             userCookie.setSecure(true);
 
+            Cookie roleCookie = new Cookie("role", String.valueOf(userDetail.getRole()));
+            roleCookie.setPath("/");
+            roleCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+            roleCookie.setHttpOnly(true);
+            roleCookie.setSecure(true);
+
             response.addCookie(tokenCookie);
             response.addCookie(userCookie);
+            response.addCookie(roleCookie);
+            
             if(userDetail.getRole().equals(UserRole.ADMIN)){
                 return "redirect:/user";
-            } else {
+            } else if(userDetail.getRole().equals(UserRole.MANAGER)){
                 return "redirect:/project";
+            } else {
+                return "redirect:/version/user/"+userDetail.getUserId();
             }
         } else {
             System.out.println("redirect to login");

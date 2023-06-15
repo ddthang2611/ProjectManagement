@@ -4,6 +4,7 @@ import com.project.entity.Issue;
 import com.project.entity.Task;
 import com.project.entity.TaskDTO;
 import com.project.entity.User;
+import com.project.helper.CookieHelper;
 import com.project.service.IssueService;
 import com.project.service.TaskService;
 import com.project.service.UserService;
@@ -27,15 +28,14 @@ public class TaskController {
     private IssueService issueService;
     @Autowired
     private UserService userService;
-
     @Autowired
-    public TaskController(TaskService taskService, IssueService issueService) {
-        this.taskService = taskService;
-        this.issueService = issueService;
-    }
+    private CookieHelper cookieHelper;
+
+
 
     @GetMapping("/{taskId}")
-    public String getTaskById(@PathVariable Integer taskId, Model model) {
+    public String getTaskById(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Task task = taskService.getTaskById(taskId);
         List<Issue> issues = taskService.getIssuesByTaskId(taskId);
         model.addAttribute("task", task);
@@ -44,7 +44,8 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}/edit")
-    public String showEditTaskForm(@PathVariable Integer taskId, Model model) {
+    public String showEditTaskForm(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         TaskDTO task = taskService.getTaskDTOById(taskId);
         model.addAttribute("task", task);
         return "task/edit";
@@ -83,7 +84,8 @@ public class TaskController {
         return "redirect:/feature/"+featureId;
     }
     @GetMapping("/{taskId}/add-issue")
-    public String showAddIssueForm(@PathVariable Integer taskId, Model model) {
+    public String showAddIssueForm(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Issue issue = new Issue();
         issue.setTask(taskService.getTaskById(taskId));
         model.addAttribute("issue", issue);
