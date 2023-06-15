@@ -47,6 +47,32 @@
             </div>
             <div class="card-body">
                 <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0">Attendee: <span th:each="attendee : ${attendees}" class="d-inline" th:text="${attendee.username} + ' '"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <form th:action="@{/version/{projectVersionId}/add-attendee(projectVersionId=${projectVersion.projectVersionId})}" method="post">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="userDropdown">Select User</label>
+                                </div>
+                                <select class="custom-select" id="userDropdown" name="userId">
+                                    <option selected disabled>Choose...</option>
+                                    <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}"></option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Add Attendee</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+
+
+
                 <ul class="list-group">
                     <li th:each="feature : ${features}" class="list-group-item">
                         <a th:href="@{/feature/{id}(id=${feature.feature.id})}" class="no-underline">

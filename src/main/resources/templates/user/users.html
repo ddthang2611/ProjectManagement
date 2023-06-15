@@ -32,6 +32,7 @@
                     <form method="POST" th:action="@{/user/update-role/{id}(id=${user.userId})}" class="mt-n1">
                         <div class="d-flex align-items-center">
                         <select class="form-control" name="newRole">
+                            <option selected disabled>Choose...</option>
                             <option value="USER" th:text="USER" th:selected="${user.role == 'USER'}"></option>
                             <option value="MANAGER" th:text="MANAGER" th:selected="${user.role == 'MANAGER'}"></option>
                         </select>
