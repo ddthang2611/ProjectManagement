@@ -92,7 +92,7 @@ public class UserController {
     @PostMapping("/password")
     public String updateUserPassword(@RequestParam("oldPass") String oldPass,
                                                 @RequestParam("newPass") String newPass,
-                                                Model model, HttpServletRequest request) throws Exception {
+                                     RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
     String token = jwtTokenService.getTokenFromRequest(request);
     User user = jwtTokenService.getUserFromToken(token);
     user.setPassword(oldPass);
@@ -101,11 +101,11 @@ public class UserController {
             // Gọi hàm updatePassword với id là 1 và password mới
             int id = user.getUserId();
             User updatedUser = userService.updatePassword(id, newPass);
-            model.addAttribute("message", "Update successful!");
-            model.addAttribute("messageType","success");
+            redirectAttributes.addFlashAttribute("message", "Update successful!");
+            redirectAttributes.addFlashAttribute("messageType","success");
         } else {
-            model.addAttribute("message", "Current Password is wrong!");
-            model.addAttribute("messageType","error");
+            redirectAttributes.addFlashAttribute("message", "Current Password is wrong!");
+            redirectAttributes.addFlashAttribute("messageType","error");
         }
         //        try {
 //            // Lấy người dùng hiện tại từ token
@@ -119,10 +119,11 @@ public class UserController {
 //            String errorMessage = e.getMessage();
 //            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
-        return "user/password";
+        return "redirect:/user/password";
     }
     @GetMapping
     public String getAllUsers(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         List<UserDTO> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "user/users";
