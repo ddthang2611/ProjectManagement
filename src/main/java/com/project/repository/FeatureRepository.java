@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FeatureRepository extends JpaRepository<Feature, Integer> {
@@ -16,11 +17,20 @@ public interface FeatureRepository extends JpaRepository<Feature, Integer> {
     @Query("UPDATE Feature f SET f.enable = :enable WHERE f.id = :featureId")
     int setEnableById(@Param("featureId") Integer featureId, @Param("enable") boolean enable);
 
-    @Query("SELECT f FROM Feature f WHERE f.projectVersion.projectVersionId = :projectVersionId")
+    @Override
+    @Query("SELECT f FROM Feature f WHERE f.enable = true")
+    List<Feature> findAll();
+
+    @Override
+    @Query("SELECT f FROM Feature f WHERE f.enable = true AND f.id = :id")
+    Optional<Feature> findById(@Param("id") Integer id);
+
+    @Query("SELECT f FROM Feature f WHERE f.projectVersion.projectVersionId = :projectVersionId AND f.enable = true")
     List<Feature> findByProjectVersionId(@Param("projectVersionId") Integer projectVersionId);
 
-    @Query("SELECT t FROM Task t WHERE t.feature.id = :featureId")
+    @Query("SELECT t FROM Task t WHERE t.feature.id = :featureId AND t.feature.enable = true")
     List<Task> findTasksByFeatureId(@Param("featureId") Integer featureId);
+
 
 
 }

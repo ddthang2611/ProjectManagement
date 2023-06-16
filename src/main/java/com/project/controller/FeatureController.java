@@ -52,6 +52,7 @@ public class FeatureController {
                                 RedirectAttributes redirectAttributes) {
         try {
             feature.setId(featureId);
+            feature.setEnable(true);
             featureService.updateFeature(feature);
             redirectAttributes.addFlashAttribute("message", "Updated Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -81,6 +82,7 @@ public class FeatureController {
     public String showAddTaskForm(@PathVariable Integer featureId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Task task = new Task();
+        task.setEnable(true);
         task.setFeature(featureService.getFeatureById(featureId));
         model.addAttribute("task", task);
         return "task/add";
@@ -92,6 +94,7 @@ public class FeatureController {
                           RedirectAttributes redirectAttributes) {
         try {
             task.setFeature(featureService.getFeatureById(featureId));
+            task.setEnable(true);
             taskService.addTask(task);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");

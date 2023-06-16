@@ -23,9 +23,6 @@ public class ProjectVersionService {
     private TaskRepository taskRepository;
 
 
-    public ProjectVersionService(ProjectVersionRepository projectVersionRepository) {
-        this.projectVersionRepository = projectVersionRepository;
-    }
 
     public void disableProjectVersion(Integer projectVersionId) {
         ProjectVersion projectVersion = projectVersionRepository.findById(projectVersionId)

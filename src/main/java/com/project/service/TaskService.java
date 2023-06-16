@@ -30,7 +30,8 @@ public class TaskService {
     public void deleteTask(Integer taskId) {
         List<Issue> issues = issueRepository.findIssuesByTaskId(taskId);
         for (Issue issue : issues) {
-            issueRepository.setEnableById(issue.getIssueId(), false);
+//            issueRepository.setEnableById(issue.getIssueId(), false);
+            issueRepository.delete(issue);
         }
 
         taskRepository.setEnableById(taskId, false);
@@ -81,6 +82,7 @@ public class TaskService {
             task.setProgress(taskDTO.getProgress());
             task.setStatus(taskDTO.getStatus());
             task.setPriority(taskDTO.getPriority());
+            task.setEnable(true);
             taskRepository.save(task);
         }
         updateProgress(task);

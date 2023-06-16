@@ -87,9 +87,7 @@ public class TaskController {
     public String showAddIssueForm(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Issue issue = new Issue();
-        issue.setTask(taskService.getTaskById(taskId));
         model.addAttribute("issue", issue);
-        System.out.println("hi");
         return "issue/add";
     }
 

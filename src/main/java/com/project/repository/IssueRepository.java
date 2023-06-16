@@ -14,8 +14,8 @@ public interface IssueRepository extends JpaRepository<Issue, Integer> {
     @Query("SELECT i FROM Issue i WHERE i.task.taskId = :taskId")
     List<Issue> findIssuesByTaskId(int taskId);
 
-    @Modifying
-    @Query("UPDATE Issue i SET i.enable = :enable WHERE i.issueId = :issueId")
-    int setEnableById(@Param("issueId") Integer issueId, @Param("enable") boolean enable);
+//    @Modifying
+//    @Query("UPDATE Issue i SET i.enable = :enable WHERE i.issueId = :issueId")
+//    int setEnableById(@Param("issueId") Integer issueId, @Param("enable") boolean enable);
 
 }

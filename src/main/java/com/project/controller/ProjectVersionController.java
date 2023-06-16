@@ -87,6 +87,7 @@ public class ProjectVersionController {
         System.out.println(projectVersion.toString());
         try {
             projectVersion.setProjectVersionId(projectVersionId);
+            projectVersion.setEnable(true);
             projectVersionService.updateProjectVersion(projectVersion);
 
             redirectAttributes.addFlashAttribute("message", "Updated Successfully");
@@ -129,6 +130,7 @@ public class ProjectVersionController {
 
         try {
             feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
+            feature.setEnable(true);
             featureService.addFeature(feature);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
