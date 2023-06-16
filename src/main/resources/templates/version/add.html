@@ -7,9 +7,10 @@
     <title>Add Project Version</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="container mt-5">
     <h1>Add Project Version</h1>
-
+    <div th:replace="fragments/message :: div"></div>
     <form th:action="@{/project/{projectId}/add-version(projectId=${projectId})}" method="post">
 
         <div class="form-group">

@@ -63,7 +63,7 @@ public class TaskController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/task/" + taskId;
+            return "redirect:/task/" + taskId +"/edit";
         }
         return "redirect:/task/" + taskId;
     }

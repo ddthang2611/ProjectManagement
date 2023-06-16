@@ -7,9 +7,10 @@
     <title>Edit Project Version</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="container mt-5">
     <h1>Edit Project Version</h1>
-
+    <div th:replace="fragments/message :: div"></div>
     <form th:action="@{/version/{projectVersionId}/edit(projectVersionId=${projectVersion.projectVersionId})}" method="post">
 
         <div class="form-group" hidden>

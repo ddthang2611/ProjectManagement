@@ -7,9 +7,10 @@
     <title>Edit Issue</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="container mt-5">
     <h1>Edit Issue</h1>
-
+    <div th:replace="fragments/message :: div"></div>
     <form th:action="@{/issue/{issueId}/edit(issueId=${issue.issueId})}" method="post" th:object="${issue}">
         <input type="text" class="form-control" id="taskId" name="taskId" th:field="*{task.taskId}" hidden="hidden">
 

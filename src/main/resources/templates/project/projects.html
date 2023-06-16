@@ -20,8 +20,6 @@
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
   <h1>Project List</h1>
-
-
   <div th:replace="fragments/message :: div"></div>
   <div th:each="projectDTO : ${projectDTOs}">
     <div class="card mb-3">

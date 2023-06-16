@@ -7,9 +7,10 @@
     <title>Add Issue</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="container mt-5">
     <h1>Add Issue</h1>
-
+    <div th:replace="fragments/message :: div"></div>
     <form th:action="@{/task/{taskId}/add-issue(taskId=${taskId})}" method="post">
 
         <div class="form-group">

@@ -12,6 +12,7 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h1>Add User</h1>
+            <div th:replace="fragments/message :: div"></div>
             <form method="POST" th:action="@{add}">
                 <div class="form-group">
                     <label for="username">Username:</label>
