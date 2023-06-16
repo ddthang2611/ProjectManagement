@@ -28,13 +28,15 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(Integer taskId) {
+        List<Issue> issues = issueRepository.findIssuesByTaskId(taskId);
+        for (Issue issue : issues) {
+            issueRepository.setEnableById(issue.getIssueId(), false);
+        }
 
-        taskRepository.deleteById(taskId);
+        taskRepository.setEnableById(taskId, false);
     }
 
-    public void updateTask(Task task) {
-        taskRepository.save(task);
-    }
+
 
     public void addTask(Task task) {
 

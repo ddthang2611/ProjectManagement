@@ -53,7 +53,6 @@ public class FeatureController {
         try {
             feature.setId(featureId);
             featureService.updateFeature(feature);
-
             redirectAttributes.addFlashAttribute("message", "Updated Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (Exception e) {

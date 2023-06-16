@@ -31,8 +31,8 @@ public class Feature {
     @JoinColumn(name = "project_version_id", nullable = false)
     private ProjectVersion projectVersion;
 
-    @OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
+//    @OneToMany(mappedBy = "feature", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Task> tasks;
     @Column(name = "start_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
@@ -51,6 +51,9 @@ public class Feature {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @Column(name = "enable")
+    private boolean enable;
 
 
 }

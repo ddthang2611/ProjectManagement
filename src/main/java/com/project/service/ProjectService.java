@@ -32,6 +32,7 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) {
+        project.setEnable(true);
         return projectRepository.save(project);
     }
 

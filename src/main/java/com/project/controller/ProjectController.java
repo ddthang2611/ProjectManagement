@@ -149,6 +149,8 @@ public class ProjectController {
                                     RedirectAttributes redirectAttributes) {
         try {
             projectVersion.setProject(projectService.getProjectById(projectId)); // Set Project cho ProjectVersion
+            projectVersion.setProgress(0);
+            projectVersion.setEnable(true);
             projectVersionService.addProjectVersion(projectVersion);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");

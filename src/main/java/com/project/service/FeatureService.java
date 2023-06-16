@@ -31,16 +31,12 @@ public class FeatureService {
 
     @Transactional
     public void deleteFeature(Integer featureId) {
-        Feature feature = featureRepository.findById(featureId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid featureId: " + featureId));
-
-        // Xóa tất cả các Task có cùng Feature Id
         List<Task> tasks = taskRepository.findTasksByFeatureId(featureId);
         for (Task task : tasks) {
-            taskRepository.delete(task);
+            taskRepository.setEnableById(task.getTaskId(),false);
         }
 
-        featureRepository.deleteById(featureId);
+        featureRepository.setEnableById(featureId, false);
     }
 
     public void updateFeature(Feature feature) {

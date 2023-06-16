@@ -41,8 +41,8 @@ public class Task {
     @JoinColumn(name = "assigned_to", referencedColumnName = "user_id")
     private User assignedTo;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CheckIn> checkIns;
+//    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues;
@@ -68,5 +68,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
     private Priority priority;
+
+    @Column(name = "enable")
+    private boolean enable;
 
 }

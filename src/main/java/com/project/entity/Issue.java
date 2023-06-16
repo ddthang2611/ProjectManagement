@@ -43,6 +43,8 @@ public class Issue {
     @Column(name = "created_at")
     private Date createdAt;
 
+    @Column(name = "enable")
+    private boolean enable;
 
 }
 
