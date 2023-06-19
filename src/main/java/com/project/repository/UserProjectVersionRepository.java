@@ -19,6 +19,9 @@ public interface UserProjectVersionRepository extends JpaRepository<UserProjectV
     @Query("SELECT u FROM User u INNER JOIN UserProjectVersion upv ON u.userId = upv.user.userId WHERE upv.projectVersion.projectVersionId = :projectVersionId")
     List<User> findUsersByProjectVersionId(Integer projectVersionId);
 
+    @Query("SELECT upv FROM UserProjectVersion upv WHERE upv.projectVersion.projectVersionId = :projectVersionId")
+    List<UserProjectVersion> findByProjectVersionId(Integer projectVersionId);
+
 
 }
 

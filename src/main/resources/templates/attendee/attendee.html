@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Attendees</title>
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script th:src="@{../static/js/DeleteConfirmation.js}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="container">
+        <h2 class="mb-3">Edit Attendees</h2>
+        <div th:replace="fragments/message :: div"></div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Add</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="attendee : ${attendees}" class="align-items-center">
+                <td th:text="${attendee.id}"></td>
+                <td th:text="${attendee.user.username}"></td>
+                <div class="d-flex">
+                    <form class="d-inline" method="POST" th:action="@{/attendee/{userProjectVersionId}/edit(userProjectVersionId=${attendee.id})}">
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="hidden" name="id" th:value="${attendee.id}">
+                                <input class="form-check-input" type="hidden" name="userId" th:value="${attendee.user.userId}">
+                                <input class="form-check-input" type="hidden" name="username" th:value="${attendee.user.username}">
+                                <input class="form-check-input" type="checkbox" name="add" id="addSwitch" th:checked="${attendee.add}">
+                                <label class="form-check-label" for="addSwitch"></label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="edit" id="editSwitch" th:checked="${attendee.edit}">
+                                <label class="form-check-label" for="editSwitch"></label>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="delete" id="deleteSwitch" th:checked="${attendee.delete}" />
+                                <label class="form-check-label" for="deleteSwitch"></label>
+                            </div>
+                        </td>
+
+                        <td>
+                        <button class="btn btn-primary" type="submit">Edit</button>
+                    </form>
+                    <form th:action="@{/attendee/{userProjectVersionId}/delete(userProjectVersionId=${attendee.id})}" method="post" class="d-inline" onsubmit="return confirmDelete(event)">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+
+                </td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-secondary float-right" th:href="@{/version/{id}(id=${projectVersionId})}">
+            Back
+        </a>
+<!--        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>-->
+<!--        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
+    </div>
+</div>
+
+
+<!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
+</body>
+</html>

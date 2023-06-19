@@ -1,5 +1,4 @@
 function confirmDelete(event) {
-    console.log('hi')
     event.preventDefault(); // Prevent form submission
     Swal.fire({
         title: 'Are you sure to delete?',

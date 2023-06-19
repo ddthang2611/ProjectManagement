@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserProjectVersionService {
@@ -47,5 +48,18 @@ public class UserProjectVersionService {
         }
 
         return userDTOs;
+    }
+    public UserProjectVersion editUserProjectVersion(UserProjectVersion userProjectVersion) {
+        return userProjectVersionRepository.save(userProjectVersion);
+    }
+    public void deleteUserProjectVersion(Integer userProjectVersionId) {
+        userProjectVersionRepository.deleteById(userProjectVersionId);
+    }
+    public List<UserProjectVersion> findUserProjectVersionsByProjectVersionId(Integer projectVersionId) {
+        return userProjectVersionRepository.findByProjectVersionId(projectVersionId);
+    }
+    public UserProjectVersion findById(Integer id) {
+        Optional<UserProjectVersion> userProjectVersionOptional = userProjectVersionRepository.findById(id);
+        return userProjectVersionOptional.orElse(null);
     }
 }

@@ -152,6 +152,9 @@ public class ProjectVersionController {
             UserProjectVersion userProjectVersion = new UserProjectVersion();
             userProjectVersion.setUser(user);
             userProjectVersion.setProjectVersion(projectVersion);
+            userProjectVersion.setAdd(false);
+            userProjectVersion.setEdit(false);
+            userProjectVersion.setDelete(false);
             userProjectVersionService.add(userProjectVersion);
             redirectAttributes.addFlashAttribute("message", "Added Attendee Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -162,6 +165,24 @@ public class ProjectVersionController {
         }
         return "redirect:/version/" + projectVersionId;
     }
+
+    @GetMapping("/{projectVersionId}/attendees")
+    public String showEditAttendeesForm(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+        List<UserProjectVersion> attendees= null;
+        try {
+            attendees = userProjectVersionService.findUserProjectVersionsByProjectVersionId(projectVersionId);
+            System.out.println(attendees.toString());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        model.addAttribute("versionId",projectVersionId);
+        model.addAttribute("attendees", attendees);
+        return "attendee/attendee";
+    }
+
+
+
     @GetMapping("/user/{userId}")
     public String getProjectVersionsByUserId(@PathVariable Integer userId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
