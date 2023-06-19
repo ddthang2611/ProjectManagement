@@ -38,8 +38,10 @@ public class TaskController {
         cookieHelper.addCookieAttributes(request, model);
         Task task = taskService.getTaskById(taskId);
         List<Issue> issues = taskService.getIssuesByTaskId(taskId);
+        List<User> attendees = taskService.findAttendeesByTaskId(taskId);
         model.addAttribute("task", task);
         model.addAttribute("issues", issues);
+        model.addAttribute("attendees",attendees);
         return "task/task";
     }
 
@@ -83,6 +85,7 @@ public class TaskController {
         }
         return "redirect:/feature/"+featureId;
     }
+
     @GetMapping("/{taskId}/add-issue")
     public String showAddIssueForm(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
@@ -118,6 +121,26 @@ public class TaskController {
         }
         return "redirect:/task/" + taskId;
     }
+    @PostMapping("/{taskId}/assign")
+    public String assignTask(@PathVariable Integer taskId, @RequestParam Integer userId, RedirectAttributes redirectAttributes) {
+        Task task = taskService.getTaskById(taskId);
+        User assignedUser = userService.getUserById(userId);
+
+        try {
+            // Gán người dùng được chọn vào task
+            task.setAssignedTo(assignedUser);
+            taskService.save(task);
+
+            redirectAttributes.addFlashAttribute("message", "Task assigned successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
+
+        return "redirect:/task/" + taskId;
+    }
+
 
 }
 

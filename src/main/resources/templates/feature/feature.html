@@ -24,7 +24,7 @@
     <div>
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 th:text="${feature.name}"></h5>
+                <h5 th:text="'Feature: ' + ${feature.name}"></h5>
                 <div  th:if="${role == 'MANAGER'}">
                     <a class="btn btn-primary" th:href="@{/feature/{featureId}/edit(featureId=${feature.id})}">
                         Edit
@@ -46,8 +46,9 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <p>Status: <span th:text="${task.status}"></span></p>
                                 <p>Task: <span th:text="${task.taskName}"></span></p>
-                            </div>
+                                </div>
                             <p>Description: <span th:text="${task.taskDescription}"></span></p>
+                            <p>Assign: <span  th:text="${task.assignedTo.username}"></span></p>
                             <div th:replace="fragments/progressbar :: div(progress=${task.progress})"></div>
                         </a>
                     </li>

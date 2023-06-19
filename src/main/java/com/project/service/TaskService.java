@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.entity.*;
+import com.project.entity.enums.Status;
 import com.project.repository.FeatureRepository;
 import com.project.repository.IssueRepository;
 import com.project.repository.ProjectVersionRepository;
@@ -87,6 +88,9 @@ public class TaskService {
         }
         updateProgress(task);
     }
+    public void save(Task task){
+        taskRepository.save(task);
+    }
 
     public void updateProgress(Task task) {
 //        Task savedTask = taskRepository.save(task);
@@ -100,6 +104,9 @@ public class TaskService {
         }
         int averageProgress = featureTasks.isEmpty() ? 0 : totalProgress / featureTasks.size();
         feature.setProgress(averageProgress);
+        System.out.println("hi"+feature.getProgress());
+        if(feature.getProgress() == 100){
+            feature.setStatus(Status.COMPLETED);}
         featureRepository.save(feature);
 
         // Tính toán progress mới cho ProjectVersion
@@ -111,8 +118,13 @@ public class TaskService {
         }
         averageProgress = projectVersionFeatures.isEmpty() ? 0 : totalProgress / projectVersionFeatures.size();
         projectVersion.setProgress(averageProgress);
+        if (projectVersion.getProgress() == 100){projectVersion.setStatus(Status.COMPLETED);}
         projectVersionRepository.save(projectVersion);
 
+    }
+    public List<User> findAttendeesByTaskId(Integer taskId) {
+        List<User> attendees = taskRepository.findAttendeesByTaskId(taskId);
+        return attendees;
     }
 
 }

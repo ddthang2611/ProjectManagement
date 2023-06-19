@@ -1,9 +1,6 @@
 package com.project.service;
 
-import com.project.entity.Feature;
-import com.project.entity.FeatureDTO;
-import com.project.entity.ProjectVersion;
-import com.project.entity.Task;
+import com.project.entity.*;
 import com.project.repository.FeatureRepository;
 import com.project.repository.ProjectVersionRepository;
 import com.project.repository.TaskRepository;
@@ -58,6 +55,9 @@ public class FeatureService {
     public List<Task> getTasksByFeatureId(Integer featureId) {
         return taskRepository.findTasksByFeatureId(featureId);
     }
-
+    public List<User> findAttendeesByFeatureId(Integer featureId) {
+        List<User> attendees = featureRepository.findAttendeesByFeatureId(featureId);
+        return attendees;
+    }
 }
 

@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import com.project.entity.*;
+import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
 import com.project.service.FeatureService;
 import com.project.service.ProjectVersionService;
@@ -55,7 +56,7 @@ public class ProjectVersionController {
         for (UserDTO user : users) {
             boolean isAttendee = false;
             for (UserDTO attendee : attendees) {
-                if (user.getUserId() == attendee.getUserId()) {
+                if (user.getUserId() == attendee.getUserId() || user.getRole() == UserRole.MANAGER) {
                     isAttendee = true;
                     break;
                 }

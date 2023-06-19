@@ -1,5 +1,6 @@
 package com.project.repository;
 import com.project.entity.Task;
+import com.project.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,10 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Modifying
     @Query("UPDATE Task t SET t.enable = :enable WHERE t.taskId = :taskId")
     int setEnableById(@Param("taskId") Integer taskId, @Param("enable") boolean enable);
+
+    @Query("SELECT DISTINCT upv.user FROM UserProjectVersion upv WHERE upv.projectVersion IN (SELECT t.feature.projectVersion FROM Task t WHERE t.taskId = :taskId)")
+    List<User> findAttendeesByTaskId(@Param("taskId") Integer taskId);
+
 
 }
 
