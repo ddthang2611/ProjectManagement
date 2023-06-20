@@ -37,5 +37,12 @@ public class EmployeeAnalysisService {
 //        System.out.println(e.toString());
         return new EmployeeAnalysis(assignedTasks, completedTasks, overdueTasks, avgDaysOverdue,employeeName);
     }
+    public int countTasksByEmployeeId(int employeeId){
+        return taskRepository.countByAssignedTo(employeeId);
+    }
+
+    public int getTotalTask(){
+        return taskRepository.getTotalTask();
+    }
 
 }

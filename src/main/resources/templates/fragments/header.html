@@ -23,7 +23,10 @@
             <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/project">Project</a>
           </li>
           <li class="nav-item ml-auto">
-            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis/user">Employee Analysis</a>
+            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis/user">Bar Chart</a>
+          </li>
+          <li class="nav-item ml-auto">
+            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis/pie-chart/user">Pie Chart</a>
           </li>
           <li class="nav-item ml-auto">
             <a th:if="${role == 'USER'}" class="nav-link navbar-text" th:href="@{/version/user/{userId}(userId=${userId})}">Project</a>
