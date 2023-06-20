@@ -35,6 +35,4 @@ public interface FeatureRepository extends JpaRepository<Feature, Integer> {
     @Query("SELECT DISTINCT upv.user FROM UserProjectVersion upv WHERE upv.projectVersion IN (SELECT f.projectVersion FROM Feature f WHERE f.id = :featureId)")
     List<User> findAttendeesByFeatureId(@Param("featureId") Integer featureId);
 
-
-
 }

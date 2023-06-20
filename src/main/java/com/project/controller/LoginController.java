@@ -1,9 +1,11 @@
 package com.project.controller;
 
+import com.project.entity.EmployeeAnalysis;
 import com.project.entity.JwtResponse;
 import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.entity.enums.UserRole;
+import com.project.service.EmployeeAnalysisService;
 import com.project.service.JwtTokenService;
 import com.project.service.UserService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -36,10 +38,10 @@ public class LoginController {
     private UserService userService;
     @Autowired
     JwtTokenService jwtTokenService;
+    @Autowired
+    EmployeeAnalysisService employeeAnalysisService;
     @GetMapping
-    public String getLoginPage() {
-        return "login";
-    }
+    public String getLoginPage() {return "login";}
 
     @PostMapping
     public String login(HttpSession session, @ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {

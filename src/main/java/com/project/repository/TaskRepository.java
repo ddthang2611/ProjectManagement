@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +35,16 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT DISTINCT upv.user FROM UserProjectVersion upv WHERE upv.projectVersion IN (SELECT t.feature.projectVersion FROM Task t WHERE t.taskId = :taskId)")
     List<User> findAttendeesByTaskId(@Param("taskId") Integer taskId);
 
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignedTo.userId = :employeeId")
+    Integer countByAssignedTo(@Param("employeeId") int employeeId);
 
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignedTo.userId = :employeeId AND t.status = 'COMPLETED'")
+    Integer countCompletedTasks(@Param("employeeId") int employeeId);
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignedTo.userId = :employeeId AND ((t.status = 'COMPLETED' AND t.endDate > t.estimatedEndDate) OR (t.status = 'PROCESSING' AND t.estimatedEndDate < :currentDate))")
+    Integer countOverdueTasks(@Param("employeeId") int employeeId, @Param("currentDate") Date currentDate);
+
+    @Query("SELECT AVG(CASE WHEN t.status = 'COMPLETED' THEN DATEDIFF(t.endDate, t.estimatedEndDate) ELSE DATEDIFF(:currentDate, t.estimatedEndDate) END) FROM Task t WHERE t.assignedTo.userId = :employeeId AND ((t.status = 'COMPLETED' AND t.endDate > t.estimatedEndDate) OR (t.status = 'PROCESSING' AND t.estimatedEndDate < :currentDate))")
+    Double calculateAverageDaysOverdue(@Param("employeeId") int employeeId, @Param("currentDate") Date currentDate);
 }
 
