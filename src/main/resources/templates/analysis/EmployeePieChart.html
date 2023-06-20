@@ -43,8 +43,10 @@
     data.push([userName, taskCount, percentage]);
   }
 
-  var unassignedPercentage = ((totalTasks - data.reduce((sum, item) => sum + item[2], 0)) / totalTasks) * 100;
-  data.push(['Unassigned', '', unassignedPercentage]);
+  var assignedTaskCount = data.reduce((sum, item) => sum + item[1], 0);
+  var unassignedTaskCount = totalTasks - assignedTaskCount;
+  var unassignedPercentage = (unassignedTaskCount / totalTasks) * 100;
+  data.push(['Unassigned', unassignedTaskCount, unassignedPercentage]);
 
   Highcharts.chart('chart', {
     chart: {

@@ -55,6 +55,7 @@ public class AnalysisController {
             int employeeId = user.getUserId();
             int tasksCount = employeeAnalysisService.countTasksByEmployeeId(employeeId);
             String employeeName = user.getUsername();
+            System.out.println(employeeId+":"+tasksCount);
             Map<String, Object> employeeTaskMap = new HashMap<>();
             employeeTaskMap.put("userName", employeeName);
             employeeTaskMap.put("taskCount", tasksCount);
