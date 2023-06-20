@@ -112,9 +112,13 @@
             </div>
         </div>
     </div>
+
     <a class="btn btn-secondary float-right" th:href="@{/project/{projectId}(projectId=${projectVersion.project.projectId})}">
         Back
     </a>
+    <a th:href="@{/version/{projectVersionId}/kaban-board(projectVersionId=${projectVersion.projectVersionId})}"
+       class="btn btn-success float-right mr-1">Kaban Board</a>
+
 </div>
 </body>
 </html>

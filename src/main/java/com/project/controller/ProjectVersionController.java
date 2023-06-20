@@ -37,12 +37,6 @@ public class ProjectVersionController {
 
 
 
-//    @GetMapping
-//    public String getAllProjectVersions(Model model) {
-//        List<ProjectVersion> projectVersions = projectVersionService.get;
-//        model.addAttribute("projectVersions", projectVersions);
-//        return "project-version/project-versions";
-//    }
 
     @GetMapping("/{projectVersionId}")
     public String getProjectVersionById(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
@@ -208,6 +202,38 @@ public class ProjectVersionController {
         return "version/userProjectVersion";
     }
 
+    @GetMapping("/{projectVersionId}/kaban-board")
+    public String getKanbanBoard(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+        ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);
+        List<Task> tasks = projectVersionService.getTasksByProjectVersionId(projectVersionId);
+
+        List<Task> inProgressTasks = new ArrayList<>();
+        List<Task> toDoTasks = new ArrayList<>();
+        List<Task> doneTasks = new ArrayList<>();
+
+        for (Task task : tasks) {
+            switch (task.getStatus()) {
+                case PROCESSING:
+                    inProgressTasks.add(task);
+                    break;
+                case PENDING:
+                case POSTPONED:
+                    toDoTasks.add(task);
+                    break;
+                case COMPLETED:
+                    doneTasks.add(task);
+                    break;
+            }
+        }
+
+        model.addAttribute("projectVersion", projectVersion);
+        model.addAttribute("inProgressTasks", inProgressTasks);
+        model.addAttribute("toDoTasks", toDoTasks);
+        model.addAttribute("doneTasks", doneTasks);
+
+        return "version/kaban-board";
+    }
 
 
 }

@@ -59,4 +59,8 @@ public class ProjectVersionService {
 
         return featureDTOs;
     }
+
+    public List<Task> getTasksByProjectVersionId(Integer projectVersionId) {
+        return projectVersionRepository.getTasksByProjectVersionId(projectVersionId);
+    }
 }

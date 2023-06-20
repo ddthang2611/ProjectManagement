@@ -1,5 +1,6 @@
 package com.project.repository;
 import com.project.entity.ProjectVersion;
+import com.project.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,8 @@ public interface ProjectVersionRepository extends JpaRepository<ProjectVersion, 
     @Modifying
     @Query("UPDATE ProjectVersion pv SET pv.enable = :enable WHERE pv.projectVersionId = :projectVersionId")
     void setEnableById(@Param("projectVersionId") Integer projectVersionId, @Param("enable") boolean enable);
+
+    @Query("SELECT t FROM Task t WHERE t.feature.projectVersion.projectVersionId = :projectVersionId")
+    List<Task> getTasksByProjectVersionId(@Param("projectVersionId") Integer projectVersionId);
+
 }
