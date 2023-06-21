@@ -48,7 +48,7 @@
                                 <p>Task: <span th:text="${task.taskName}"></span></p>
                                 </div>
                             <p>Description: <span th:text="${task.taskDescription}"></span></p>
-                            <p>Assign: <span  th:text="${task.assignedTo.username}"></span></p>
+                            <p>Assign: <span  th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></span></p>
                             <div th:replace="fragments/progressbar :: div(progress=${task.progress})"></div>
                         </a>
                     </li>

@@ -15,9 +15,13 @@
         });
     </script>
     <style>
-        /*.container {*/
-        /*    margin-top: 50px;*/
-        /*}*/
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
         .card {
             margin-bottom: 20px;
         }
@@ -51,9 +55,12 @@
                     To Do
                 </div>
                 <ul class="list-group list-group-flush">
+
                     <li th:each="task : ${toDoTasks}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/task/{taskId}(taskId=${task.taskId})}">
                         <strong th:text="${task.taskName}"></strong>
-                        <p th:text="${task.taskDescription}"></p>
+                        <p th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></p>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -65,9 +72,12 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li th:each="task : ${inProgressTasks}" class="list-group-item">
-                        <strong th:text="${task.taskName}"></strong>
-                        <p th:text="${task.taskDescription}"></p>
+                        <a class="no-underline" th:href="@{/task/{taskId}(taskId=${task.taskId})}">
+                            <strong th:text="${task.taskName}"></strong>
+                            <p th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></p>
+                        </a>
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -78,8 +88,10 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     <li th:each="task : ${doneTasks}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/task/{taskId}(taskId=${task.taskId})}">
                         <strong th:text="${task.taskName}"></strong>
-                        <p th:text="${task.taskDescription}"></p>
+                        <p th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></p>
+                        </a>
                     </li>
                 </ul>
             </div>

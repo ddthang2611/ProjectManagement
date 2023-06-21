@@ -1,6 +1,7 @@
 package com.project.repository;
 import com.project.entity.Task;
 import com.project.entity.User;
+import com.project.entity.UserProjectVersion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,5 +50,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     @Query("SELECT AVG(CASE WHEN t.status = 'COMPLETED' THEN DATEDIFF(t.endDate, t.estimatedEndDate) ELSE DATEDIFF(:currentDate, t.estimatedEndDate) END) FROM Task t WHERE t.enable = true AND t.assignedTo.userId = :employeeId AND ((t.status = 'COMPLETED' AND t.endDate > t.estimatedEndDate) OR (t.status = 'PROCESSING' AND t.estimatedEndDate < :currentDate))")
     Double calculateAverageDaysOverdue(@Param("employeeId") int employeeId, @Param("currentDate") Date currentDate);
+
+
+
 }
 
