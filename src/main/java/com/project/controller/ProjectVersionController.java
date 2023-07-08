@@ -76,7 +76,16 @@ public class ProjectVersionController {
     @PostMapping("/{projectVersionId}/edit")
     public String updateProjectVersion(@PathVariable Integer projectVersionId,
                                        @ModelAttribute("projectVersion") ProjectVersion projectVersion,
-                                       RedirectAttributes redirectAttributes) {
+                                       RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        String redirectLink ="";
+        if (user.getRole().equals(UserRole.ADMIN)){
+            redirectLink = "redirect:/version/" + projectVersionId;
+        }
+        if (user.getRole().equals(UserRole.USER)){
+            redirectLink = "redirect:/version/user/" +user.getUserId();
+        }
         try {
             projectVersion.setProjectVersionId(projectVersionId);
             projectVersion.setEnable(true);
@@ -87,14 +96,23 @@ public class ProjectVersionController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/version/" + projectVersionId;
+            return redirectLink ;
         }
-        return "redirect:/version/" + projectVersionId;
+        return redirectLink;
     }
 
 
     @PostMapping("/{projectVersionId}/disable")
-    public String disableProjectVersion(@PathVariable Integer projectVersionId, RedirectAttributes redirectAttributes) {
+    public String disableProjectVersion(@PathVariable Integer projectVersionId, RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        String redirectLink ="";
+        if (user.getRole().equals(UserRole.ADMIN)){
+            redirectLink = "redirect:/project";
+        }
+        if (user.getRole().equals(UserRole.USER)){
+            redirectLink = "redirect:/version/user/" +user.getUserId();
+        }
         try {
             projectVersionService.disableProjectVersion(projectVersionId);
             redirectAttributes.addFlashAttribute("message", "Disabled Successfully");
@@ -103,7 +121,7 @@ public class ProjectVersionController {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/project";
+        return redirectLink;
     }
 
     @GetMapping("/{projectVersionId}/add-feature")
@@ -118,7 +136,16 @@ public class ProjectVersionController {
     @PostMapping("/{projectVersionId}/add-feature")
     public String addFeature(@PathVariable Integer projectVersionId,
                              @ModelAttribute("feature") Feature feature,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        String redirectLink ="";
+        if (user.getRole().equals(UserRole.ADMIN)){
+            redirectLink = "redirect:/version/" + projectVersionId + "/add-feature";
+        }
+        if (user.getRole().equals(UserRole.USER)){
+            redirectLink = "redirect:/version/user/" +user.getUserId();
+        }
 
         try {
             feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
@@ -129,9 +156,9 @@ public class ProjectVersionController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/version/" + projectVersionId + "/add-feature";
+            return redirectLink;
         }
-        return "redirect:/version/" + projectVersionId;
+        return redirectLink;
     }
 
     @PostMapping("/{projectVersionId}/add-attendee")
@@ -193,12 +220,8 @@ public class ProjectVersionController {
 
             projectVersionDTOs.add(projectVersionDTO);
         }
-        String token = jwtTokenService.getTokenFromRequest(request);
-        User user = jwtTokenService.getUserFromToken(token);
 
 
-
-        //Phân quyền các pv cho user
 
         model.addAttribute("projectVersionDTOs", projectVersionDTOs); // Truyền danh sách ProjectVersionDTO
 

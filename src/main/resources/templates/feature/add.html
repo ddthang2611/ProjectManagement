@@ -48,7 +48,10 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
-        <a th:href="@{/version/{projectVersionId}(projectVersionId=${feature.projectVersion.projectVersionId})}" class="btn btn-secondary">Back</a>
+        <a th:if="${role == 'MANAGER'}" th:href="@{/version/{projectVersionId}(projectVersionId=${feature.projectVersion.projectVersionId})}" class="btn btn-secondary">Back</a>
+        <a th:if="${role == 'USER'}" class="btn btn-secondary" th:href="@{/version/user/{userId}(userId=${userId})}">
+            Back
+        </a>
     </form>
 
 </div>

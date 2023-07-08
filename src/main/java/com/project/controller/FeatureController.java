@@ -76,8 +76,17 @@ public class FeatureController {
     }
 
     @PostMapping("/{featureId}/delete")
-    public String deleteFeature(@PathVariable Integer featureId, RedirectAttributes redirectAttributes) {
+    public String deleteFeature(@PathVariable Integer featureId, RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
         Integer projectVersionId = featureService.getFeatureById(featureId).getProjectVersion().getProjectVersionId();
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        String redirectLink ="";
+        if (user.getRole().equals(UserRole.ADMIN)){
+            redirectLink = "redirect:/project";
+        }
+        if (user.getRole().equals(UserRole.USER)){
+            redirectLink = "redirect:/version/user/" +user.getUserId();
+        }
         try {
              featureService.deleteFeature(featureId);
             redirectAttributes.addFlashAttribute("message", "Deleted Successfully");
@@ -86,7 +95,7 @@ public class FeatureController {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/version/"+ projectVersionId ;
+        return redirectLink ;
     }
 
     @GetMapping("/{featureId}/add-task")
