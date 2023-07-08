@@ -3,6 +3,7 @@ package com.project.repository;
 import com.project.entity.Feature;
 import com.project.entity.Task;
 import com.project.entity.User;
+import com.project.entity.UserProjectVersion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,5 +35,11 @@ public interface FeatureRepository extends JpaRepository<Feature, Integer> {
 
     @Query("SELECT DISTINCT upv.user FROM UserProjectVersion upv WHERE upv.projectVersion IN (SELECT f.projectVersion FROM Feature f WHERE f.id = :featureId)")
     List<User> findAttendeesByFeatureId(@Param("featureId") Integer featureId);
+
+    @Query("SELECT upv FROM UserProjectVersion upv " +
+            "JOIN upv.projectVersion pv " +
+            "WHERE upv.user.userId = :userId " +
+            "AND pv.projectVersionId = (SELECT f.projectVersion.projectVersionId FROM Feature f WHERE f.id = :featureId)")
+    UserProjectVersion getUPVByFeatureIdAndUserId(@Param("featureId") int featureId, @Param("userId") int userId);
 
 }

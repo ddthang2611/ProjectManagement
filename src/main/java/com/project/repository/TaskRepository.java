@@ -51,6 +51,13 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT AVG(CASE WHEN t.status = 'COMPLETED' THEN DATEDIFF(t.endDate, t.estimatedEndDate) ELSE DATEDIFF(:currentDate, t.estimatedEndDate) END) FROM Task t WHERE t.enable = true AND t.assignedTo.userId = :employeeId AND ((t.status = 'COMPLETED' AND t.endDate > t.estimatedEndDate) OR (t.status = 'PROCESSING' AND t.estimatedEndDate < :currentDate))")
     Double calculateAverageDaysOverdue(@Param("employeeId") int employeeId, @Param("currentDate") Date currentDate);
 
+    @Query("SELECT upv FROM UserProjectVersion upv " +
+            "JOIN upv.projectVersion pv " +
+            "WHERE upv.user.userId = :userId " +
+            "AND pv.projectVersionId = (SELECT f.projectVersion.projectVersionId FROM Feature f WHERE f.id = " +
+            "(SELECT t.feature.id FROM Task t WHERE t.taskId = :taskId))")
+    UserProjectVersion getUPVByTaskIdAndUserId(@Param("taskId") int taskId, @Param("userId") int userId);
+
 
 
 }

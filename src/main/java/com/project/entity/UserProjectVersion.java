@@ -24,11 +24,11 @@ public class UserProjectVersion {
     @JoinColumn(name = "project_version_id")
     private ProjectVersion projectVersion;
 
-    @Column(name = "add_permission")
-    private boolean add;
-    @Column(name = "edit_permission")
-    private boolean edit;
-    @Column(name = "delete_permission")
-    private boolean delete;
+    @Column(name = "version_modification")
+    private boolean versionModification;
+    @Column(name = "feature_modification")
+    private boolean featureModification;
+    @Column(name = "task_modification")
+    private boolean taskModification;
 }
 

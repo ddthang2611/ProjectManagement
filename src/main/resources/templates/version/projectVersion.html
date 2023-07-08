@@ -27,7 +27,6 @@
                 <h5 th:text="${projectVersion.project.projectName}"></h5>
                 <h5 th:text="${projectVersion.version}"></h5>
                 <div>
-
                     <div class="btn-group" role="group">
                         <a class="btn btn-success rounded-right mr-1" th:href="@{/version/{projectVersionId}/add-feature(projectVersionId=${projectVersion.projectVersionId})}">
                             Add Feature
@@ -38,12 +37,7 @@
                         <form th:action="@{'/version/' + ${projectVersionId} + '/disable'}" method="post" onsubmit="return confirmDelete(event)">
                             <button type="submit" class="btn btn-danger">Disable</button>
                         </form>
-
-
                     </div>
-
-
-
                 </div>
             </div>
             <div class="card-body">

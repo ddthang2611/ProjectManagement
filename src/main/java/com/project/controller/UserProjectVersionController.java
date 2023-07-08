@@ -20,9 +20,9 @@ public class UserProjectVersionController {
                                @ModelAttribute UserProjectVersion attendee,
                                RedirectAttributes redirectAttributes) {
         UserProjectVersion upv = userProjectVersionService.findById(userProjectVersionId);
-        upv.setAdd(attendee.isAdd());
-        upv.setEdit(attendee.isEdit());
-        upv.setDelete(attendee.isDelete());
+        upv.setVersionModification(attendee.isVersionModification());
+        upv.setFeatureModification(attendee.isFeatureModification());
+        upv.setTaskModification(attendee.isTaskModification());
         try {
             userProjectVersionService.editUserProjectVersion(upv);
             redirectAttributes.addFlashAttribute("message", "Updated Attendee Successfully");

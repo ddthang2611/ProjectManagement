@@ -7,6 +7,7 @@ import com.project.repository.IssueRepository;
 import com.project.repository.ProjectVersionRepository;
 import com.project.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -125,6 +126,10 @@ public class TaskService {
     public List<User> findAttendeesByTaskId(Integer taskId) {
         List<User> attendees = taskRepository.findAttendeesByTaskId(taskId);
         return attendees;
+    }
+
+    public UserProjectVersion getUPVByTaskIdAndUserId(int taskId, int userId){
+        return taskRepository.getUPVByTaskIdAndUserId(taskId,userId);
     }
 
 }

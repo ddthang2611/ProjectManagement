@@ -2,8 +2,10 @@ package com.project.controller;
 
 
 import com.project.entity.*;
+import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
 import com.project.service.FeatureService;
+import com.project.service.JwtTokenService;
 import com.project.service.ProjectVersionService;
 import com.project.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,21 @@ public class FeatureController {
 
     @Autowired
     private CookieHelper cookieHelper;
-
+    @Autowired
+    private JwtTokenService jwtTokenService;
     @GetMapping("/{featureId}")
-    public String getFeatureById(@PathVariable Integer featureId, Model model, HttpServletRequest request) {
+    public String getFeatureById(@PathVariable Integer featureId, Model model, HttpServletRequest request) throws Exception {
         cookieHelper.addCookieAttributes(request, model);
         Feature feature = featureService.getFeatureById(featureId);
         List<Task> tasks = featureService.getTasksByFeatureId(featureId);
+
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        if (user.getRole().equals(UserRole.USER)) {
+            UserProjectVersion upv = featureService.getUPVByFeatureIdAndUserId(featureId, user.getUserId());
+            model.addAttribute("upv", upv);
+        }
+//        Phân quyền cho các user
         model.addAttribute("feature", feature);
         model.addAttribute("tasks", tasks);
         return "feature/feature";

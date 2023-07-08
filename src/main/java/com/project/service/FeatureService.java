@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -59,5 +58,9 @@ public class FeatureService {
         List<User> attendees = featureRepository.findAttendeesByFeatureId(featureId);
         return attendees;
     }
+    public UserProjectVersion getUPVByFeatureIdAndUserId(int featureId, int userId){
+        return featureRepository.getUPVByFeatureIdAndUserId(featureId,userId);
+    };
+
 }
 

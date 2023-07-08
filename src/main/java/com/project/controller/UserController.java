@@ -68,7 +68,6 @@ public class UserController {
                                  @RequestParam("newRole") UserRole newRole,
                                  RedirectAttributes redirectAttributes) {
         try {
-            System.out.println(newRole);
             if(newRole == UserRole.ADMIN){
                 throw new Exception("Access Denied");
             }

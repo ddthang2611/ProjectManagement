@@ -13,10 +13,10 @@ import java.util.List;
 @Repository
 public interface UserProjectVersionRepository extends JpaRepository<UserProjectVersion, Integer> {
 
-    @Query("SELECT pv FROM ProjectVersion pv INNER JOIN UserProjectVersion upv ON pv.projectVersionId = upv.projectVersion.projectVersionId WHERE upv.user.userId = :userId")
+    @Query("SELECT pv FROM ProjectVersion pv INNER JOIN UserProjectVersion upv ON pv.projectVersionId = upv.projectVersion.projectVersionId WHERE upv.user.userId = :userId AND pv.enable = true")
     List<ProjectVersion> findProjectVersionsByUserId(Integer userId);
 
-    @Query("SELECT u FROM User u INNER JOIN UserProjectVersion upv ON u.userId = upv.user.userId WHERE upv.projectVersion.projectVersionId = :projectVersionId")
+    @Query("SELECT u FROM User u INNER JOIN UserProjectVersion upv ON u.userId = upv.user.userId WHERE upv.projectVersion.projectVersionId = :projectVersionId AND u.active = true")
     List<User> findUsersByProjectVersionId(Integer projectVersionId);
 
     @Query("SELECT upv FROM UserProjectVersion upv WHERE upv.projectVersion.projectVersionId = :projectVersionId")

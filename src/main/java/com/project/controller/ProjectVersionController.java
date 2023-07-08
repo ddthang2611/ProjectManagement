@@ -3,10 +3,7 @@ package com.project.controller;
 import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
-import com.project.service.FeatureService;
-import com.project.service.ProjectVersionService;
-import com.project.service.UserProjectVersionService;
-import com.project.service.UserService;
+import com.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +32,8 @@ public class ProjectVersionController {
     @Autowired
     private CookieHelper cookieHelper;
 
-
+    @Autowired
+    private JwtTokenService jwtTokenService;
 
 
     @GetMapping("/{projectVersionId}")
@@ -79,7 +77,6 @@ public class ProjectVersionController {
     public String updateProjectVersion(@PathVariable Integer projectVersionId,
                                        @ModelAttribute("projectVersion") ProjectVersion projectVersion,
                                        RedirectAttributes redirectAttributes) {
-        System.out.println(projectVersion.toString());
         try {
             projectVersion.setProjectVersionId(projectVersionId);
             projectVersion.setEnable(true);
@@ -147,9 +144,9 @@ public class ProjectVersionController {
             UserProjectVersion userProjectVersion = new UserProjectVersion();
             userProjectVersion.setUser(user);
             userProjectVersion.setProjectVersion(projectVersion);
-            userProjectVersion.setAdd(false);
-            userProjectVersion.setEdit(false);
-            userProjectVersion.setDelete(false);
+            userProjectVersion.setVersionModification(false);
+            userProjectVersion.setFeatureModification(false);
+            userProjectVersion.setTaskModification(false);
             userProjectVersionService.add(userProjectVersion);
             redirectAttributes.addFlashAttribute("message", "Added Attendee Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -162,7 +159,7 @@ public class ProjectVersionController {
     }
 
     @GetMapping("/{projectVersionId}/attendees")
-    public String showEditAttendeesForm(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) {
+    public String showEditAttendeesForm(@PathVariable Integer projectVersionId, Model model, HttpServletRequest request) throws Exception {
         cookieHelper.addCookieAttributes(request, model);
         List<UserProjectVersion> attendees= null;
         try {
@@ -179,11 +176,10 @@ public class ProjectVersionController {
 
 
     @GetMapping("/user/{userId}")
-    public String getProjectVersionsByUserId(@PathVariable Integer userId, Model model, HttpServletRequest request) {
+    public String getProjectVersionsByUserId(@PathVariable Integer userId, Model model, HttpServletRequest request) throws Exception {
         cookieHelper.addCookieAttributes(request, model);
         List<ProjectVersion> projectVersions = userProjectVersionService.findProjectVersionsByUserId(userId);
         List<ProjectVersionDTO> projectVersionDTOs = new ArrayList<>(); // Danh sách ProjectVersionDTO
-
         for (ProjectVersion projectVersion : projectVersions) {
 
             // Lấy danh sách Feature của ProjectVersion
@@ -191,11 +187,18 @@ public class ProjectVersionController {
 
             List<UserDTO> attendees = userProjectVersionService.findUsersByProjectVersionId(projectVersion.getProjectVersionId());
 
-            ProjectVersionDTO projectVersionDTO = new ProjectVersionDTO(projectVersion, features, attendees);
+            UserProjectVersion upv = projectVersionService.getUPVByProjectVersionIdAndUserId(projectVersion.getProjectVersionId(),userId);
+
+            ProjectVersionDTO projectVersionDTO = new ProjectVersionDTO(projectVersion, features, attendees, upv);
+
             projectVersionDTOs.add(projectVersionDTO);
         }
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
 
 
+
+        //Phân quyền các pv cho user
 
         model.addAttribute("projectVersionDTOs", projectVersionDTOs); // Truyền danh sách ProjectVersionDTO
 

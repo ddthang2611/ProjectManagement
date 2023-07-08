@@ -1,11 +1,10 @@
 package com.project.controller;
 
-import com.project.entity.Issue;
-import com.project.entity.Task;
-import com.project.entity.TaskDTO;
-import com.project.entity.User;
+import com.project.entity.*;
+import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
 import com.project.service.IssueService;
+import com.project.service.JwtTokenService;
 import com.project.service.TaskService;
 import com.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +30,23 @@ public class TaskController {
     @Autowired
     private CookieHelper cookieHelper;
 
-
+    @Autowired
+    private JwtTokenService jwtTokenService;
 
     @GetMapping("/{taskId}")
-    public String getTaskById(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
+    public String getTaskById(@PathVariable Integer taskId, Model model, HttpServletRequest request) throws Exception {
         cookieHelper.addCookieAttributes(request, model);
         Task task = taskService.getTaskById(taskId);
         List<Issue> issues = taskService.getIssuesByTaskId(taskId);
         List<User> attendees = taskService.findAttendeesByTaskId(taskId);
+
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        if (user.getRole().equals(UserRole.USER)) {
+            UserProjectVersion upv = taskService.getUPVByTaskIdAndUserId(taskId,user.getUserId());
+            model.addAttribute("upv", upv);
+        }
+//        Phân quyền cho các user
         model.addAttribute("task", task);
         model.addAttribute("issues", issues);
         model.addAttribute("attendees",attendees);

@@ -14,16 +14,16 @@
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div class="container">
-        <h2 class="mb-3">Edit Attendees</h2>
+        <h2 class="mb-3">Modify Permissions</h2>
         <div th:replace="fragments/message :: div"></div>
         <table class="table">
             <thead>
             <tr>
                 <th>ID</th>
                 <th>Username</th>
-                <th>Add</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th>Version</th>
+                <th>Feature</th>
+                <th>Task</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -38,21 +38,21 @@
                                 <input class="form-check-input" type="hidden" name="id" th:value="${attendee.id}">
                                 <input class="form-check-input" type="hidden" name="userId" th:value="${attendee.user.userId}">
                                 <input class="form-check-input" type="hidden" name="username" th:value="${attendee.user.username}">
-                                <input class="form-check-input" type="checkbox" name="add" id="addSwitch" th:checked="${attendee.add}">
-                                <label class="form-check-label" for="addSwitch"></label>
+                                <input class="form-check-input" type="checkbox" name="versionModification" id="versionSwitch" th:checked="${attendee.versionModification}">
+                                <label class="form-check-label" for="versionSwitch"></label>
                             </div>
                         </td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="edit" id="editSwitch" th:checked="${attendee.edit}">
-                                <label class="form-check-label" for="editSwitch"></label>
+                                <input class="form-check-input" type="checkbox" name="featureModification" id="featureSwitch" th:checked="${attendee.featureModification}">
+                                <label class="form-check-label" for="featureSwitch"></label>
                             </div>
                         </td>
 
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="delete" id="deleteSwitch" th:checked="${attendee.delete}" />
-                                <label class="form-check-label" for="deleteSwitch"></label>
+                                <input class="form-check-input" type="checkbox" name="taskModification" id="taskSwitch" th:checked="${attendee.taskModification}" />
+                                <label class="form-check-label" for="taskSwitch"></label>
                             </div>
                         </td>
 

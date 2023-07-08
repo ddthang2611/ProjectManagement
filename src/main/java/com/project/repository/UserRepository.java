@@ -14,14 +14,22 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    @Query("SELECT u FROM User u WHERE u.username = :username AND u.password = :password AND u.active = true")
     User findByUsernameAndPassword(String username, String password);
+
+    @Query("SELECT u FROM User u WHERE u.username = :username AND u.active = true")
     Optional<User> getUserByUsername(String username);
+
+    @Query("SELECT u FROM User u WHERE u.userId = :userId AND u.active = true")
+    Optional<User> findById(int userId);
+
+    @Query("SELECT u FROM User u WHERE u.active = true")
+    List<User> findAll();
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.active = false WHERE u.userId = :userId")
     int deactivateUser(@Param("userId") int userId);
-    Optional<User> findById(int userId);
-    List<User> findAll();
+
 
 
 }

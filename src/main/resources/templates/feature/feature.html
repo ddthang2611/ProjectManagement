@@ -36,6 +36,17 @@
                         Add Task
                     </a>
                 </div>
+                <div th:if="${role == 'USER'}">
+                        <a th:if="${upv.featureModification == true}" class="btn btn-primary" th:href="@{/feature/{featureId}/edit(featureId=${feature.id})}">
+                            Edit
+                        </a>
+                        <form th:if="${upv.featureModification == true}" th:action="@{/feature/{featureId}/delete(featureId=${feature.id})}" method="post" class="d-inline" onsubmit="return confirmDelete(event)">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <a th:if="${upv.taskModification == true}" class="btn btn-success" th:href="@{/feature/{featureId}/add-task(featureId=${feature.id})}">
+                            Add Task
+                        </a>
+                </div>
             </div>
             <div class="card-body">
                 <p th:text="${feature.description}"></p>
