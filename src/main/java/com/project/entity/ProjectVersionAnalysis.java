@@ -9,6 +9,9 @@ import lombok.ToString;
 @ToString
 public class ProjectVersionAnalysis {
     private int projectVersionId;
+
+    private String version;
+    private String projectName;
     private int totalTasks;
     private int processingTasks;
     private int completedTasks;
@@ -17,8 +20,10 @@ public class ProjectVersionAnalysis {
     private int overdueTasks;
     private double averageDaysOverdue;
 
-    public ProjectVersionAnalysis(int projectVersionId, int totalTasks, int processingTasks, int completedTasks, int pendingTasks, int postponedTasks, int overdueTasks, double averageDaysOverdue) {
+    public ProjectVersionAnalysis(int projectVersionId, String version, String projectName, int totalTasks, int processingTasks, int completedTasks, int pendingTasks, int postponedTasks, int overdueTasks, double averageDaysOverdue) {
         this.projectVersionId = projectVersionId;
+        this.version = version;
+        this.projectName = projectName;
         this.totalTasks = totalTasks;
         this.processingTasks = processingTasks;
         this.completedTasks = completedTasks;

@@ -16,19 +16,21 @@
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th onclick="sortTable(0)">Version</th>
-                    <th onclick="sortTable(1)">Total Tasks</th>
-                    <th onclick="sortTable(2)">Processing Tasks</th>
-                    <th onclick="sortTable(3)">Completed Tasks</th>
-                    <th onclick="sortTable(4)">Pending Tasks</th>
-                    <th onclick="sortTable(5)">Postponed Tasks</th>
-                    <th onclick="sortTable(6)">Overdue Tasks</th>
-                    <th onclick="sortTable(7)">Avg Days Overdue</th>
+                    <th onclick="sortTable(0)">Project</th>
+                    <th onclick="sortTable(1)">Version</th>
+                    <th onclick="sortTable(2)">Total Tasks</th>
+                    <th onclick="sortTable(3)">Processing Tasks</th>
+                    <th onclick="sortTable(4)">Completed Tasks</th>
+                    <th onclick="sortTable(5)">Pending Tasks</th>
+                    <th onclick="sortTable(6)">Postponed Tasks</th>
+                    <th onclick="sortTable(7)">Overdue Tasks</th>
+                    <th onclick="sortTable(8)">Avg Days Overdue</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="projectVersionAnalysis : ${projectVersionAnalyses}">
-                    <td th:text="${projectVersionAnalysis.projectVersionId}"></td>
+                    <td th:text="${projectVersionAnalysis.projectName}"></td>
+                    <td th:text="${projectVersionAnalysis.version}"></td>
                     <td th:text="${projectVersionAnalysis.totalTasks}"></td>
                     <td th:text="${projectVersionAnalysis.processingTasks}"></td>
                     <td th:text="${projectVersionAnalysis.completedTasks}"></td>
@@ -39,9 +41,9 @@
                 </tr>
                 </tbody>
             </table>
+            <a th:href="@{/analysis}" class="btn btn-secondary float-right">Back</a>
         </div>
     </div>
-    <a th:href="@{/analysis}" class="btn btn-secondary float-right">Back</a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
@@ -58,7 +60,7 @@
 
     /* Populate data arrays */
     for (var i = 0; i < projectVersionData.length; i++) {
-        versions.push(projectVersionData[i].projectVersionId);
+        versions.push(projectVersionData[i].projectName +"("+ projectVersionData[i].version +")");
         totalTasks.push(projectVersionData[i].totalTasks);
         processingTasks.push(projectVersionData[i].processingTasks);
         completedTasks.push(projectVersionData[i].completedTasks);
@@ -86,7 +88,7 @@
             }, {
                 label: 'Completed Tasks',
                 data: completedTasks,
-                backgroundColor: '#ffc107',
+                backgroundColor: 'purple',
                 borderWidth: 1
             }, {
                 label: 'Pending Tasks',
@@ -106,7 +108,7 @@
             }, {
                 label: 'Avg Days Overdue (x10)',
                 data: avgDaysOverdue,
-                backgroundColor: 'purple',
+                backgroundColor: 'black',
                 borderWidth: 1
             }]
         },
