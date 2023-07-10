@@ -3,7 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>Project Management</title>
-  <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css}">
+<!--  <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/5.2.0/css/bootstrap.min.css}">-->
+<!--  <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/5.2.0/js/bootstrap.min.js}"></script>-->
+  <!-- Bạn có thể bao gồm tệp jQuery từ một nguồn tĩnh hoặc sử dụng CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Bao gồm tệp Popper.js -->
+  <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+  <!-- Bao gồm tệp JavaScript của Bootstrap -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <header>
@@ -14,6 +24,7 @@
               aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse justify-content-end mr-4" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item ml-auto">
@@ -22,12 +33,16 @@
           <li class="nav-item ml-auto">
             <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/project">Project</a>
           </li>
+
           <li class="nav-item ml-auto">
-            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis/user">Bar Chart</a>
+            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis">Analysis</a>
           </li>
-          <li class="nav-item ml-auto">
-            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis/pie-chart/user">Pie Chart</a>
-          </li>
+
+
+
+
+
+
           <li class="nav-item ml-auto">
             <a th:if="${role == 'USER'}" class="nav-link navbar-text" th:href="@{/version/user/{userId}(userId=${userId})}">Project</a>
           </li>
@@ -47,6 +62,5 @@
 
 <!-- Nội dung trang web ở đây -->
 
-<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap5.1.0/dist/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

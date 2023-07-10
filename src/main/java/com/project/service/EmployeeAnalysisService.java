@@ -33,8 +33,6 @@ public class EmployeeAnalysisService {
         Double averageDaysOverdue = taskRepository.calculateAverageDaysOverdue(employeeId, convertedDate);
         double avgDaysOverdue = averageDaysOverdue != null ? averageDaysOverdue.doubleValue() : 0.0;
         int overdueTasks = taskRepository.countOverdueTasks(employeeId, convertedDate);
-//        EmployeeAnalysis e = new EmployeeAnalysis(assignedTasks, completedTasks, overdueTasks, avgDaysOverdue);
-//        System.out.println(e.toString());
         return new EmployeeAnalysis(assignedTasks, completedTasks, overdueTasks, avgDaysOverdue,employeeName);
     }
     public int countTasksByEmployeeId(int employeeId){

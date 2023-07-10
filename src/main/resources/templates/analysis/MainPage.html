@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analysis</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .card-img {
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+  <h1 class="mt-4">Analysis</h1>
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card">
+        <img src="https://datavizproject.com/wp-content/uploads/types/Bar-Chart-Vertical.png" alt="Bar Chart" class="card-img">
+        <div class="card-body">
+          <h5 class="card-title">Bar Chart</h5>
+          <p class="card-text">This is a bar chart that shows...</p>
+          <a href="/analysis/user" class="btn btn-primary">View Chart</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+<!--        <div class="card-img-container" style="width: 400px; height: 200px; display: flex; justify-content: center; align-items: center;">-->
+<!--          <img src="https://dictionary.cambridge.org/vi/images/thumb/piecha_noun_002_27591.jpg?version=5.0.328" alt="Pie Chart" style="max-width: 100%; max-height: 100%;">-->
+<!--        </div>-->
+        <div class="card-img-container">
+          <img src="https://dictionary.cambridge.org/vi/images/thumb/piecha_noun_002_27591.jpg?version=5.0.328" alt="Pie Chart" class="card-img img-fluid" style="object-fit: contain;">
+        </div>
+
+<!--        <img src="https://www.tableau.com/sites/default/files/2021-06/DataGlossary_Icons_Pie%20Chart.jpg" alt="Pie Chart" class="card-img" style="width: 300px; height: 200px;">-->
+<!--        <img src="PieChart.jpg" >-->
+<!--             alt="Pie Chart" class="card-img" style="object-fit: contain; width: 400px; height: 200px;">-->
+<!--        <img src="PieChart.jpg" alt="Pie Chart" class="card-img">-->
+
+
+        <!--        <img src="images/PieChart.jpg" alt="Pie Chart" class="card-img">-->
+<!--        <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-3d-pie-chart.png" alt="Pie Chart" class="card-img" style="object-fit: contain; width: 400px; height: 200px;">-->
+        <div class="card-body">
+          <h5 class="card-title">Pie Chart</h5>
+          <p class="card-text">This is a pie chart that represents...</p>
+          <a href="/analysis/pie-chart/user" class="btn btn-primary">View Chart</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mt-3">
+      <div class="card">
+        <!--        <div class="card-img-container" style="width: 400px; height: 200px; display: flex; justify-content: center; align-items: center;">-->
+        <!--          <img src="https://dictionary.cambridge.org/vi/images/thumb/piecha_noun_002_27591.jpg?version=5.0.328" alt="Pie Chart" style="max-width: 100%; max-height: 100%;">-->
+        <!--        </div>-->
+        <div class="card-img-container">
+          <img src="https://sigma-docs-screenshots.s3.us-west-2.amazonaws.com/Workbooks/Visualizations/Build+a+Bar+Chart/bar-chart.png" alt="Pie Chart" class="card-img img-fluid" style="object-fit: contain;">
+        </div>
+
+        <!--        <img src="https://www.tableau.com/sites/default/files/2021-06/DataGlossary_Icons_Pie%20Chart.jpg" alt="Pie Chart" class="card-img" style="width: 300px; height: 200px;">-->
+        <!--        <img src="PieChart.jpg" >-->
+        <!--             alt="Pie Chart" class="card-img" style="object-fit: contain; width: 400px; height: 200px;">-->
+        <!--        <img src="PieChart.jpg" alt="Pie Chart" class="card-img">-->
+
+
+        <!--        <img src="images/PieChart.jpg" alt="Pie Chart" class="card-img">-->
+        <!--        <img src="https://static.anychart.com/images/gallery/v8/pie-and-donut-charts-3d-pie-chart.png" alt="Pie Chart" class="card-img" style="object-fit: contain; width: 400px; height: 200px;">-->
+        <div class="card-body">
+          <h5 class="card-title">Pie Chart</h5>
+          <p class="card-text">This is a pie chart that represents the distribution of tasks across different project versions.</p>
+          <a href="/analysis/projectVersion" class="btn btn-primary">View Chart</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+</body>
+
+</html>

@@ -1,10 +1,10 @@
 package com.project.controller;
-import com.project.entity.EmployeeAnalysis;
-import com.project.entity.User;
-import com.project.entity.UserDTO;
+import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
 import com.project.service.EmployeeAnalysisService;
+import com.project.service.ProjectVersionAnalysisService;
+import com.project.service.ProjectVersionService;
 import com.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,11 +22,20 @@ public class AnalysisController {
 
     @Autowired
     private EmployeeAnalysisService employeeAnalysisService;
-
+    @Autowired
+    private ProjectVersionService projectVersionService;
+    @Autowired
+    private ProjectVersionAnalysisService projectVersionAnalysisService;
     @Autowired
     private UserService userService;
     @Autowired
     private CookieHelper cookieHelper;
+
+    @GetMapping("/analysis")
+    public String getAnalysisMainPage(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+        return "analysis/MainPage";
+    }
 
     @GetMapping("/analysis/user")
     public String getUserAnalysis(Model model, HttpServletRequest request) {
@@ -70,6 +79,23 @@ public class AnalysisController {
 
         return "analysis/EmployeePieChart";
     }
+    @GetMapping("/analysis/projectVersion")
+    public String getProjectVersionAnalysis(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+
+        List<ProjectVersion> projectVersions = projectVersionService.findAll();
+        List<ProjectVersionAnalysis> projectVersionAnalyses = new ArrayList<>();
+
+        for (ProjectVersion projectVersion : projectVersions) {
+            ProjectVersionAnalysis projectVersionAnalysis = projectVersionAnalysisService.getProjectVersionAnalysis(projectVersion.getProjectVersionId());
+            projectVersionAnalyses.add(projectVersionAnalysis);
+        }
+
+        model.addAttribute("projectVersionAnalyses", projectVersionAnalyses);
+
+        return "analysis/VersionAnalysis";
+    }
+
 
 }
 

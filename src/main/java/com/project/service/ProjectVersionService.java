@@ -20,7 +20,9 @@ public class ProjectVersionService {
     @Autowired
     private TaskRepository taskRepository;
 
-
+    public List<ProjectVersion> findAll() {
+        return projectVersionRepository.findAll();
+    }
 
     public void disableProjectVersion(Integer projectVersionId) {
         ProjectVersion projectVersion = projectVersionRepository.findById(projectVersionId)
