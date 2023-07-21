@@ -62,14 +62,9 @@ public class IssueController {
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String userId = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("user")) {
-                userId = cookie.getValue();
-                break;
-            }
-        }
+        userId = cookieHelper.getUserId(request);
         User user = userService.getUserById(Integer.parseInt(userId));
-
+        System.out.println(issue.toString());
         try {
             issue.setIssueId(issueId);
             issue.setReporter(user);

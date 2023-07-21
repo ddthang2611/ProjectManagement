@@ -42,24 +42,24 @@
 
         <div class="form-group">
             <label for="version">Version:</label>
-            <input type="text" class="form-control" id="version" name="version" th:field="${projectVersion.version}">
+            <input type="text" class="form-control" id="version" name="version" th:field="${projectVersion.version}" readonly>
         </div>
         <div class="form-group">
             <label for="projectVersionDescription">Project Version Description:</label>
-            <textarea class="form-control" id="projectVersionDescription" name="projectVersionDescription" rows="3" th:field="${projectVersion.versionDescription}"></textarea>
+            <textarea class="form-control" id="projectVersionDescription" name="projectVersionDescription" rows="3" th:field="${projectVersion.versionDescription}" required></textarea>
         </div>
         <div class="row">
             <div class="col">
                 <div class="form-group">
                     <label for="startDate">Start Date:</label>
-                    <input type="date" class="form-control" id="startDate" name="startDate" th:field="${projectVersion.startDate}">
+                    <input type="date" class="form-control" id="startDate" name="startDate" th:field="${projectVersion.startDate}" required>
                 </div>
             </div>
 
             <div class="col">
                 <div class="form-group">
                     <label for="estimatedEndDate">Estimated End Date:</label>
-                    <input type="date" class="form-control" id="estimatedEndDate" name="estimatedEndDate" th:field="${projectVersion.estimatedEndDate}">
+                    <input type="date" class="form-control" id="estimatedEndDate" name="estimatedEndDate" th:field="${projectVersion.estimatedEndDate}" required>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
 
                 <div class="form-group">
                     <label for="status">Status:</label>
-                    <select class="form-control" id="status" name="status">
+                    <select class="form-control" id="status" name="status" required>
                         <option value="PROCESSING" th:selected="${projectVersion.status == 'PROCESSING'}" th:field="${projectVersion.status}">Processing</option>
                         <option value="COMPLETED" th:selected="${projectVersion.status == 'COMPLETED'}" th:field="${projectVersion.status}">Completed</option>
                         <option value="PENDING" th:selected="${projectVersion.status == 'PENDING'}" th:field="${projectVersion.status}">Pending</option>

@@ -30,4 +30,27 @@ public class CookieHelper {
         model.addAttribute("userId", userId);
         model.addAttribute("role", role);
     }
+
+    public String getJwtToken(HttpServletRequest request) {
+        return getCookieValue(request, "jwtToken");
+    }
+
+    public String getUserId(HttpServletRequest request) {
+        return getCookieValue(request, "userId");
+    }
+
+    public String getRole(HttpServletRequest request) {
+        return getCookieValue(request, "role");
+    }
+    private String getCookieValue(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
 }

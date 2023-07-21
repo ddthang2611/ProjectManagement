@@ -53,7 +53,7 @@ public class ProjectController {
     }
 
     @GetMapping("/add")
-    public String showCreateProjectForm(Model model, HttpServletRequest request) {
+    public String showAddProjectForm(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Project project = new Project();
         model.addAttribute("project", project);
@@ -61,7 +61,7 @@ public class ProjectController {
     }
 
     @PostMapping("/add")
-    public String createProject(@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes,HttpServletRequest request, Model model) {
+    public String addProject(@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes,HttpServletRequest request, Model model) {
         cookieHelper.addCookieAttributes(request, model);
         try {
             projectService.createProject(project);
