@@ -51,6 +51,7 @@
             </div>
             <div class="card-body">
                 <p class="ml-3" th:text="${task.taskDescription}"></p>
+                <p class=" ml-3">Progress: <span  th:text="${task.progress}"></span>%</p>
                 <p class="mb-2 ml-3">Assign: <span  th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></span></p>
                 <form th:if="${role == 'MANAGER'}" class="col-md-4" th:action="@{/task/{taskId}/assign(taskId=${task.taskId})}" method="post">
                     <div class="input-group mb-3">

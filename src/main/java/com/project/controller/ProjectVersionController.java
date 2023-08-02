@@ -150,6 +150,7 @@ public class ProjectVersionController {
         try {
             feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
             feature.setEnable(true);
+            System.out.println(feature.toString());
             featureService.addFeature(feature);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -158,6 +159,7 @@ public class ProjectVersionController {
             redirectAttributes.addFlashAttribute("messageType", "error");
             return redirectLink;
         }
+        System.out.println(redirectLink);
         return redirectLink;
     }
 

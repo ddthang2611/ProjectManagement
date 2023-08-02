@@ -93,6 +93,13 @@ public class TaskService {
         taskRepository.save(task);
     }
 
+    public void updateAllProgresses() {
+        List<Task> allTasks = taskRepository.findAll();
+        for (Task task : allTasks) {
+            updateProgress(task);
+        }
+    }
+
     public void updateProgress(Task task) {
 //        Task savedTask = taskRepository.save(task);
 
@@ -105,7 +112,6 @@ public class TaskService {
         }
         int averageProgress = featureTasks.isEmpty() ? 0 : totalProgress / featureTasks.size();
         feature.setProgress(averageProgress);
-        System.out.println("hi"+feature.getProgress());
         if(feature.getProgress() == 100){
             feature.setStatus(Status.COMPLETED);}
         featureRepository.save(feature);

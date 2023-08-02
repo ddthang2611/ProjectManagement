@@ -55,6 +55,20 @@ public class Feature {
     @Column(name = "enable")
     private boolean enable;
 
+    public Feature() {
+    }
 
+    public Feature(int id, String name, String description, ProjectVersion projectVersion, Date startDate, Date endDate, Integer progress, Date estimatedEndDate, Status status, boolean enable) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.projectVersion = projectVersion;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.progress = progress;
+        this.estimatedEndDate = estimatedEndDate;
+        this.status = status;
+        this.enable = enable;
+    }
 }
 

@@ -5,8 +5,10 @@ import com.project.entity.JwtResponse;
 import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.entity.enums.UserRole;
+import com.project.repository.TaskRepository;
 import com.project.service.EmployeeAnalysisService;
 import com.project.service.JwtTokenService;
+import com.project.service.TaskService;
 import com.project.service.UserService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ public class LoginController {
     JwtTokenService jwtTokenService;
     @Autowired
     EmployeeAnalysisService employeeAnalysisService;
+
     @GetMapping
     public String getLoginPage() {return "login";}
 

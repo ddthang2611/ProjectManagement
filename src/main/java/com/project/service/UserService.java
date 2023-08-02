@@ -17,6 +17,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    TaskService taskService;
 
     public boolean checkLogin(User user) {
         User userFromDB = null;
@@ -27,6 +29,7 @@ public class UserService {
 
         }
         if (userFromDB != null && userFromDB.isActive()) {
+            taskService.updateAllProgresses();
             System.out.println(userFromDB.getUsername());
             System.out.println(userFromDB.getPassword());
             return true;
