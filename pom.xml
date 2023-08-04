@@ -8,7 +8,7 @@
 		<version>2.1.10.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sapo.edu</groupId>
+	<groupId>com.project</groupId>
 	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>demo</name>
@@ -160,7 +160,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.project.Main</mainClass>
+							<mainClass>com.project.DemoApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
