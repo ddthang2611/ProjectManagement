@@ -80,17 +80,18 @@ public class ProjectVersionController {
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
-        if (user.getRole().equals(UserRole.ADMIN)){
+        if (user.getRole().equals(UserRole.MANAGER)){
             redirectLink = "redirect:/version/" + projectVersionId;
+            System.out.println(redirectLink);
         }
         if (user.getRole().equals(UserRole.USER)){
             redirectLink = "redirect:/version/user/" +user.getUserId();
+            System.out.println(redirectLink);
         }
         try {
             projectVersion.setProjectVersionId(projectVersionId);
             projectVersion.setEnable(true);
             projectVersionService.updateProjectVersion(projectVersion);
-
             redirectAttributes.addFlashAttribute("message", "Updated Successfully");
             redirectAttributes.addFlashAttribute("messageType", "success");
         } catch (Exception e) {
@@ -107,11 +108,13 @@ public class ProjectVersionController {
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
-        if (user.getRole().equals(UserRole.ADMIN)){
+        if (user.getRole().equals(UserRole.MANAGER)){
             redirectLink = "redirect:/project";
         }
-        if (user.getRole().equals(UserRole.USER)){
+        else if (user.getRole().equals(UserRole.USER)){
             redirectLink = "redirect:/version/user/" +user.getUserId();
+        } else{
+            redirectLink = "redirect:/project";
         }
         try {
             projectVersionService.disableProjectVersion(projectVersionId);
@@ -140,11 +143,14 @@ public class ProjectVersionController {
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
-        if (user.getRole().equals(UserRole.ADMIN)){
-            redirectLink = "redirect:/version/" + projectVersionId + "/add-feature";
+        if (user.getRole().equals(UserRole.MANAGER)){
+            redirectLink = "redirect:/version/" + projectVersionId;
         }
-        if (user.getRole().equals(UserRole.USER)){
+        else if (user.getRole().equals(UserRole.USER)){
             redirectLink = "redirect:/version/user/" +user.getUserId();
+        }else {
+
+            redirectLink = "redirect:/version/" + projectVersionId;
         }
 
         try {

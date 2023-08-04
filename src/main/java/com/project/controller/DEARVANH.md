@@ -1,2 +1,0 @@
-Đang làm dở cái analysis, ý tưởng là truyền vào current Date sau đó so với estimated End Date để trả về late date. Tiếp theo mục tiêu là để vẽ biểu đồ line, thì truyền vào 1 tháng, ví dụ 1/4/2023 v 1/5/2023 để xem xem end date có nằm trong khoảng đó không để cho complete task ++ rồi vẽ biểu đồ số task đã complete theo tháng
-Hãy làm employeeeanalysis 3d pie chart trước

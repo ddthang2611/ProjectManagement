@@ -81,7 +81,7 @@ public class FeatureController {
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
-        if (user.getRole().equals(UserRole.ADMIN)){
+        if (user.getRole().equals(UserRole.MANAGER)){
             redirectLink = "redirect:/project";
         }
         if (user.getRole().equals(UserRole.USER)){

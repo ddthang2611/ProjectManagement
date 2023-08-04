@@ -106,16 +106,10 @@ public class TaskController {
     public String addIssue(@PathVariable Integer taskId,
                            @ModelAttribute("issue") Issue issue,
                            RedirectAttributes redirectAttributes,
-                           HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        String userId = null;
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("user")) {
-                    userId = cookie.getValue();
-                    break;
-                }
-            }
-        User user = userService.getUserById(Integer.parseInt(userId));
+                           HttpServletRequest request) throws Exception {
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+
         try {
             issue.setTask(taskService.getTaskById(taskId));
             issue.setReporter(user);
@@ -127,6 +121,7 @@ public class TaskController {
             redirectAttributes.addFlashAttribute("messageType", "error");
             return "redirect:/task/" + taskId + "/add-issue";
         }
+        System.out.println("redirect:/task/" + taskId);
         return "redirect:/task/" + taskId;
     }
     @PostMapping("/{taskId}/assign")
