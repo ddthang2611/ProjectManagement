@@ -6,10 +6,7 @@ import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.entity.enums.UserRole;
 import com.project.repository.TaskRepository;
-import com.project.service.EmployeeAnalysisService;
-import com.project.service.JwtTokenService;
-import com.project.service.TaskService;
-import com.project.service.UserService;
+import com.project.service.*;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +39,8 @@ public class LoginController {
     JwtTokenService jwtTokenService;
     @Autowired
     EmployeeAnalysisService employeeAnalysisService;
+    @Autowired
+    LineGraphEmployeeTaskAnalysisService lineGraphEmployeeTaskAnalysisService;
 
     @GetMapping
     public String getLoginPage() {return "login";}
@@ -49,6 +48,7 @@ public class LoginController {
     @PostMapping
     public String login(HttpSession session, @ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         boolean isAuthenticated = userService.checkLogin(user);
+        lineGraphEmployeeTaskAnalysisService.getAllLineGraphData();
         if (isAuthenticated) {
             User userDetail = userService.getUserByUsername(user.getUsername());
             System.out.println(userDetail.getRole());

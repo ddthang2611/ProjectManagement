@@ -3,12 +3,12 @@ import com.itextpdf.text.DocumentException;
 import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
-import com.project.service.EmployeeAnalysisService;
-import com.project.service.ProjectVersionAnalysisService;
-import com.project.service.ProjectVersionService;
-import com.project.service.UserService;
+import com.project.service.*;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,12 +18,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,14 +42,48 @@ public class AnalysisController {
     private UserService userService;
     @Autowired
     private CookieHelper cookieHelper;
+    @Autowired
+    LineGraphEmployeeTaskAnalysisService lineGraphEmployeeTaskAnalysisService;
 
     @GetMapping("/analysis")
     public String getAnalysisMainPage(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         return "analysis/MainPage";
     }
+    @GetMapping("/hi")
+    public ResponseEntity<ByteArrayResource> generateFile() throws IOException {
+        // Nội dung bạn muốn lưu vào file
+        String content = "hi";
 
-    @GetMapping("/analysis/user")
+        // Tạo XWPFDocument để lưu nội dung file .docx
+        XWPFDocument document = new XWPFDocument();
+        XWPFParagraph paragraph = document.createParagraph();
+        XWPFRun run = paragraph.createRun();
+        run.setText(content);
+
+        // Tạo ByteArrayOutputStream để lưu nội dung file vào bộ nhớ
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        document.write(byteArrayOutputStream);
+
+        // Chuyển đổi nội dung từ ByteArrayOutputStream thành ByteArrayResource
+        ByteArrayResource resource = new ByteArrayResource(byteArrayOutputStream.toByteArray());
+
+        // Xác định kiểu nội dung của file
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=hi.docx");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        // Trả về file dưới dạng response để tải về
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+
+
+
+
+
+@GetMapping("/analysis/bar-chart/user-task")
     public String getUserAnalysis(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         List<UserDTO> users = userService.getAllUsers();
@@ -63,9 +97,9 @@ public class AnalysisController {
 
         model.addAttribute("employeeAnalyses", employeeAnalyses);
 
-        return "analysis/EmployeeAnalysis";
+        return "analysis/BarChart_UserTask";
     }
-    @GetMapping("/analysis/pie-chart/user")
+    @GetMapping("/analysis/pie-chart/user-task")
     public String getUserAnalysisPieChart(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         List<UserDTO> users = userService.getAllUsers();
@@ -89,9 +123,9 @@ public class AnalysisController {
         System.out.println(totalTasks);
         model.addAttribute("totalTasks", totalTasks);
 
-        return "analysis/EmployeePieChart";
+        return "analysis/PieChart_UserTask";
     }
-    @GetMapping("/analysis/projectVersion")
+    @GetMapping("/analysis/bar-chart/version-task")
     public String getProjectVersionAnalysis(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
 
@@ -105,8 +139,22 @@ public class AnalysisController {
 
         model.addAttribute("projectVersionAnalyses", projectVersionAnalyses);
 
-        return "analysis/VersionAnalysis";
+        return "analysis/BarChart_VersionTask";
+
     }
+    @GetMapping("/analysis/line-graph/user-task")
+    public String getLineGraphEmployeeTask(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+
+        // Lấy danh sách LineGraphEmployeeTaskAnalysis từ service
+        List<LineGraphEmployeeTaskAnalysis> lineGraphDataList = lineGraphEmployeeTaskAnalysisService.getAllLineGraphData();
+
+        // Thêm danh sách LineGraphEmployeeTaskAnalysis vào model
+        model.addAttribute("lineGraphDataList", lineGraphDataList);
+
+        return "analysis/LineGraph_UserTask"; // Trả về tên view mà bạn muốn hiển thị dữ liệu
+    }
+
 //    @PostMapping("/analysis/user/download")
 //    public ResponseEntity<FileSystemResource> downloadEmployeeAnalysis(RedirectAttributes redirectAttributes) {
 //        // TODO: Implement logic to retrieve employee analysis data from the list of EmployeeAnalysis
