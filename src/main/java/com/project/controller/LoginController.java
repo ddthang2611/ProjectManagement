@@ -48,13 +48,14 @@ public class LoginController {
     @PostMapping
     public String login(HttpSession session, @ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         boolean isAuthenticated = userService.checkLogin(user);
-        lineGraphEmployeeTaskAnalysisService.getAllLineGraphData();
         if (isAuthenticated) {
+            System.out.println("1");
             User userDetail = userService.getUserByUsername(user.getUsername());
             System.out.println(userDetail.getRole());
             String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
             System.out.println("Role "+ userDetail.getRole());
             // Tạo cookie chứa token
+            System.out.println("2");
             Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
             tokenCookie.setPath("/");
             tokenCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
@@ -76,12 +77,15 @@ public class LoginController {
             response.addCookie(tokenCookie);
             response.addCookie(userCookie);
             response.addCookie(roleCookie);
-            
+            System.out.println("3");
             if(userDetail.getRole().equals(UserRole.ADMIN)){
+                System.out.println("4");
                 return "redirect:/user";
             } else if(userDetail.getRole().equals(UserRole.MANAGER)){
+                System.out.println("5");
                 return "redirect:/project";
             } else {
+                System.out.println("6");
                 return "redirect:/version/user/"+userDetail.getUserId();
             }
         } else {
