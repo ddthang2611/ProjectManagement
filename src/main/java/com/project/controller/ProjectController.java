@@ -29,6 +29,7 @@ public class ProjectController {
 
     @GetMapping
     public String getAllProjects(Model model, HttpServletRequest request) {
+        System.out.println("1");
         cookieHelper.addCookieAttributes(request, model);
         List<Project> projects = projectService.getAllProjects();
         List<ProjectDTO> projectDTOs = new ArrayList<>();
