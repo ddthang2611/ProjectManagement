@@ -56,6 +56,9 @@ public class LineGraphEmployeeTaskAnalysisService {
                     Map<YearMonth, Integer> sortedCompleteTask = new TreeMap<>(Comparator.naturalOrder());
                     sortedCompleteTask.putAll(completeTask);
 
+                // Cộng giá trị của tháng trước vào tháng sau
+
+                System.out.println(completeTask.toString());
                     lineGraphData.setCompleteTask(completeTask);
                     lineGraphDataList.add(lineGraphData);
                 }
