@@ -57,9 +57,22 @@ public class LineGraphEmployeeTaskAnalysisService {
                     sortedCompleteTask.putAll(completeTask);
 
                 // Cộng giá trị của tháng trước vào tháng sau
+                Map<YearMonth, Integer> updatedMap = new HashMap<>();
+                Integer temp = null;
 
-                System.out.println(completeTask.toString());
-                    lineGraphData.setCompleteTask(completeTask);
+                for (Map.Entry<YearMonth, Integer> entry : sortedCompleteTask.entrySet()) {
+                    if (temp == null) {
+                        temp = entry.getValue();
+                    } else {
+                        temp += entry.getValue();
+                    }
+
+                    updatedMap.put(entry.getKey(), temp);
+                }
+
+
+
+                    lineGraphData.setCompleteTask(updatedMap);
                     lineGraphDataList.add(lineGraphData);
                 }
             }

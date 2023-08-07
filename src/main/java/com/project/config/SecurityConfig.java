@@ -32,14 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers( "/user").hasRole("ADMIN")
-         .antMatchers( "/user").permitAll()
                 .antMatchers( "/user/password").authenticated()
-                .antMatchers("/project", "/feature", "/task", "/issue", "/check-in").permitAll()
-//                .antMatchers("/project", "/feature", "/task", "/issue", "/check-in").hasAnyRole("MANAGER", "USER")
-//                .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
+                .antMatchers("/project", "/feature", "/task", "/issue", "/check-in").hasAnyRole("MANAGER", "USER")
+                .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/user/**/update-role").hasRole("ADMIN")
-//                .anyRequest().authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
+
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
