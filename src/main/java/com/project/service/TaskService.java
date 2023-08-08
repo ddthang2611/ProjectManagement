@@ -93,13 +93,13 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    public void updateAllProgresses() {
-        List<Task> allTasks = taskRepository.findAll();
-        for (Task task : allTasks) {
-            updateProgress(task);
-        }
-    }
-
+//    public void updateAllProgresses() {
+//        List<Task> allTasks = taskRepository.findAll();
+//        for (Task task : allTasks) {
+//            updateProgress(task);
+//        }
+//    }
+//
     public void updateProgress(Task task) {
 //        Task savedTask = taskRepository.save(task);
 

@@ -43,8 +43,9 @@
             <div class="card-body">
                 <div class="row">
                 <div class="col-md-6">
-                <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
-                    <p> Progress: <span th:text="${projectVersion.progress}"></span>%</p>
+                <p> Version Description: <span th:text="${projectVersion.projectVersionId}"></span></p>
+                    <p> Estimated End Date: <span th:text="${projectVersion.estimatedEndDate}" id="estimatedEndDate"></span></p>
+                    <p> Estimated End Date: <span th:text="${projectVersion.estimatedEndDate}" id="estimatedEndDate-${projectVersion.projectVersionId}"></span></p>   <p> Progress: <span th:text="${projectVersion.progress}"></span>%</p>
 
                 </div>
 <!--                <div class="row">-->
@@ -114,5 +115,20 @@
        class="btn btn-success float-right mr-1">Kaban Board</a>
 
 </div>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var projectVersionId = /*[[${projectVersion.projectVersionId}]]*/ null;
+        var estimatedEndDate = new Date(/*[[${#dates.format(projectVersion.estimatedEndDate, 'yyyy-MM-dd HH:mm:ss')}]])*/);
+        var currentDate = new Date(/*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}]])*/);
+        console.log(estimatedEndDate)
+        console.log(currentDate)
+
+        var estimatedEndDateElement = document.querySelector("#estimatedEndDate-" + projectVersionId);
+
+        if (estimatedEndDate < currentDate) {
+            estimatedEndDateElement.classList.add("alert", "alert-danger");
+        }
+    });
+</script>
 </body>
 </html>

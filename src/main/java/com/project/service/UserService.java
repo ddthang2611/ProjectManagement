@@ -31,7 +31,6 @@ public class UserService {
 
         }
         if (userFromDB != null && userFromDB.isActive()) {
-//            taskService.updateAllProgresses();
             System.out.println(userFromDB.getUsername());
             System.out.println(userFromDB.getPassword());
             return true;

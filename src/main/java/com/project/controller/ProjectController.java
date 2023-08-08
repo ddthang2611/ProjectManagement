@@ -29,15 +29,22 @@ public class ProjectController {
 
     @GetMapping
     public String getAllProjects(Model model, HttpServletRequest request) {
+        System.out.println("go to /project");
         cookieHelper.addCookieAttributes(request, model);
-        List<Project> projects = projectService.getAllProjects();
-        List<ProjectDTO> projectDTOs = new ArrayList<>();
-        for (Project project : projects) {
-            List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
-            ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
-            projectDTOs.add(projectDTO);
+        try {
+            List<Project> projects = projectService.getAllProjects();
+            List<ProjectDTO> projectDTOs = new ArrayList<>();
+            for (Project project : projects) {
+                List<ProjectVersion> projectVersions = projectVersionService.getProjectVersionsByProjectId(project.getProjectId());
+                ProjectDTO projectDTO = new ProjectDTO(project, projectVersions);
+                projectDTO.toString();
+                projectDTOs.add(projectDTO);
+            }
+            model.addAttribute("projectDTOs", projectDTOs);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
-        model.addAttribute("projectDTOs", projectDTOs);
+
         return "project/projects";
     }
 

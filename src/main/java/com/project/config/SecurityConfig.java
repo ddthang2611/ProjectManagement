@@ -9,14 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-import static org.apache.commons.lang3.BooleanUtils.and;
 
 @Configuration
 @EnableWebSecurity
@@ -31,12 +24,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers( "/user").hasRole("ADMIN")
-                .antMatchers( "/user/password").authenticated()
-                .antMatchers("/project", "/feature", "/task", "/issue", "/check-in").hasAnyRole("MANAGER", "USER")
-                .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/user/**/update-role").hasRole("ADMIN")
-                .anyRequest().authenticated()
+//                .antMatchers( "/user").hasRole("ADMIN")
+//                .antMatchers( "/user/password").authenticated()
+//                .antMatchers("/project", "/feature", "/task", "/issue", "/check-in").hasAnyRole("MANAGER", "USER")
+//                .antMatchers(HttpMethod.DELETE, "/user/**").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.PUT, "/user/**/update-role").hasRole("ADMIN")
+//                .anyRequest().authenticated()
+                .anyRequest().permitAll()
 
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
