@@ -43,9 +43,10 @@
             <div class="card-body">
                 <div class="row">
                 <div class="col-md-6">
-                <p> Version Description: <span th:text="${projectVersion.projectVersionId}"></span></p>
-                    <p> Estimated End Date: <span th:text="${projectVersion.estimatedEndDate}" id="estimatedEndDate"></span></p>
-                    <p> Estimated End Date: <span th:text="${projectVersion.estimatedEndDate}" id="estimatedEndDate-${projectVersion.projectVersionId}"></span></p>   <p> Progress: <span th:text="${projectVersion.progress}"></span>%</p>
+                <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
+                    <p> Estimated End Date: <span class="estimated-end-date" th:text="${projectVersion.estimatedEndDate}" th:attr="data-project-version-id=${projectVersion.projectVersionId}"></span></p>
+
+                    <p> Progress: <span th:text="${projectVersion.progress}"></span>%</p>
 
                 </div>
 <!--                <div class="row">-->
@@ -115,20 +116,51 @@
        class="btn btn-success float-right mr-1">Kaban Board</a>
 
 </div>
-<script th:inline="javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-        var projectVersionId = /*[[${projectVersion.projectVersionId}]]*/ null;
-        var estimatedEndDate = new Date(/*[[${#dates.format(projectVersion.estimatedEndDate, 'yyyy-MM-dd HH:mm:ss')}]])*/);
-        var currentDate = new Date(/*[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')}]])*/);
-        console.log(estimatedEndDate)
-        console.log(currentDate)
+<script>
+    var now = new Date();
+    var estimatedEndDateElements = document.querySelectorAll(".estimated-end-date");
 
-        var estimatedEndDateElement = document.querySelector("#estimatedEndDate-" + projectVersionId);
+    estimatedEndDateElements.forEach(function(element) {
+        var estimatedEndDateText = element.textContent;
+        var estimatedEndDate = new Date(estimatedEndDateText);
+        var projectVersionId = element.getAttribute("data-project-version-id");
 
-        if (estimatedEndDate < currentDate) {
-            estimatedEndDateElement.classList.add("alert", "alert-danger");
+        var formattedEstimatedEndDate = estimatedEndDate.toLocaleDateString('en-GB'); // Định dạng ngày thành "dd-MM-yyyy"
+
+        if (estimatedEndDate < now) {
+            element.style.color = "red";
+            var daysLate = Math.floor((now - estimatedEndDate) / (1000 * 60 * 60 * 24));
+            element.textContent = formattedEstimatedEndDate + " (" + daysLate + " days late)";
+            console.log("Project Version ID " + projectVersionId + " exceeded estimated end date by " + daysLate + " days.");
+        } else {
+            var daysLeft = Math.floor((estimatedEndDate - now) / (1000 * 60 * 60 * 24));
+            if (daysLeft === 1) {
+                element.textContent = formattedEstimatedEndDate + " (" + daysLeft + " day left)";
+            } else {
+                element.textContent = formattedEstimatedEndDate + " (" + daysLeft + " days left)";
+            }
+            element.style.color = "green"; // Đổi màu chữ thành xanh nếu còn thời gian
+            console.log("Project Version ID " + projectVersionId + " has " + daysLeft + " days left.");
         }
     });
 </script>
+
+
+<!--<script>-->
+<!--    var now = new Date();-->
+<!--    var estimatedEndDateElements = document.querySelectorAll(".estimated-end-date");-->
+
+<!--    estimatedEndDateElements.forEach(function(element) {-->
+<!--        var estimatedEndDate = new Date(element.textContent);-->
+<!--        var projectVersionId = element.getAttribute("data-project-version-id");-->
+
+<!--        if (estimatedEndDate < now) {-->
+<!--            element.style.color = "red";-->
+<!--            console.log("Project Version ID " + projectVersionId + " exceeded estimated end date.");-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+
 </body>
 </html>

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +83,12 @@ public class TaskService {
             task.setEstimatedEndDate(taskDTO.getEstimatedEndDate());
             task.setEndDate(taskDTO.getEndDate());
             task.setProgress(taskDTO.getProgress());
-            task.setStatus(taskDTO.getStatus());
+            if(taskDTO.getProgress()==100){
+                task.setStatus(Status.COMPLETED);
+                task.setEndDate(java.sql.Date.valueOf(LocalDate.now()));
+            }else {
+                task.setStatus(taskDTO.getStatus());
+            }
             task.setPriority(taskDTO.getPriority());
             task.setEnable(true);
             taskRepository.save(task);

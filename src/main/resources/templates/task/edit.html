@@ -42,7 +42,7 @@
             <label for="status">Status:</label>
             <select class="form-control" id="status" name="status" required>
                 <option value="PROCESSING" th:selected="${task.status == 'PROCESSING'}">Processing</option>
-                <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}">Completed</option>
+<!--                <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}">Completed</option>-->
                 <option value="PENDING" th:selected="${task.status == 'PENDING'}">Pending</option>
                 <option value="POSTPONED" th:selected="${task.status == 'POSTPONED'}">Postponed</option>
             </select>

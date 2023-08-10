@@ -47,56 +47,62 @@ public class LoginController {
 
     @PostMapping
     public String login(HttpSession session, @ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
-        boolean isAuthenticated = userService.checkLogin(user);
-        if (isAuthenticated) {
-            System.out.println("1");
-            User userDetail = userService.getUserByUsername(user.getUsername());
-            System.out.println(userDetail.getRole());
-            String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
-            System.out.println("Role "+ userDetail.getRole());
-            // Tạo cookie chứa token
-            System.out.println("2");
-            Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
-            tokenCookie.setPath("/");
-            tokenCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
-            tokenCookie.setHttpOnly(true);
-            tokenCookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
+        try {
+            boolean isAuthenticated = userService.checkLogin(user);
+            if (isAuthenticated) {
 
-            Cookie userCookie = new Cookie("userId", String.valueOf(userDetail.getUserId()));
-            userCookie.setPath("/");
-            userCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
-            userCookie.setHttpOnly(true);
-            userCookie.setSecure(true);
+                System.out.println("start authen");
+                User userDetail = userService.getUserByUsername(user.getUsername());
+                System.out.println(userDetail.getRole());
+                String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
+                System.out.println("Role " + userDetail.getRole());
+                // Tạo cookie chứa token
+                System.out.println("get cookie");
+                Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
+                tokenCookie.setPath("/");
+                tokenCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+                tokenCookie.setHttpOnly(true);
+                tokenCookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
 
-            Cookie roleCookie = new Cookie("role", String.valueOf(userDetail.getRole()));
-            roleCookie.setPath("/");
-            roleCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
-            roleCookie.setHttpOnly(true);
-            roleCookie.setSecure(true);
+                Cookie userCookie = new Cookie("userId", String.valueOf(userDetail.getUserId()));
+                userCookie.setPath("/");
+                userCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+                userCookie.setHttpOnly(true);
+                userCookie.setSecure(true);
 
-            response.addCookie(tokenCookie);
-            response.addCookie(userCookie);
-            response.addCookie(roleCookie);
-            System.out.println("3");
-            if(userDetail.getRole().equals(UserRole.ADMIN)){
-                System.out.println("4");
-                return "redirect:/user";
-            } else if(userDetail.getRole().equals(UserRole.MANAGER)){
-                System.out.println("5");
-                return "redirect:/project";
+                Cookie roleCookie = new Cookie("role", String.valueOf(userDetail.getRole()));
+                roleCookie.setPath("/");
+                roleCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+                roleCookie.setHttpOnly(true);
+                roleCookie.setSecure(true);
+
+                response.addCookie(tokenCookie);
+                response.addCookie(userCookie);
+                response.addCookie(roleCookie);
+                System.out.println("done cookie");
+                if (userDetail.getRole().equals(UserRole.ADMIN)) {
+                    System.out.println("redirect to main page");
+                    return "redirect:/user";
+                } else if (userDetail.getRole().equals(UserRole.MANAGER)) {
+                    System.out.println("redirect manager page");
+                    return "redirect:/project";
+                } else {
+                    System.out.println("redirect to user page");
+                    return "redirect:/version/user/" + userDetail.getUserId();
+                }
             } else {
-                System.out.println("6");
-                return "redirect:/version/user/"+userDetail.getUserId();
+                System.out.println("redirect to login");
+                model.addAttribute("message", "Invalid username or password");
+                model.addAttribute("messageType", "error");
+                return "login";
             }
-        } else {
-            System.out.println("redirect to login");
-            model.addAttribute("message", "Invalid username or password");
-            model.addAttribute("messageType","error");
-            return "login";
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    return null;
         }
     }
 
 
 
-}
 

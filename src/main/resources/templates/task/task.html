@@ -13,6 +13,21 @@
         .no-underline:hover {
             color: #000 !important;
         }
+        .priority-critical {
+            color: red;
+        }
+
+        .priority-high {
+            color: orange;
+        }
+
+        .priority-medium {
+            color: yellow;
+        }
+
+        .priority-low {
+            color: green;
+        }
 
     </style>
 </head>
@@ -51,7 +66,11 @@
             </div>
             <div class="card-body">
                 <p class="ml-3" th:text="${task.taskDescription}"></p>
+                <p class="ml-3" th:text="${task.status}"></p>
                 <p class=" ml-3">Progress: <span  th:text="${task.progress}"></span>%</p>
+                <p class=" ml-3"  th:attr="id=${'endDateText'}">End Date: <span th:text="${task.endDate}" th:attr="id=${'endDate'}"></span></p>
+                <p class=" ml-3">Estimated End Date: <span th:text="${task.estimatedEndDate}" th:attr="id=${'estEndDate'}"></span></p>
+
                 <p class="mb-2 ml-3">Assign: <span  th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></span></p>
                 <form th:if="${role == 'MANAGER'}" class="col-md-4" th:action="@{/task/{taskId}/assign(taskId=${task.taskId})}" method="post">
                     <div class="input-group mb-3">
@@ -73,7 +92,7 @@
                         <a class="no-underline" th:href="@{/issue/{issueId}/edit(issueId=${issue.issueId})}">
                         <div class="d-flex justify-content-between align-items-center">
                             <p>Type: <span th:text="${issue.issueType}"></span></p>
-                            <p>Priority: <span th:text="${issue.priority}"></span></p>
+                            <p>Priority: <span th:attr="id=${'prioritySpan_' + issue.issueId}" th:text="${issue.priority}"></span></p>
                         </div>
                         <p>Summary: <span th:text="${issue.summary}"></span></p>
                         <p>Reporter: <span th:text="${issue.reporter.username}"></span> </p>
@@ -92,6 +111,76 @@
 </div>
 </body>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Format dates and handle overdue/remaining days
 
 
+        var endDate = document.getElementById('endDate');
+        var estEndDate = document.getElementById('estEndDate');
+        var endDateText = document.getElementById('endDateText');
+
+        var estEndDateValue = estEndDate.textContent.trim();
+        var endDateValue = endDate.textContent.trim();
+
+        var estEndDateObj = new Date(estEndDateValue);
+        var endDateObj = new Date(endDateValue);
+
+        if (endDateValue == '') {
+            var now = new Date();
+            var diffInDays = Math.ceil((estEndDateObj - now) / (1000 * 60 * 60 * 24));
+
+            var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+
+            estEndDate.textContent = formattedEstEndDate;
+            endDateText.innerHTML = ''
+
+            if (diffInDays > 0) {
+                estEndDate.innerHTML += ' <span style="color: green;">(' + diffInDays + ' days left)</span>';
+            } else if (diffInDays < 0) {
+                estEndDate.innerHTML += ' <span style="color: red;">(' + Math.abs(diffInDays) + ' days late)</span>';
+            }
+        } else {
+            var formattedEndDate = endDateObj.toLocaleDateString('en-GB');
+            var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+            endDate.textContent = formattedEndDate
+            estEndDate.textContent = formattedEstEndDate;
+        }
+    });
+
+
+
+</script>
+
+<script>
+    function setPriorityColor(issueId, priority) {
+        var color;
+        switch (priority) {
+            case "CRITICAL":
+                color = "red";
+                break;
+            case "HIGH":
+                color = "orange";
+                break;
+            case "MEDIUM":
+                color = "yellow";
+                break;
+            case "LOW":
+                color = "green";
+                break;
+            default:
+                color = "black";
+        }
+
+        var prioritySpan = document.getElementById("prioritySpan_" + issueId);
+        prioritySpan.style.color = color;
+    }
+
+    var issues = /* Lấy danh sách issue từ dữ liệu */;
+    issues.forEach(function(issue) {
+        setPriorityColor(issue.issueId, issue.priority);
+    });
+</script>
 </html>
