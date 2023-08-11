@@ -4,6 +4,7 @@ package com.project.controller;
 import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
+import com.project.helper.NotiHelper;
 import com.project.service.FeatureService;
 import com.project.service.JwtTokenService;
 import com.project.service.ProjectVersionService;
@@ -31,6 +32,8 @@ public class FeatureController {
     private CookieHelper cookieHelper;
     @Autowired
     private JwtTokenService jwtTokenService;
+    @Autowired
+    private NotiHelper notiHelper;
     @GetMapping("/{featureId}")
     public String getFeatureById(@PathVariable Integer featureId, Model model, HttpServletRequest request) throws Exception {
         cookieHelper.addCookieAttributes(request, model);
@@ -60,7 +63,10 @@ public class FeatureController {
     @PostMapping("/{featureId}/edit")
     public String updateFeature(@PathVariable Integer featureId,
                                 @ModelAttribute("feature") Feature feature,
-                                RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"updated feature "+feature.getName());
+
         try {
             feature.setId(featureId);
             feature.setEnable(true);
@@ -77,7 +83,11 @@ public class FeatureController {
 
     @PostMapping("/{featureId}/delete")
     public String deleteFeature(@PathVariable Integer featureId, RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
-        Integer projectVersionId = featureService.getFeatureById(featureId).getProjectVersion().getProjectVersionId();
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"deleted feature "+featureService.getFeatureById(featureId));
+
+
+//        Integer projectVersionId = featureService.getFeatureById(featureId).getProjectVersion().getProjectVersionId();
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
@@ -100,6 +110,7 @@ public class FeatureController {
 
     @GetMapping("/{featureId}/add-task")
     public String showAddTaskForm(@PathVariable Integer featureId, Model model, HttpServletRequest request) {
+
         cookieHelper.addCookieAttributes(request, model);
         Task task = new Task();
         task.setEnable(true);
@@ -111,7 +122,10 @@ public class FeatureController {
     @PostMapping("/{featureId}/add-task")
     public String addTask(@PathVariable Integer featureId,
                           @ModelAttribute("task") Task task,
-                          RedirectAttributes redirectAttributes) {
+                          RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"added a new task("+ task.getTaskName()+ ") to feature " +featureService.getFeatureById(featureId));
+
         try {
             task.setFeature(featureService.getFeatureById(featureId));
             task.setEnable(true);

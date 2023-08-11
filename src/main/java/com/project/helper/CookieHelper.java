@@ -25,7 +25,6 @@ public class CookieHelper {
                 }
             }
         }
-        System.out.println("Cookie Helper: token "+jwtToken);
         model.addAttribute("jwtToken", jwtToken);
         model.addAttribute("userId", userId);
         model.addAttribute("role", role);

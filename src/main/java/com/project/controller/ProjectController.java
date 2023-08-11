@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entity.*;
 import com.project.helper.CookieHelper;
+import com.project.helper.NotiHelper;
 import com.project.service.ProjectService;
 import com.project.service.ProjectVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,12 @@ public class ProjectController {
     private ProjectVersionService projectVersionService;
     @Autowired
     private CookieHelper cookieHelper;
+    @Autowired
+    private NotiHelper notiHelper;
 
 
     @GetMapping
     public String getAllProjects(Model model, HttpServletRequest request) {
-        System.out.println("go to /project");
         cookieHelper.addCookieAttributes(request, model);
         try {
             List<Project> projects = projectService.getAllProjects();
@@ -70,6 +72,11 @@ public class ProjectController {
     @PostMapping("/add")
     public String addProject(@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes,HttpServletRequest request, Model model) {
         cookieHelper.addCookieAttributes(request, model);
+
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"added a new Project: "+project.getProjectName());
+
+
         try {
             projectService.createProject(project);
             redirectAttributes.addFlashAttribute("message", "Added Successfully");
@@ -92,7 +99,11 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/edit")
-    public String updateProject(@PathVariable Integer projectId,@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes) {
+    public String updateProject(@PathVariable Integer projectId,@ModelAttribute("project") Project project, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"updated project "+project.getProjectName());
+
         try {
             projectService.updateProject(project);
             redirectAttributes.addFlashAttribute("message", "Updated Successfully");
@@ -107,7 +118,12 @@ public class ProjectController {
 
 
     @PostMapping("/{projectId}/disable")
-    public String disableProject(@PathVariable Integer projectId, RedirectAttributes redirectAttributes) {
+    public String disableProject(@PathVariable Integer projectId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"deleted project "+projectService.getProjectById(projectId).getProjectName());
+
+
         try {
             projectService.disableProject(projectId);
             redirectAttributes.addFlashAttribute("message", "Disabled Successfully");
@@ -153,7 +169,11 @@ public class ProjectController {
     @PostMapping("/{projectId}/add-version")
     public String addProjectVersion(@PathVariable Integer projectId,
                                     @ModelAttribute("projectVersion") ProjectVersion projectVersion,
-                                    RedirectAttributes redirectAttributes) {
+                                    RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        Project p = projectService.getProjectById(projectId);
+        notiHelper.createNotiForAllManagers(actor,"added version "+projectVersion.getVersion()+" for Project "+p.getProjectName());
+
         try {
             projectVersion.setProject(projectService.getProjectById(projectId)); // Set Project cho ProjectVersion
             projectVersion.setProgress(0);

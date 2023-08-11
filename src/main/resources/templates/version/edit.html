@@ -69,7 +69,7 @@
                     <label for="status">Status:</label>
                     <select class="form-control" id="status" name="status" required>
                         <option value="PROCESSING" th:selected="${projectVersion.status == 'PROCESSING'}" th:field="${projectVersion.status}">Processing</option>
-                        <option value="COMPLETED" th:selected="${projectVersion.status == 'COMPLETED'}" th:field="${projectVersion.status}">Completed</option>
+<!--                        <option value="COMPLETED" th:selected="${projectVersion.status == 'COMPLETED'}" th:field="${projectVersion.status}">Completed</option>-->
                         <option value="PENDING" th:selected="${projectVersion.status == 'PENDING'}" th:field="${projectVersion.status}">Pending</option>
                         <option value="POSTPONED" th:selected="${projectVersion.status == 'POSTPONED'}" th:field="${projectVersion.status}">Postponed</option>
                     </select>

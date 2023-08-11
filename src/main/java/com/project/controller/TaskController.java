@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
+import com.project.helper.NotiHelper;
 import com.project.service.IssueService;
 import com.project.service.JwtTokenService;
 import com.project.service.TaskService;
@@ -32,6 +33,8 @@ public class TaskController {
 
     @Autowired
     private JwtTokenService jwtTokenService;
+    @Autowired
+    private NotiHelper notiHelper;
 
     @GetMapping("/{taskId}")
     public String getTaskById(@PathVariable Integer taskId, Model model, HttpServletRequest request) throws Exception {
@@ -64,7 +67,11 @@ public class TaskController {
     @PostMapping("/{taskId}/edit")
     public String updateTask(@PathVariable Integer taskId,
                              @ModelAttribute("task") TaskDTO task,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes,  HttpServletRequest request) {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"updated task "+task.getTaskName());
+
+
         try {
             task.setTaskId(taskId);
             taskService.updateTask(task);
@@ -79,9 +86,12 @@ public class TaskController {
     }
 
     @PostMapping("/{taskId}/delete")
-    public String deleteTask(@PathVariable Integer taskId, RedirectAttributes redirectAttributes) {
+    public String deleteTask(@PathVariable Integer taskId, RedirectAttributes redirectAttributes,  HttpServletRequest request) {
         Task task = taskService.getTaskById(taskId);
         int featureId = task.getFeature().getId();
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"deleted task "+task.getTaskName());
+
         try {
 
             taskService.deleteTask(taskId);
@@ -107,6 +117,10 @@ public class TaskController {
                            @ModelAttribute("issue") Issue issue,
                            RedirectAttributes redirectAttributes,
                            HttpServletRequest request) throws Exception {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"added a new issue to task "+ taskService.getTaskById(taskId).getTaskName());
+
+
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
 
@@ -125,9 +139,12 @@ public class TaskController {
         return "redirect:/task/" + taskId;
     }
     @PostMapping("/{taskId}/assign")
-    public String assignTask(@PathVariable Integer taskId, @RequestParam Integer userId, RedirectAttributes redirectAttributes) {
+    public String assignTask(@PathVariable Integer taskId, @RequestParam Integer userId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         Task task = taskService.getTaskById(taskId);
         User assignedUser = userService.getUserById(userId);
+
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNoti(actor,"assigned task "+task.getTaskName()+" to you", assignedUser.getUserId());
 
         try {
             // Gán người dùng được chọn vào task

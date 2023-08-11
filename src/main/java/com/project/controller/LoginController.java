@@ -51,13 +51,11 @@ public class LoginController {
             boolean isAuthenticated = userService.checkLogin(user);
             if (isAuthenticated) {
 
-                System.out.println("start authen");
                 User userDetail = userService.getUserByUsername(user.getUsername());
-                System.out.println(userDetail.getRole());
                 String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
+                System.out.println("User "+userDetail.getUsername());
                 System.out.println("Role " + userDetail.getRole());
                 // Tạo cookie chứa token
-                System.out.println("get cookie");
                 Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
                 tokenCookie.setPath("/");
                 tokenCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
@@ -79,19 +77,14 @@ public class LoginController {
                 response.addCookie(tokenCookie);
                 response.addCookie(userCookie);
                 response.addCookie(roleCookie);
-                System.out.println("done cookie");
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
-                    System.out.println("redirect to main page");
                     return "redirect:/user";
                 } else if (userDetail.getRole().equals(UserRole.MANAGER)) {
-                    System.out.println("redirect manager page");
                     return "redirect:/project";
                 } else {
-                    System.out.println("redirect to user page");
                     return "redirect:/version/user/" + userDetail.getUserId();
                 }
             } else {
-                System.out.println("redirect to login");
                 model.addAttribute("message", "Invalid username or password");
                 model.addAttribute("messageType", "error");
                 return "login";

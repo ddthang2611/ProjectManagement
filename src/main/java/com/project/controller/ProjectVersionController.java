@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
+import com.project.helper.NotiHelper;
 import com.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,8 @@ public class ProjectVersionController {
     private UserService userService;
     @Autowired
     private CookieHelper cookieHelper;
-
+    @Autowired
+    private NotiHelper notiHelper;
     @Autowired
     private JwtTokenService jwtTokenService;
 
@@ -77,6 +79,10 @@ public class ProjectVersionController {
     public String updateProjectVersion(@PathVariable Integer projectVersionId,
                                        @ModelAttribute("projectVersion") ProjectVersion projectVersion,
                                        RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        notiHelper.createNotiForAllManagers(actor,"updated version "+projectVersion.getVersion() +" of Project "+projectVersion.getProject().getProjectName());
+
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
@@ -105,6 +111,10 @@ public class ProjectVersionController {
 
     @PostMapping("/{projectVersionId}/disable")
     public String disableProjectVersion(@PathVariable Integer projectVersionId, RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        ProjectVersion pv = projectVersionService.getProjectVersionById(projectVersionId);
+        notiHelper.createNotiForAllManagers(actor,"deleted version "+pv.getVersion() +" of Project "+pv.getProject());
+
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
@@ -140,6 +150,8 @@ public class ProjectVersionController {
     public String addFeature(@PathVariable Integer projectVersionId,
                              @ModelAttribute("feature") Feature feature,
                              RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+
+
         String token = jwtTokenService.getTokenFromRequest(request);
         User user = jwtTokenService.getUserFromToken(token);
         String redirectLink ="";
@@ -152,6 +164,10 @@ public class ProjectVersionController {
 
             redirectLink = "redirect:/version/" + projectVersionId;
         }
+
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        ProjectVersion pv = projectVersionService.getProjectVersionById(projectVersionId);
+        notiHelper.createNotiForAllManagers(actor,"added a new feature("+feature.getName()+") to version "+pv.getProjectVersionId() +" of Project "+pv.getProject().getProjectName());
 
         try {
             feature.setProjectVersion(projectVersionService.getProjectVersionById(projectVersionId));
@@ -172,7 +188,10 @@ public class ProjectVersionController {
     @PostMapping("/{projectVersionId}/add-attendee")
     public String addAttendee(@PathVariable Integer projectVersionId,
                               @RequestParam Integer userId,
-                              RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes,  HttpServletRequest request) {
+        int actor = Integer.valueOf(cookieHelper.getUserId(request));
+        ProjectVersion pv = projectVersionService.getProjectVersionById(projectVersionId);
+        notiHelper.createNoti(actor,"added you as a new attendee of version "+pv.getVersion() +" of Project "+pv.getProject().getProjectName(),userId);
         try {
             User user = userService.getUserById(userId);
             ProjectVersion projectVersion = projectVersionService.getProjectVersionById(projectVersionId);

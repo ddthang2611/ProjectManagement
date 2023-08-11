@@ -21,8 +21,6 @@ public class UserService {
     TaskService taskService;
 
     public boolean checkLogin(User user) {
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
         User userFromDB = null;
         try {
             userFromDB = userRepository.findByUsernameAndPassword(user.getUsername(),user.getPassword());
@@ -31,8 +29,6 @@ public class UserService {
 
         }
         if (userFromDB != null && userFromDB.isActive()) {
-            System.out.println(userFromDB.getUsername());
-            System.out.println(userFromDB.getPassword());
             return true;
         } else {
             System.out.println("cannot found");
