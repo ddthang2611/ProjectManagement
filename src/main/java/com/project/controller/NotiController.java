@@ -39,11 +39,11 @@ public class NotiController {
 
         List<Noti> readNotiList = new ArrayList<Noti>();
         List<Noti> unreadNotiList = new ArrayList<Noti>();
-        for (Noti noti : listNoti) {
-            if (!noti.isUnread()) {
-                readNotiList.add(noti);
+        for (int i = listNoti.size() -1; i > -1; i--) {
+            if (!listNoti.get(i).isUnread()) {
+                readNotiList.add(listNoti.get(i));
             } else {
-                unreadNotiList.add(noti);
+                unreadNotiList.add(listNoti.get(i));
             }
         }
         model.addAttribute("readNotiList", readNotiList);

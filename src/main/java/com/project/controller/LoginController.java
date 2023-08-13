@@ -46,7 +46,7 @@ public class LoginController {
     public String getLoginPage() {return "login";}
 
     @PostMapping
-    public String login(HttpSession session, @ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         try {
             boolean isAuthenticated = userService.checkLogin(user);
             if (isAuthenticated) {
