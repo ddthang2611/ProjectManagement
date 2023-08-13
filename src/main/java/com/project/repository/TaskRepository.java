@@ -26,8 +26,12 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT t FROM Task t WHERE t.enable = true AND t.taskId = :id")
     Optional<Task> findById(@Param("id") Integer id);
 
+
     @Query("SELECT t FROM Task t WHERE t.feature.id = :featureId AND t.enable = true")
     List<Task> findTasksByFeatureId(@Param("featureId") int featureId);
+
+    @Query("SELECT t FROM Task t WHERE t.assignedTo.userId = :userId AND t.enable = true")
+    List<Task> findTasksByUserId(@Param("userId") int userId);
 
     @Modifying
     @Query("UPDATE Task t SET t.enable = :enable WHERE t.taskId = :taskId")

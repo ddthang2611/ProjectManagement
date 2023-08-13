@@ -144,5 +144,9 @@ public class TaskService {
         return taskRepository.getUPVByTaskIdAndUserId(taskId,userId);
     }
 
+    public List<Task> findTasksByUserId(int userId) {
+        return taskRepository.findTasksByUserId(userId);
+    }
+
 }
 

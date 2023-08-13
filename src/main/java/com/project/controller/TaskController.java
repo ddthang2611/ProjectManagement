@@ -14,9 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -56,6 +54,15 @@ public class TaskController {
         return "task/task";
     }
 
+    @GetMapping("/user/{userId}")
+    public String getTaskByUserId(@PathVariable Integer userId, Model model, HttpServletRequest request) throws Exception {
+        cookieHelper.addCookieAttributes(request, model);
+        List<Task> tasks;
+        tasks = taskService.findTasksByUserId(userId);
+
+        model.addAttribute("tasks", tasks);
+        return "task/findByUserId";
+    }
     @GetMapping("/{taskId}/edit")
     public String showEditTaskForm(@PathVariable Integer taskId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
