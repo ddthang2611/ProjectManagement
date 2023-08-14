@@ -62,6 +62,9 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             "(SELECT t.feature.id FROM Task t WHERE t.taskId = :taskId))")
     UserProjectVersion getUPVByTaskIdAndUserId(@Param("taskId") int taskId, @Param("userId") int userId);
 
+    @Query("SELECT t FROM Task t WHERE t.enable = true AND t.endDate = null AND t.estimatedEndDate BETWEEN :currentDate AND :dueDate")
+    List<Task> findTasksByDueDate(@Param("currentDate") Date currentDate, @Param("dueDate") Date dueDate);
+
 
 
 }

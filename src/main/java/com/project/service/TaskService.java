@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -146,6 +148,20 @@ public class TaskService {
 
     public List<Task> findTasksByUserId(int userId) {
         return taskRepository.findTasksByUserId(userId);
+    }
+
+    public List<Task> findTasksDueInDays(int days) {
+        // Lấy ngày hiện tại
+        Date currentDate = new Date();
+
+        // Tính toán thời hạn bằng cách cộng thêm số ngày
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        Date dueDate = calendar.getTime();
+
+        // Gọi hàm từ repository để lấy danh sách các task
+        return taskRepository.findTasksByDueDate(currentDate, dueDate);
     }
 
 }
