@@ -37,3 +37,5 @@ transaction-logs
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+*.tar
+pm-app.tar

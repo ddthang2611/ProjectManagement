@@ -1,6 +1,5 @@
 package com.project.service;
 
-import com.itextpdf.text.*;
 import com.project.entity.EmployeeAnalysis;
 import com.project.entity.User;
 import com.project.repository.TaskRepository;
@@ -8,23 +7,9 @@ import com.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Optional;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
-import javax.servlet.http.HttpServletResponse;
 
 @Service
 

@@ -1,14 +1,10 @@
 package com.project.service;
 
 import com.project.entity.Issue;
-import com.project.entity.Task;
 import com.project.repository.IssueRepository;
 import com.project.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 public class IssueService {

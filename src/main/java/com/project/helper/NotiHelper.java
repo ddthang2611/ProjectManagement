@@ -1,15 +1,12 @@
 package com.project.helper;
 
 import com.project.entity.Noti;
-import com.project.entity.User;
 import com.project.repository.NotiRepository;
 import com.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component

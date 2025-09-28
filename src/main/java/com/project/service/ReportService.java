@@ -1,21 +1,16 @@
 package com.project.service;
 
 import com.project.entity.EmployeeAnalysis;
-import com.project.entity.UserDTO;
-import com.project.entity.enums.UserRole;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.poi.xwpf.usermodel.*;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
