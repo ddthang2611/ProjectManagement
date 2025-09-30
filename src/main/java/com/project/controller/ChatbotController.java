@@ -33,4 +33,6 @@ public class ChatbotController {
         // Redirect để tránh lỗi F5 gửi lại form
         return "redirect:/chat";
     }
+
+
 }
