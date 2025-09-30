@@ -26,8 +26,10 @@
             color: #28a745;
         }
     </style>
+    <!-- Header fragment will be included in the body for consistent navbar -->
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
 <div class="container mt-5">
     <h2 class="text-center mb-4">Chatbot</h2>
     <div id="chat-box" class="mb-3">
