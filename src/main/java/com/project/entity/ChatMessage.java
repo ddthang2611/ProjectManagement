@@ -26,4 +26,8 @@ public class ChatMessage {
     private String content;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public Long getMessage() {
+        throw new UnsupportedOperationException("Unimplemented method 'getMessage'");
+    }
 }
