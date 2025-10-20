@@ -1,192 +1,253 @@
 <!-- /templates/fragments/chatbot.html -->
 <div th:fragment="chatbot-modal (projectId)">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#chatModal" th:attr="data-project-id=${projectId}"
-        onclick="openChat(this)">
-        Quick Review
-    </button>
+  <button
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#chatModal"
+    th:attr="data-project-id=${projectId}"
+    onclick="openChat(this)"
+  >
+    Quick Review
+  </button>
 
-    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true"
-        data-bs-backdrop="static" data-bs-keyboard="false">
-        <!-- thêm class "modal-dialog-centered" để căn giữa -->
-        <div class="modal-dialog modal-xl modal-dialog-centered animate-slide">
-            <div class="modal-content shadow-lg rounded-3">
-                <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
-                    <h5 class="modal-title" id="chatModalLabel">Chatbot</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <!-- tin nhắn  -->
-                    <div id="chatMessages" class="border p-2 d-flex flex-column gap-2"
-                        style="height: 480px; overflow-y: auto; background: #f8f9fa;">
-                    </div>
-
-                    <!-- input và nút gửi -->
-                    <div class="mt-2 d-flex flex-row align-items-center gap-2">
-                        <input type="text" id="chatInput" class="form-control" placeholder="Ask something...">
-                        <button class="btn btn-success ml-2" onclick="sendMessage()">Send</button>
-                    </div>
-                </div>
-            </div>
+  <div
+    class="modal fade"
+    id="chatModal"
+    tabindex="-1"
+    aria-labelledby="chatModalLabel"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+  >
+    <!-- thêm class "modal-dialog-centered" để căn giữa -->
+    <div class="modal-dialog modal-xl modal-dialog-centered animate-slide">
+      <div class="modal-content shadow-lg rounded-3">
+        <div
+          class="modal-header bg-success text-white d-flex justify-content-between align-items-center"
+        >
+          <h5 class="modal-title" id="chatModalLabel">Chatbot</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
+        <div class="modal-body">
+          <!-- tin nhắn  -->
+          <div
+            id="chatMessages"
+            class="border p-2 d-flex flex-column gap-2"
+            style="height: 480px; overflow-y: auto; background: #f8f9fa"
+          ></div>
+
+          <!-- input và nút gửi -->
+          <div class="mt-2 d-flex flex-row align-items-center gap-2">
+            <input
+              type="text"
+              id="chatInput"
+              class="form-control"
+              placeholder="Ask something..."
+            />
+            <button class="btn btn-success ml-2" onclick="sendMessage()">
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <style>
-        /* Hiệu ứng trượt nhẹ từ dưới lên */
-        .animate-slide {
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.4s ease-out;
-        }
+  <style>
+    /* Hiệu ứng trượt nhẹ từ dưới lên */
+    .animate-slide {
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease-out;
+    }
 
-        .modal.show .animate-slide {
-            transform: translateY(0);
-            opacity: 1;
-        }
+    .modal.show .animate-slide {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-        /* Giao diện tin nhắn */
-        .message {
-            margin: 6px 0;
-            padding: 10px 14px;
-            border-radius: 15px;
-            max-width: 75%;
-            word-wrap: break-word;
-        }
+    /* Giao diện tin nhắn */
+    .message {
+      margin: 6px 0;
+      padding: 10px 14px;
+      border-radius: 15px;
+      max-width: 75%;
+      word-wrap: break-word;
+    }
 
-        .user-message {
-            background-color: #198754;
-            color: white;
-            align-self: flex-end;
-            text-align: right;
-            margin-left: auto;
-        }
+    .user-message {
+      background-color: #198754;
+      color: white;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
 
-        .bot-message {
-            background-color: white;
-            color: #198754;
-            border: 1px solid #198754;
-            align-self: flex-start;
-            text-align: left;
-            margin-right: auto;
-        }
+    .bot-message {
+      background-color: white;
+      color: #198754;
+      border: 1px solid #198754;
+      align-self: flex-start;
+      text-align: left;
+      margin-right: auto;
+    }
 
-        #chatMessages {
-            display: flex;
-            flex-direction: column;
-            font-size: 14px;
-            border-radius: 6px;
-            scroll-behavior: smooth;
-        }
+    #chatMessages {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      border-radius: 6px;
+      scroll-behavior: smooth;
+    }
 
-        .modal-content {
-            border: none;
-        }
+    .modal-content {
+      border: none;
+    }
 
-        .modal-header {
-            border-bottom: 2px solid #198754;
-        }
+    .modal-header {
+      border-bottom: 2px solid #198754;
+    }
 
-        .btn-success {
-            min-width: 70px;
-        }
+    .btn-success {
+      min-width: 70px;
+    }
 
-        .chat-message.bot {
-            display: flex;
-            justify-content: flex-start;
-        }
+    .chat-message.bot {
+      display: flex;
+      justify-content: flex-start;
+    }
 
-        .chat-message.bot .message-bubble {
-            background-color: #f1f0f0;
-            color: #333;
-            border-radius: 15px 15px 15px 0;
-            padding: 10px 15px;
-            max-width: 70%;
-            word-wrap: break-word;
-            animation: fadeIn 0.2s ease-in;
-        }
+    .chat-message.bot .message-bubble {
+      background-color: #f1f0f0;
+      color: #333;
+      border-radius: 15px 15px 15px 0;
+      padding: 10px 15px;
+      max-width: 70%;
+      word-wrap: break-word;
+      animation: fadeIn 0.2s ease-in;
+    }
 
-        .chat-message.user {
-            display: flex;
-            justify-content: flex-end;
-        }
+    .chat-message.user {
+      display: flex;
+      justify-content: flex-end;
+    }
 
-        .chat-message.user .message-bubble {
-            background-color: #0d6efd;
-            color: white;
-            border-radius: 15px 15px 0 15px;
-            padding: 10px 15px;
-            max-width: 70%;
-            word-wrap: break-word;
-            animation: fadeIn 0.2s ease-in;
-        }
-    </style>
+    .chat-message.user .message-bubble {
+      background-color: #0d6efd;
+      color: white;
+      border-radius: 15px 15px 0 15px;
+      padding: 10px 15px;
+      max-width: 70%;
+      word-wrap: break-word;
+      animation: fadeIn 0.2s ease-in;
+    }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        if (typeof currentProjectId === "undefined") {
-            var currentProjectId = null;
-        }
-        const initMessage = "Summarize the project status";
+    .message-bubble table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 6px;
+    }
 
-        openChat = (button) => {
-            currentProjectId = button.getAttribute("data-project-id");
-            console.log("Open chat for project ID:", currentProjectId);
-            // Bạn có thể sử dụng projectId để tải dữ liệu liên quan nếu cần
+    .message-bubble th,
+    .message-bubble td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+    }
 
-            sendAutoMessage(initMessage);
-        };
+    .message-bubble th {
+      background: #e9ecef;
+    }
 
-        async function sendAutoMessage(message) {
-            appendMessage("user", message);
+    .message-bubble h3,
+    .message-bubble h4 {
+      margin-top: 8px;
+      color: #198754;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    if (typeof currentProjectId === "undefined") {
+      var currentProjectId = null;
+    }
+    const initMessage = "Summarize the project status";
 
-            const response = await fetch("/chat/send", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: message,
-                    projectId: currentProjectId ? currentProjectId : 1
-                })
-            });
+    openChat = (button) => {
+      currentProjectId = button.getAttribute("data-project-id");
+      console.log("Open chat for project ID:", currentProjectId);
+      // Bạn có thể sử dụng projectId để tải dữ liệu liên quan nếu cần
 
-            const history = await response.json();
-            const last = history[history.length - 1];
-            appendMessage(last.sender, last.content);
-        }
+      sendAutoMessage(initMessage);
+    };
 
-        async function sendMessage() {
-            const input = document.getElementById("chatInput");
-            const messages = input.value.trim();
-            if (!messages || !currentProjectId) return;
-            appendMessage("user", messages);
-            input.value = "";
-            // Gửi tin nhắn đến server
-            const response = await fetch("/chat/send", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ message: messages, projectId: currentProjectId ? currentProjectId : 1 })
-            })
-                .then(res => res.json())
-                .then(history => {
-                    const last = history[history.length - 1];
-                    appendMessage(last.sender, last.content);
-                })
-                .catch(err => console.error("Error:", err));
+    async function sendAutoMessage(message) {
+      appendMessage("user", message);
 
-        }
+      const response = await fetch("/chat/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: message,
+          projectId: currentProjectId ? currentProjectId : 1,
+        }),
+      });
 
-        function appendMessage(sender, content) {
-            const chatMessages = document.getElementById("chatMessages");
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            messageDiv.className = `chat-mesage.${sender}`;
-            messageDiv.innerHTML = `<div class="message-bubble">${content}</div>`;
-            messageDiv.textContent = content;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Tự động cuộn xuống dưới
-        }
-    </script>
+      const history = await response.json();
+      const last = history[history.length - 1];
+      appendMessage(last.sender, last.content);
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const messages = input.value.trim();
+      if (!messages || !currentProjectId) return;
+      appendMessage("user", messages);
+      input.value = "";
+      // Gửi tin nhắn đến server
+      const response = await fetch("/chat/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: messages,
+          projectId: currentProjectId ? currentProjectId : 1,
+        }),
+      })
+        .then((res) => res.json())
+        .then((history) => {
+          const last = history[history.length - 1];
+          appendMessage(last.sender, last.content);
+        })
+        .catch((err) => console.error("Error:", err));
+    }
+
+    function appendMessage(sender, content) {
+      const chatMessages = document.getElementById("chatMessages");
+
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("chat-message", sender);
+
+      const bubble = document.createElement("div");
+      bubble.classList.add("message-bubble");
+
+      if (sender === "bot") {
+        bubble.innerHTML = marked.parse(content);
+      } else {
+        bubble.textContent = content;
+      }
+
+      wrapper.appendChild(bubble);
+      chatMessages.appendChild(wrapper);
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
 </div>
