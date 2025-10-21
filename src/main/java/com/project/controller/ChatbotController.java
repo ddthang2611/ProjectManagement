@@ -1,38 +1,29 @@
 package com.project.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import com.project.entity.ChatMessage;
+import com.project.service.ChatbotService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.*;
 
-import com.project.entity.Message;
-
-import java.util.ArrayList;
-import java.util.List;
-
-@Controller
-@RequestMapping("/chatbot")
+@RestController
+@RequestMapping("/chat")
 public class ChatbotController {
 
-    private final List<Message> messages = new ArrayList<>();
-
-    @GetMapping
-    public String getChatPage(Model model) {
-        model.addAttribute("messages", messages);
-        return "chatbot/chatbot"; 
-    }
+    @Autowired
+    private ChatbotService chatbotService;
 
     @PostMapping("/send")
-    public String sendMessage(@RequestParam("message") String content) {
-        // Thêm message từ user
-        messages.add(new Message("user", content));
+    public List<ChatMessage> sendMessage(@RequestBody Map<String, String> payload) {
+        Long projectId = Long.valueOf(payload.get("projectId"));
+        String message = payload.get("message");
 
-        // Tạo phản hồi tạm thời từ bot
-        String botReply = "Bot trả lời: " + content;
-        messages.add(new Message("bot", botReply));
-
-        // Redirect để tránh lỗi F5 gửi lại form
-        return "redirect:/chat";
+        chatbotService.sendMessage(projectId, message);
+        return chatbotService.getHistory(projectId);
     }
 
-
+    @GetMapping("/history/{projectId}")
+    public List<ChatMessage> getHistory(@PathVariable Long projectId) {
+        return chatbotService.getHistory(projectId);
+    }
 }

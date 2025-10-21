@@ -50,7 +50,7 @@
           <div class="d-flex direction-row justify-content-between align-items-center">
             <p th:text="${projectDTO.project.projectDescription}"></p>
             <!-- quickchat button here -->
-            <div th:replace="fragments/chatbot :: chatbot-modal"></div>
+            <div th:replace="fragments/chatbot :: chatbot-modal (${projectDTO.project.projectId})"></div>
             <!---->
           </div>
           <h6>Project Versions:</h6>
