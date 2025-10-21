@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.entity.ChatMessage;
+import com.project.entity.ChatResponse;
 import com.project.repository.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -13,7 +14,7 @@ import java.util.*;
 @Service
 public class ChatbotService {
 
-    private static final String CHAT_API_URL = "http://localhost:8081/api/chat"; // API thật của bạn
+    private static final String CHAT_API_URL = "http://localhost:2100/api/chat"; // API thật của bạn
 
     @Autowired
     private ChatMessageRepository chatRepo;
@@ -40,8 +41,8 @@ public class ChatbotService {
 
         String botReply;
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(CHAT_API_URL, entity, String.class);
-            botReply = response.getBody();
+            ResponseEntity<ChatResponse> response = restTemplate.postForEntity(CHAT_API_URL, entity, ChatResponse.class);
+            botReply = response.getBody().getData();
         } catch (Exception e) {
             botReply = "⚠️ Không thể kết nối đến API chatbot.";
         }
