@@ -1,6 +1,5 @@
 package com.project.controller;
 
-import com.project.entity.Issue;
 import com.project.entity.Noti;
 import com.project.helper.CookieHelper;
 import com.project.service.NotiService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/noti")
