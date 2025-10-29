@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Chart</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-container {
+      width: 80%;
+      margin: 30px auto;
+    }
+
+    .form-section {
+      margin-top: 40px;
+    }
+
+    #loadingSpinner {
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div th:replace="fragments/header :: header"></div>
+
+  <div class="container">
+    <h2 class="mt-4 mb-3 text-center">Tạo biểu đồ tùy chỉnh</h2>
+
+    <form id="chartForm" class="form-section">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="chartType">Loại biểu đồ</label>
+          <select class="form-control" id="chartType" required>
+            <option value="bar">Bar Chart</option>
+            <option value="line">Line Chart</option>
+            <option value="pie">Pie Chart</option>
+            <option value="doughnut">Doughnut Chart</option>
+            <option value="radar">Radar Chart</option>
+          </select>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="xAxis">Tiêu chí trục hoành (X-axis)</label>
+          <input type="text" class="form-control" id="xAxis" placeholder="VD: project_version, feature_name" required>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="yAxis">Tiêu chí trục tung (Y-axis)</label>
+          <input type="text" class="form-control" id="yAxis" placeholder="VD: progress, task_count" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="prompt">Mô tả yêu cầu (tùy chọn)</label>
+        <textarea id="prompt" class="form-control" rows="3" placeholder="VD: Phân tích tiến độ trung bình theo phiên bản dự án..."></textarea>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+      </div>
+    </form>
+
+    <div id="loadingSpinner" class="mt-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Đang tạo biểu đồ...</span>
+      </div>
+      <p class="mt-2">Đang gửi yêu cầu đến Chatbot AI...</p>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="generatedChart" style="display: none;"></canvas>
+    </div>
+  </div>
+
+  <script>
+    let chartInstance = null;
+
+    document.getElementById("chartForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const chartType = document.getElementById("chartType").value;
+      const xAxis = document.getElementById("xAxis").value;
+      const yAxis = document.getElementById("yAxis").value;
+      const prompt = document.getElementById("prompt").value;
+
+      const spinner = document.getElementById("loadingSpinner");
+      const canvas = document.getElementById("generatedChart");
+      spinner.style.display = "block";
+      canvas.style.display = "none";
+
+      try {
+        const response = await fetch("/api/ai/chart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chartType, xAxis, yAxis, prompt })
+        });
+
+        if (!response.ok) throw new Error("Không thể tạo biểu đồ từ AI");
+
+        const data = await response.json(); 
+        // Dạng dữ liệu mong đợi: { labels: [...], values: [...] }
+
+        spinner.style.display = "none";
+        canvas.style.display = "block";
+
+        if (chartInstance) chartInstance.destroy();
+        const ctx = canvas.getContext("2d");
+        chartInstance = new Chart(ctx, {
+          type: chartType,
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: `Biểu đồ theo ${xAxis} - ${yAxis}`,
+              data: data.values,
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(153, 102, 255, 0.5)'
+              ],
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: chartType === 'bar' || chartType === 'line'
+              ? { y: { beginAtZero: true } }
+              : {}
+          }
+        });
+      } catch (err) {
+        spinner.innerHTML = `<p style="color:red;">${err.message}</p>`;
+      }
+    });
+  </script>
+
+</body>
+
+</html>

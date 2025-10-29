@@ -127,6 +127,9 @@ public class AnalysisController {
         return "analysis/LineGraph_UserTask"; // Trả về tên view mà bạn muốn hiển thị dữ liệu
     }
 
-
+    @GetMapping("/analysis/generate-chart")
+    public String generateCharts(Model model, HttpServletRequest request) {
+        return "analysis/Generate_Chart";
+    }
 }
 
