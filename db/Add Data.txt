@@ -1,0 +1,225 @@
+-- insert_data_expanded.sql
+-- Thêm dữ liệu mở rộng cho it_project_management
+-- Lưu ý: run sau khi import DB gốc. Sẽ tắt FK checks trong lúc insert.
+
+SET FOREIGN_KEY_CHECKS = 0;
+START TRANSACTION;
+
+-- ----------------------------
+-- 1) Thêm Projects
+-- ----------------------------
+INSERT INTO project (project_name, project_description, enable) VALUES
+('E-Commerce Platform', 'Build scalable e-commerce backend', 1),
+('HR Management System', 'Manage employee data and attendance', 1);
+
+-- ----------------------------
+-- 2) Thêm Project Versions (liên kết với 2 project mới)
+--    Giả sử project_id cho 2 project mới sẽ tiếp theo (3 và 4)
+-- ----------------------------
+INSERT INTO project_version (project_id, version, version_description, start_date, end_date, estimated_end_date, status, progress, enable) VALUES
+(3, '1.0', 'Initial e-commerce MVP', '2023-04-01', '2023-05-15', '2023-05-20', 'COMPLETED', 100, 1),
+(3, '2.0', 'E-commerce with AI recommendation', '2023-06-01', NULL, NULL, 'PROCESSING', 60, 1),
+(4, '1.0', 'HR core system', '2023-04-01', '2023-04-20', '2023-04-25', 'COMPLETED', 100, 1),
+(4, '2.0', 'HR with payroll integration', '2023-05-01', NULL, NULL, 'PROCESSING', 40, 1);
+
+-- ----------------------------
+-- 3) Thêm Features (liên kết tới project_version mới: ids 4,5,6,7)
+--    Những feature này sẽ nhận feature_id tiếp theo (9..)
+-- ----------------------------
+INSERT INTO feature (feature_name, feature_description, project_version_id, start_date, end_date, progress, estimated_end_date, enable, status) VALUES
+('Product Catalog', 'Manage product listings and categories', 4, '2023-04-01', '2023-04-15', 100, '2023-04-15', 1, 'COMPLETED'),
+('Shopping Cart', 'Handle user cart and checkout', 4, '2023-04-10', '2023-04-20', 90, '2023-04-20', 1, 'COMPLETED'),
+('Recommendation Engine', 'Suggest items to users based on behavior', 5, '2023-06-01', NULL, 55, NULL, 1, 'PROCESSING'),
+('Payment Gateway', 'Integrate multiple payment methods', 5, '2023-06-05', NULL, 45, NULL, 1, 'PROCESSING'),
+('Attendance Tracking', 'Track employee attendance daily', 6, '2023-04-01', '2023-04-10', 100, '2023-04-10', 1, 'COMPLETED'),
+('Payroll Module', 'Automate salary computation & reports', 7, '2023-05-01', NULL, 42, NULL, 1, 'PROCESSING'),
+('Leave Management', 'Handle leave applications & approvals', 7, '2023-05-05', NULL, 25, NULL, 1, 'PENDING');
+
+-- ----------------------------
+-- 4) Thêm 50 Tasks (liên kết tới feature_id mới và một số feature cũ)
+--    assigned_to sử dụng user_id 1..6 (có trong DB).
+-- ----------------------------
+INSERT INTO task (task_name, task_description, feature_id, assigned_to, start_date, estimated_end_date, end_date, progress, status, priority, enable) VALUES
+('Design product DB schema', 'Design tables for products, categories, tags', 9, 3, '2023-04-01', '2023-04-05', '2023-04-04', 100, 'COMPLETED', 'HIGH', 1),
+('Implement product CRUD API', 'REST endpoints for product management', 9, 4, '2023-04-03', '2023-04-15', '2023-04-14', 100, 'COMPLETED', 'HIGH', 1),
+('Frontend: product list UI', 'Product list & filters', 9, 5, '2023-04-05', '2023-04-12', '2023-04-11', 100, 'COMPLETED', 'MEDIUM', 1),
+('Add product image upload', 'Support multiple images per product', 9, 4, '2023-04-07', '2023-04-18', NULL, 80, 'PROCESSING', 'MEDIUM', 1),
+('Design cart DB & sessions', 'Cart persistence design', 10, 6, '2023-04-10', '2023-04-14', '2023-04-14', 100, 'COMPLETED', 'HIGH', 1),
+('Implement cart backend', 'Cart add/remove/update', 10, 6, '2023-04-11', '2023-04-20', '2023-04-20', 100, 'COMPLETED', 'HIGH', 1),
+('Cart frontend & mini-cart', 'UX for cart preview', 10, 5, '2023-04-12', '2023-04-20', '2023-04-19', 100, 'COMPLETED', 'MEDIUM', 1),
+('Checkout flow MVP', 'Simple checkout page', 10, 4, '2023-04-15', '2023-04-25', NULL, 90, 'PROCESSING', 'HIGH', 1),
+('Implement recommendation data pipeline', 'Collect events for recommendations', 11, 3, '2023-06-01', '2023-06-15', NULL, 60, 'PROCESSING', 'MEDIUM', 1),
+('Train recommendation model', 'Initial training and evaluation', 11, 2, '2023-06-10', '2023-07-01', NULL, 40, 'PROCESSING', 'HIGH', 1),
+('Integrate recommendation into product page', 'Show recommendations', 11, 5, '2023-06-20', '2023-07-05', NULL, 30, 'PROCESSING', 'MEDIUM', 1),
+('Payment gateway: API integration', 'PayPal and Stripe', 12, 4, '2023-06-05', '2023-06-25', NULL, 55, 'PROCESSING', 'HIGH', 1),
+('Payment gateway: security review', 'PCI considerations', 12, 1, '2023-06-18', '2023-07-01', NULL, 20, 'PENDING', 'CRITICAL', 1),
+('Attendance: design UI', 'Daily check-in UI for employees', 13, 5, '2023-04-01', '2023-04-08', '2023-04-07', 100, 'COMPLETED', 'MEDIUM', 1),
+('Attendance backend logic', 'Store and query attendance logs', 13, 4, '2023-04-02', '2023-04-12', '2023-04-11', 100, 'COMPLETED', 'HIGH', 1),
+('Implement payroll core calculations', 'Gross->net salary logic', 14, 5, '2023-05-01', '2023-05-20', NULL, 50, 'PROCESSING', 'HIGH', 1),
+('Payroll: add tax rules', 'Country tax rules implementation', 14, 3, '2023-05-10', '2023-05-30', NULL, 30, 'PROCESSING', 'MEDIUM', 1),
+('Payroll: monthly report generation', 'CSV and PDF reports', 14, 2, '2023-05-15', '2023-06-05', NULL, 20, 'PENDING', 'MEDIUM', 1),
+('Leave mgmt: apply flow', 'Employee submits leave', 15, 6, '2023-05-05', '2023-05-15', NULL, 25, 'PENDING', 'LOW', 1),
+('Leave mgmt: approval flow', 'Manager approves/denies leave', 15, 4, '2023-05-08', '2023-05-20', NULL, 30, 'PROCESSING', 'MEDIUM', 1),
+
+-- thêm các task phân bổ rộng lớn (tổng cộng 50)
+('Search optimization', 'Improve product search relevance', 2, 3, '2023-02-10', '2023-02-28', '2023-02-27', 100, 'COMPLETED', 'HIGH', 1),
+('API pagination', 'Add pagination support', 2, 4, '2023-02-12', '2023-02-20', '2023-02-19', 100, 'COMPLETED', 'MEDIUM', 1),
+('Security review', 'OWASP checklist', 6, 1, '2023-02-20', '2023-03-05', NULL, 50, 'PROCESSING', 'HIGH', 1),
+('Unit tests product', 'Add unit tests for product services', 9, 5, '2023-04-06', '2023-04-20', NULL, 80, 'PROCESSING', 'MEDIUM', 1),
+('E2E tests checkout', 'End-to-end tests for checkout flow', 10, 2, '2023-04-16', '2023-05-05', NULL, 60, 'PROCESSING', 'HIGH', 1),
+('Performance tuning DB', 'Indexing and query improvements', 1, 4, '2023-01-10', '2023-01-30', '2023-01-29', 100, 'COMPLETED', 'HIGH', 1),
+('Refactor legacy module', 'Clean up old code for maintainability', 3, 5, '2023-01-15', '2023-02-05', '2023-02-01', 100, 'COMPLETED', 'MEDIUM', 1),
+('CI/CD pipeline', 'Setup build and deploy pipelines', 2, 1, '2023-03-01', '2023-03-20', '2023-03-18', 100, 'COMPLETED', 'HIGH', 1),
+('Add analytics events', 'Emit events for analytics', 11, 3, '2023-06-03', '2023-06-20', NULL, 70, 'PROCESSING', 'MEDIUM', 1),
+('Implement caching', 'Cache product list responses', 9, 6, '2023-04-08', '2023-04-22', NULL, 75, 'PROCESSING', 'MEDIUM', 1),
+('Fix bug: product detail NPE', 'Null pointer in product details', 9, 4, '2023-04-09', '2023-04-10', '2023-04-10', 100, 'COMPLETED', 'HIGH', 1),
+('Fix bug: checkout double-charge', 'Ensure idempotency', 10, 2, '2023-04-18', '2023-04-19', '2023-04-19', 100, 'COMPLETED', 'CRITICAL', 1),
+('Add promo code support', 'Coupons & discounts', 10, 5, '2023-04-20', '2023-05-10', NULL, 45, 'PROCESSING', 'MEDIUM', 1),
+('Localization support', 'Multi-language product descriptions', 9, 3, '2023-04-02', '2023-04-25', NULL, 30, 'PROCESSING', 'LOW', 1),
+('Product import tool', 'CSV import for products', 9, 4, '2023-04-10', '2023-04-28', NULL, 20, 'PENDING', 'MEDIUM', 1),
+('Customer feedback endpoint', 'Collect user reviews', 9, 5, '2023-04-12', '2023-04-30', NULL, 60, 'PROCESSING', 'LOW', 1),
+('Order history API', 'User order history', 10, 6, '2023-05-01', '2023-05-20', NULL, 50, 'PROCESSING', 'MEDIUM', 1),
+('Admin dashboard', 'Admin UI for e-commerce', 9, 1, '2023-05-05', '2023-05-25', NULL, 40, 'PROCESSING', 'MEDIUM', 1),
+('Implement webhooks', 'Notify external services on order events', 10, 2, '2023-05-10', '2023-05-30', NULL, 35, 'PROCESSING', 'MEDIUM', 1),
+('Data migration scripts', 'Migrate legacy product data', 9, 3, '2023-04-15', '2023-04-30', NULL, 90, 'PROCESSING', 'HIGH', 1),
+('Optimize image storage', 'Use CDN and thumbnails', 9, 4, '2023-04-18', '2023-05-05', NULL, 65, 'PROCESSING', 'MEDIUM', 1),
+('Add role-based access', 'Admin/manager/user roles', 6, 1, '2023-02-01', '2023-02-20', '2023-02-18', 100, 'COMPLETED', 'HIGH', 1),
+('Fix issue: login timeout', 'Improve session handling', 6, 2, '2023-02-05', '2023-02-12', '2023-02-12', 100, 'COMPLETED', 'MEDIUM', 1),
+('Create sample data generator', 'Populate demo data', 9, 3, '2023-03-05', '2023-03-20', '2023-03-18', 100, 'COMPLETED', 'LOW', 1),
+('Add billing history', 'User invoices and receipts', 14, 5, '2023-06-01', '2023-06-20', NULL, 45, 'PROCESSING', 'MEDIUM', 1),
+('Integrate payroll taxes', 'Support tax brackets', 14, 3, '2023-05-10', '2023-06-05', NULL, 30, 'PROCESSING', 'HIGH', 1),
+('Fix bug: payroll rounding', 'Small rounding error in payroll', 14, 2, '2023-05-20', '2023-05-22', '2023-05-22', 100, 'COMPLETED', 'HIGH', 1),
+('Add leave report', 'Monthly leave summary for managers', 15, 4, '2023-05-12', '2023-05-25', NULL, 20, 'PENDING', 'LOW', 1),
+('Migrate attendance logs', 'Archive old attendance data', 13, 5, '2023-04-10', '2023-04-30', NULL, 95, 'PROCESSING', 'MEDIUM', 1),
+('Build notifications service', 'Notify users about events', 9, 1, '2023-04-22', '2023-05-10', NULL, 60, 'PROCESSING', 'MEDIUM', 1),
+('Add admin roles UI', 'Manage users and roles', 6, 1, '2023-03-01', '2023-03-15', '2023-03-14', 100, 'COMPLETED', 'MEDIUM', 1),
+('Implement audit logs', 'Record critical actions', 6, 2, '2023-03-05', '2023-03-20', NULL, 80, 'PROCESSING', 'HIGH', 1),
+('Fix bug: session leak', 'Memory leak in sessions', 6, 4, '2023-03-10', '2023-03-18', '2023-03-18', 100, 'COMPLETED', 'HIGH', 1),
+('Add product tags', 'Tagging for search & filter', 9, 5, '2023-04-14', '2023-04-28', NULL, 70, 'PROCESSING', 'LOW', 1),
+('Integration tests for payments', 'Automated tests for payment flows', 12, 2, '2023-06-12', '2023-07-01', NULL, 40, 'PROCESSING', 'HIGH', 1),
+('Security: vulnerability patch', 'Patch CVE found in dependency', 6, 1, '2023-03-22', '2023-03-30', '2023-03-30', 100, 'COMPLETED', 'CRITICAL', 1),
+('Create onboarding flow', 'First-time user experience', 9, 5, '2023-05-01', '2023-05-15', NULL, 50, 'PROCESSING', 'MEDIUM', 1),
+('Refine product filters', 'Add advanced filtering', 9, 3, '2023-04-20', '2023-05-05', NULL, 30, 'PENDING', 'LOW', 1),
+('Customer returns flow', 'Handle refunds and returns', 10, 4, '2023-05-10', '2023-05-30', NULL, 25, 'PENDING', 'MEDIUM', 1),
+('Implement AB testing', 'Experiment on product pages', 11, 2, '2023-06-15', '2023-07-15', NULL, 15, 'PENDING', 'LOW', 1);
+
+-- Tổng: 50 task rows chèn vào
+
+-- ----------------------------
+-- 5) Thêm ~80 Issue records (một số liên kết đến task cũ và task mới)
+--    reporter sử dụng user_id 1..6
+-- ----------------------------
+INSERT INTO issue (task_id, issue_type, priority, summary, reporter, created_at) VALUES
+(1,'REQUEST','HIGH','Request: add bulk update for cards',2,'2023-01-03'),
+(2,'COMMENT','LOW','Comment: consider caching here',3,'2023-01-04'),
+(3,'NOTE','MEDIUM','Note: review transaction edge cases',2,'2023-01-05'),
+(4,'BUG','CRITICAL','Bug: payment endpoint null pointer',3,'2023-01-06'),
+(5,'REQUEST','MEDIUM','Request: support multiple device tokens',2,'2023-01-07'),
+(6,'COMMENT','LOW','Comment: test case missing',3,'2023-01-08'),
+(7,'NOTE','MEDIUM','Note: archive old logs',2,'2023-01-09'),
+(8,'BUG','HIGH','Bug: endpoint timeout on large payload',3,'2023-01-10'),
+(9,'REQUEST','MEDIUM','Add transaction export feature',2,'2023-01-11'),
+(10,'COMMENT','LOW','Minor UI comment',3,'2023-01-12'),
+(11,'NOTE','MEDIUM','Note: check concurrency',2,'2023-01-13'),
+(12,'BUG','HIGH','Critical: incorrect balance calculation',3,'2023-01-14'),
+(13,'REQUEST','LOW','Request: small enhancement',2,'2023-01-15'),
+(14,'COMMENT','MEDIUM','Comment: logging verbosity',3,'2023-01-16'),
+(15,'NOTE','HIGH','Note: release readiness',2,'2023-01-17'),
+(16,'BUG','MEDIUM','Bug: pagination off-by-one',3,'2023-01-18'),
+(17,'REQUEST','LOW','Request: improve docs',2,'2023-01-19'),
+(18,'COMMENT','MEDIUM','Comment: validation rules',3,'2023-01-20'),
+(19,'NOTE','HIGH','Note: security review needed',2,'2023-01-21'),
+(20,'BUG','MEDIUM','Bug: race condition in processing',3,'2023-01-22'),
+(21,'REQUEST','MEDIUM','Add filter for search',2,'2023-01-23'),
+(22,'COMMENT','LOW','UI tweak request',3,'2023-01-24'),
+(23,'NOTE','MEDIUM','Refactor suggestion',2,'2023-01-25'),
+(24,'BUG','HIGH','Bug: memory leak under load',3,'2023-01-26'),
+(25,'REQUEST','LOW','Request: add export CSV',2,'2023-01-27'),
+(26,'NOTE','MEDIUM','Note: backup schedule',3,'2023-01-28'),
+(27,'BUG','HIGH','Bug: incorrect tax in payroll',2,'2023-05-06'),
+(28,'REQUEST','MEDIUM','Request: add leave type',3,'2023-05-07'),
+(29,'COMMENT','LOW','Comment: UI alignment',2,'2023-05-08'),
+(30,'NOTE','MEDIUM','Note: check timezone handling',3,'2023-05-09'),
+(31,'BUG','CRITICAL','Bug: double charge for some users',2,'2023-04-12'),
+(32,'REQUEST','MEDIUM','Feature request: promo stacking',4,'2023-04-15'),
+(33,'BUG','HIGH','Bug: trending recommendations wrong',5,'2023-06-25'),
+(34,'COMMENT','LOW','Comment: API response shape',6,'2023-06-26'),
+(35,'REQUEST','MEDIUM','Request: more robust CSV parsing',4,'2023-04-18'),
+(36,'NOTE','LOW','Note: deprecated API',5,'2023-04-20'),
+(37,'BUG','MEDIUM','Bug: incorrect rounding in totals',4,'2023-05-22'),
+(38,'REQUEST','LOW','Request: export invoices',5,'2023-06-01'),
+(39,'COMMENT','MEDIUM','Comment: consider async processing',4,'2023-06-05'),
+(40,'NOTE','HIGH','Note: SLA requirements',5,'2023-06-10'),
+(41,'BUG','MEDIUM','Bug: attendance time-off mismatch',4,'2023-04-11'),
+(42,'REQUEST','LOW','Request: add profile picture',5,'2023-04-13'),
+(43,'COMMENT','MEDIUM','Comment: improve error messages',4,'2023-04-14'),
+(44,'NOTE','LOW','Note: translate strings',5,'2023-04-15'),
+(45,'BUG','HIGH','Bug: payroll incorrect for bonuses',4,'2023-05-18'),
+(46,'REQUEST','MEDIUM','Request: add manager override',5,'2023-05-20'),
+(47,'COMMENT','LOW','Comment: add more metrics',4,'2023-05-22'),
+
+-- issues liên quan đến các tasks mới (task_id 23..72)
+(48, 'BUG', 'HIGH', 'Product list not updating for some SKUs', 2, '2023-04-06'),
+(49, 'COMMENT', 'LOW', 'Improve API validation on product create', 3, '2023-04-07'),
+(50, 'REQUEST', 'MEDIUM', 'Add product image bulk upload', 4, '2023-04-08'),
+(51, 'BUG', 'CRITICAL', 'Cart not clearing after checkout on retry', 2, '2023-04-12'),
+(52, 'NOTE', 'LOW', 'Test PayPal sandbox configuration', 5, '2023-06-06'),
+(53, 'BUG', 'HIGH', 'Salary computation incorrect for overtime', 2, '2023-05-06'),
+(54, 'REQUEST', 'MEDIUM', 'Add leave type filter in reports', 3, '2023-05-12'),
+(55, 'BUG', 'HIGH', 'Search returns stale results', 2, '2023-04-10'),
+(56, 'BUG', 'MEDIUM', 'Product detail NPE when images missing', 4, '2023-04-09'),
+(57, 'REQUEST', 'LOW', 'Add ability to bulk delete products', 5, '2023-04-11'),
+(58, 'COMMENT', 'LOW', 'Minor UI alignment on product card', 6, '2023-04-12'),
+(59, 'BUG', 'HIGH', 'Checkout failing with specific coupon', 2, '2023-04-20'),
+(60, 'NOTE', 'MEDIUM', 'Add log for failed payments', 3, '2023-04-22'),
+(61, 'REQUEST', 'MEDIUM', 'Support EU VAT calculation', 4, '2023-04-25'),
+(62, 'BUG', 'MEDIUM', 'Image upload fails on large files', 5, '2023-04-28'),
+(63, 'COMMENT', 'LOW', 'Add more unit tests for product service', 6, '2023-05-01'),
+(64, 'BUG', 'HIGH', 'Recommendation model returns empty list for new users', 3, '2023-06-30'),
+(65, 'REQUEST', 'LOW', 'Add admin filter for pending orders', 4, '2023-05-02'),
+(66, 'NOTE', 'MEDIUM', 'Document payment integration steps', 5, '2023-06-08'),
+(67, 'BUG', 'HIGH', 'Payroll rounding causes mismatch in payslip', 2, '2023-05-21'),
+(68, 'REQUEST', 'MEDIUM', 'Add daily summary email for managers', 4, '2023-05-23'),
+(69, 'COMMENT', 'LOW', 'Cosmetic: change button color', 6, '2023-05-25'),
+(70, 'BUG', 'MEDIUM', 'Order history missing entries for some users', 3, '2023-05-30'),
+(71, 'REQUEST', 'LOW', 'Add export for attendance logs', 5, '2023-04-18'),
+(72, 'NOTE', 'MEDIUM', 'Schedule DB vacuum/cleanup', 4, '2023-06-12'),
+(73, 'BUG', 'HIGH', 'Session handling causes logouts', 1, '2023-03-15'),
+(74, 'REQUEST', 'MEDIUM', 'Add support for promo code expiration', 2, '2023-04-30'),
+(75, 'COMMENT', 'LOW', 'Minor wording in emails', 3, '2023-04-29'),
+(76, 'BUG', 'CRITICAL', 'Data leak vulnerability on reports', 1, '2023-07-05'),
+(77, 'REQUEST', 'HIGH', 'Expedite fix for checkout critical bug', 2, '2023-04-21'),
+(78, 'BUG', 'MEDIUM', 'Intermittent failure in background job', 3, '2023-06-02'),
+(79, 'NOTE', 'LOW', 'Add feature flag for experiments', 4, '2023-06-15'),
+(80, 'COMMENT', 'MEDIUM', 'Consider switch to paginated responses', 5, '2023-06-18'),
+(81, 'BUG', 'HIGH', 'High CPU usage in recommendation training', 2, '2023-06-28'),
+(82, 'REQUEST', 'MEDIUM', 'Add more analytics metrics for product', 3, '2023-06-29'),
+(83, 'COMMENT', 'LOW', 'UI: mobile layout tweak', 4, '2023-05-04'),
+(84, 'BUG', 'HIGH', 'Incorrect total on invoice PDF', 2, '2023-06-20'),
+(85, 'REQUEST', 'LOW', 'Add user timezone preference', 5, '2023-05-12'),
+(86, 'NOTE', 'MEDIUM', 'Review backup retention', 1, '2023-05-20'),
+(87, 'BUG', 'MEDIUM', 'Webhook retries not scheduled', 3, '2023-05-28'),
+(88, 'REQUEST', 'MEDIUM', 'Add throttling for heavy endpoints', 4, '2023-06-02'),
+(89, 'COMMENT', 'LOW', 'Tooltip copy improvement', 5, '2023-06-03'),
+(90, 'BUG', 'HIGH', 'Memory leak in worker process', 2, '2023-06-07'),
+(91, 'REQUEST', 'MEDIUM', 'Add feature to export user lists', 3, '2023-06-10'),
+(92, 'BUG', 'LOW', 'Typo in settings page', 5, '2023-05-09'),
+(93, 'NOTE', 'MEDIUM', 'Plan for maintenance window', 1, '2023-06-11'),
+(94, 'REQUEST', 'LOW', 'Add theme toggle (dark mode)', 4, '2023-06-13'),
+(95, 'COMMENT', 'MEDIUM', 'Refactor duplication in codebase', 5, '2023-06-14'),
+(96, 'BUG', 'HIGH', 'Critical: missing auth check on admin API', 1, '2023-07-01'),
+(97, 'NOTE', 'LOW', 'Add retention policy docs', 2, '2023-06-20'),
+(98, 'REQUEST', 'MEDIUM', 'Add scheduled export job', 3, '2023-06-25'),
+(99, 'BUG', 'HIGH', 'CSV import crashes on malformed row', 4, '2023-04-27'),
+(100, 'COMMENT', 'LOW', 'Adjust whitespace in layout', 5, '2023-04-29'),
+(101, 'REQUEST', 'LOW', 'Add keyboard shortcuts', 6, '2023-05-14'),
+(102, 'BUG', 'MEDIUM', 'Order cancellation not propagating', 2, '2023-05-16'),
+(103, 'COMMENT', 'LOW', 'Clarify error message text', 3, '2023-05-18'),
+(104, 'BUG', 'HIGH', 'High latency in product list under load', 2, '2023-06-05');
+
+-- Kết thúc chèn issue
+
+COMMIT;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- Done.
