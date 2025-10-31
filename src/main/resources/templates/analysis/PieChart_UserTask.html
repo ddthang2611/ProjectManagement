@@ -32,8 +32,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/9.3.1/highcharts-3d.js"></script>
 
 <script th:inline="javascript">
-  var employeeTasks = [[${employeeTasks}]];
-  var totalTasks = [[${totalTasks}]];
+  var employeeTasks = /*[[${employeeTasks}]]*/ [];
+  var totalTasks = /*[[${totalTasks}]]*/ 0;
 
   var data = [];
 

@@ -13,6 +13,11 @@
       margin: 30px auto;
     }
 
+    /* .chart-input-select {
+      width: 100%;
+      padding: 16px !important;
+    } */
+
     .form-section {
       margin-top: 40px;
     }
@@ -36,27 +41,42 @@
           <label for="chartType">Loại biểu đồ</label>
           <select class="form-control" id="chartType" required>
             <option value="bar">Bar Chart</option>
-            <option value="line">Line Chart</option>
+            <!-- <option value="line">Line Chart</option>
             <option value="pie">Pie Chart</option>
             <option value="doughnut">Doughnut Chart</option>
-            <option value="radar">Radar Chart</option>
+            <option value="radar">Radar Chart</option> -->
           </select>
         </div>
 
         <div class="form-group col-md-4">
-          <label for="xAxis">Tiêu chí trục hoành (X-axis)</label>
-          <input type="text" class="form-control" id="xAxis" placeholder="VD: project_version, feature_name" required>
+          <label for="xAxis">Trục hoành (X-axis)</label>
+          <select id="xAxis" class="form-control chart-input-select" required>
+            <option value="">-- Chọn tiêu chí --</option>
+            <option value="project_name">Tên dự án</option>
+            <option value="version">Phiên bản</option>
+            <option value="feature_name">Tính năng</option>
+            <option value="user_name">Nhân viên</option>
+            <option value="status">Trạng thái</option>
+          </select>
         </div>
 
         <div class="form-group col-md-4">
-          <label for="yAxis">Tiêu chí trục tung (Y-axis)</label>
-          <input type="text" class="form-control" id="yAxis" placeholder="VD: progress, task_count" required>
+          <label for="yAxis">Trục tung (Y-axis)</label>
+          <select id="yAxis" class="form-control chart-input-select" required>
+            <option value="">-- Chọn tiêu chí --</option>
+            <option value="progress">Tiến độ (%)</option>
+            <option value="task_count">Số lượng task</option>
+            <option value="issue_count">Số lượng issue</option>
+            <option value="duration">Thời lượng (giờ)</option>
+            <option value="completed_rate">Tỷ lệ hoàn thành</option>
+          </select>
         </div>
       </div>
 
       <div class="form-group">
         <label for="prompt">Mô tả yêu cầu (tùy chọn)</label>
-        <textarea id="prompt" class="form-control" rows="3" placeholder="VD: Phân tích tiến độ trung bình theo phiên bản dự án..."></textarea>
+        <textarea id="prompt" class="form-control" rows="3"
+          placeholder="VD: Phân tích tiến độ trung bình theo phiên bản dự án..."></textarea>
       </div>
 
       <div class="text-center">
@@ -100,7 +120,7 @@
 
         if (!response.ok) throw new Error("Không thể tạo biểu đồ từ AI");
 
-        const data = await response.json(); 
+        const data = await response.json();
         // Dạng dữ liệu mong đợi: { labels: [...], values: [...] }
 
         spinner.style.display = "none";
@@ -138,7 +158,5 @@
       }
     });
   </script>
-
 </body>
-
 </html>
