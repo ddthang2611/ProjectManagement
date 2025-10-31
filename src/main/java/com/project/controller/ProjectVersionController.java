@@ -230,6 +230,9 @@ public class ProjectVersionController {
         cookieHelper.addCookieAttributes(request, model);
         List<ProjectVersion> projectVersions = userProjectVersionService.findProjectVersionsByUserId(userId);
         List<ProjectVersionDTO> projectVersionDTOs = new ArrayList<>(); // Danh sách ProjectVersionDTO
+
+        projectVersions.sort((v1, v2) -> v2.getVersion().compareTo(v1.getVersion()));
+
         for (ProjectVersion projectVersion : projectVersions) {
 
             // Lấy danh sách Feature của ProjectVersion
@@ -237,15 +240,18 @@ public class ProjectVersionController {
 
             List<UserDTO> attendees = userProjectVersionService.findUsersByProjectVersionId(projectVersion.getProjectVersionId());
 
-            UserProjectVersion upv = projectVersionService.getUPVByProjectVersionIdAndUserId(projectVersion.getProjectVersionId(),userId);
+            UserProjectVersion upv = projectVersionService.getUPVByProjectVersionIdAndUserId(projectVersion.getProjectVersionId(), userId);
 
             ProjectVersionDTO projectVersionDTO = new ProjectVersionDTO(projectVersion, features, attendees, upv);
 
             projectVersionDTOs.add(projectVersionDTO);
+            
         }
+        
+        User user = userService.getUserById(userId);
 
-
-
+        UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
+        model.addAttribute("user", userDTO);
         model.addAttribute("projectVersionDTOs", projectVersionDTOs); // Truyền danh sách ProjectVersionDTO
 
         return "version/userProjectVersion";

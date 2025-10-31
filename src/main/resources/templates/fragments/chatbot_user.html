@@ -1,0 +1,131 @@
+<!-- /templates/fragments/chatbot_user.html -->
+<div th:fragment="chatbot-user-modal(projectId, userId, versionId)">
+  <button class="btn btn-warning"
+          data-bs-toggle="modal"
+          data-bs-target="#userChatModal"
+          th:attr="data-project-id=${projectId}, data-user-id=${userId}, data-version-id=${versionId}"
+          onclick="openUserChat(this)">
+    User Chatbot
+  </button>
+
+  <div class="modal fade" id="userChatModal" tabindex="-1" aria-labelledby="userChatModalLabel"
+       aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered animate-slide">
+      <div class="modal-content shadow-lg rounded-3">
+        <div class="modal-header bg-warning text-dark">
+          <h5 class="modal-title" id="userChatModalLabel">User Chatbot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div id="userChatMessages" class="border p-2 d-flex flex-column gap-2"
+               style="height: 480px; overflow-y: auto; background: #f8f9fa;">
+          </div>
+
+          <div class="mt-2 d-flex flex-row align-items-center gap-2">
+            <input type="text" id="userChatInput" class="form-control" placeholder="Ask something...">
+            <button class="btn btn-warning text-dark" onclick="sendUserMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .user-chat-message { display: flex; justify-content: flex-end; }
+    .bot-chat-message { display: flex; justify-content: flex-start; }
+
+    .message-bubble {
+      padding: 10px 14px;
+      border-radius: 15px;
+      max-width: 75%;
+      word-wrap: break-word;
+    }
+
+    .user-chat-message .message-bubble {
+      background-color: #ffc107;
+      color: #000;
+      border-radius: 15px 15px 0 15px;
+    }
+
+    .bot-chat-message .message-bubble {
+      background-color: white;
+      color: #333;
+      border: 1px solid #ffc107;
+      border-radius: 15px 15px 15px 0;
+    }
+
+    #userChatMessages {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
+
+    .animate-slide {
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease-out;
+    }
+
+    .modal.show .animate-slide {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+
+  <script>
+    if (typeof currentUserProjectId === "undefined") var currentUserProjectId = null;
+    if (typeof currentUserVersionId === "undefined") var currentUserVersionId = null;
+    if (typeof currentUserId === "undefined") var currentUserId = null;
+
+    function openUserChat(button) {
+      currentUserProjectId = button.getAttribute("data-project-id");
+      currentUserVersionId = button.getAttribute("data-version-id");
+      currentUserId = button.getAttribute("data-user-id");
+      console.log("Open chat for project:", currentUserProjectId, 
+                  "version:", currentUserVersionId, 
+                  "user:", currentUserId);
+    }
+
+    async function sendUserMessage() {
+      const input = document.getElementById("userChatInput");
+      const message = input.value.trim();
+      if (!message || !currentUserProjectId || !currentUserId || !currentUserVersionId) return;
+
+      appendUserMessage("user", message);
+      input.value = "";
+
+      try {
+        const res = await fetch("http://localhost:2100/api/v1/user/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            project_id: currentUserProjectId,
+            project_version_id: currentUserVersionId,
+            user_id: currentUserId,
+            message: message
+          })
+        });
+
+        const data = await res.json();
+        appendUserMessage("bot", data.reply || "No response from bot");
+      } catch (err) {
+        appendUserMessage("bot", "⚠️ Error connecting to server.");
+      }
+    }
+
+    function appendUserMessage(sender, content) {
+      const chatMessages = document.getElementById("userChatMessages");
+      const wrapper = document.createElement("div");
+      wrapper.classList.add(sender === "user" ? "user-chat-message" : "bot-chat-message");
+
+      const bubble = document.createElement("div");
+      bubble.classList.add("message-bubble");
+      bubble.textContent = content;
+
+      wrapper.appendChild(bubble);
+      chatMessages.appendChild(wrapper);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+</div>
