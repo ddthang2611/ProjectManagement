@@ -46,10 +46,10 @@
             <input
               type="text"
               id="chatInput"
-              class="form-control"
+              class="form-control mr-2"
               placeholder="Ask something..."
             />
-            <button class="btn btn-success ml-2" onclick="sendMessage()">
+            <button class="btn btn-success" onclick="sendMessage()">
               Send
             </button>
           </div>
@@ -182,10 +182,10 @@
       console.log("Open chat for project ID:", currentProjectId);
       // Bạn có thể sử dụng projectId để tải dữ liệu liên quan nếu cần
 
-      sendAutoMessage(initMessage);
+      sendAutoManagerMessage(initMessage);
     };
 
-    async function sendAutoMessage(message) {
+    async function sendAutoManagerMessage(message) {
       appendMessage("user", message);
 
       const response = await fetch("/chat/send", {

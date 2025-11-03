@@ -8,7 +8,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/chat")
-public class ChatbotController {
+public class ChatbotManagerController {
 
     @Autowired
     private ChatbotService chatbotService;
@@ -27,4 +27,5 @@ public class ChatbotController {
     public List<ChatMessage> getHistory(@PathVariable Long projectId) {
         return chatbotService.getHistory(projectId);
     }
+
 }
