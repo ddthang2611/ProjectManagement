@@ -232,7 +232,6 @@ public class ProjectVersionController {
         List<ProjectVersionDTO> projectVersionDTOs = new ArrayList<>(); // Danh sách ProjectVersionDTO
 
         projectVersions.sort((v1, v2) -> v2.getVersion().compareTo(v1.getVersion()));
-
         for (ProjectVersion projectVersion : projectVersions) {
 
             // Lấy danh sách Feature của ProjectVersion
@@ -247,13 +246,10 @@ public class ProjectVersionController {
             projectVersionDTOs.add(projectVersionDTO);
             
         }
-        
         User user = userService.getUserById(userId);
-
         UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
         model.addAttribute("user", userDTO);
         model.addAttribute("projectVersionDTOs", projectVersionDTOs); // Truyền danh sách ProjectVersionDTO
-
         return "version/userProjectVersion";
     }
 

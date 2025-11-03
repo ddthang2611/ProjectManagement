@@ -52,7 +52,7 @@
                         <!-- chatbot user -->
                         <div th:replace="fragments/chatbot_user :: chatbot-user-modal(
                             ${projectVersionDTO.projectVersion.project.projectId},
-                            ${user.id},
+                            ${projectVersionDTO.upv.userId},
                             ${projectVersionDTO.projectVersion.projectVersionId}
                         )"></div>
                         <!-- end chatbot user -->

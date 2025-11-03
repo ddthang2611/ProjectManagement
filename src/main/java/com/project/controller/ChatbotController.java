@@ -17,8 +17,9 @@ public class ChatbotController {
     public List<ChatMessage> sendMessage(@RequestBody Map<String, String> payload) {
         Long projectId = Long.valueOf(payload.get("projectId"));
         String message = payload.get("message");
-
-        chatbotService.sendMessage(projectId, message);
+        String role = payload.get("role");
+        Long userID = Long.valueOf(payload.get("userId"));
+        chatbotService.sendMessage(projectId, message, role, userID);
         return chatbotService.getHistory(projectId);
     }
 
