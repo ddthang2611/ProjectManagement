@@ -16,8 +16,8 @@ import java.util.*;
 public class ChatbotService {
 
     // Cấu hình endpoint riêng biệt
-    private String USER_CHAT_API_URL = "http://localhost:9090/api/v1/user/chat";
-    private String MANAGER_CHAT_API_URL = "http://localhost:9090/api/chat";
+    private String USER_CHAT_API_URL = "http://localhost:2100/api/v1/user/chat";
+    private String MANAGER_CHAT_API_URL = "http://localhost:2100/api/chat";
 
     @Autowired
     private ChatMessageRepository chatRepo;

@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
 public class ChatbotManagerController {
 
     @Autowired
     private ChatbotService chatbotService;
 
-    @PostMapping("/send")
+    @PostMapping
     public List<ChatMessage> sendMessage(@RequestBody Map<String, String> payload) {
         Long projectId = Long.valueOf(payload.get("projectId"));
         String message = payload.get("message");
@@ -27,5 +27,5 @@ public class ChatbotManagerController {
     public List<ChatMessage> getHistory(@PathVariable Long projectId) {
         return chatbotService.getHistory(projectId);
     }
-
 }
+

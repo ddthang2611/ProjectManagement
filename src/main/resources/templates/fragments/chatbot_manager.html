@@ -1,54 +1,27 @@
 <!-- /templates/fragments/chatbot.html -->
 <div th:fragment="chatbot-manager-modal(projectId)">
-  <button
-    class="btn btn-primary"
-    data-bs-toggle="modal"
-    data-bs-target="#managerChatModal"
-    th:attr="data-project-id=${projectId}"
-    onclick="openChat(this)"
-  >
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#managerChatModal"
+    th:attr="data-project-id=${projectId}" onclick="openChat(this)">
     Quick Review
   </button>
 
-  <div
-    class="modal fade"
-    id="managerChatModal"
-    tabindex="-1"
-    aria-labelledby="managerChatModalLabel"
-    aria-hidden="true"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
-  >
+  <div class="modal fade" id="managerChatModal" tabindex="-1" aria-labelledby="managerChatModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <!-- thêm class "modal-dialog-centered" để căn giữa -->
     <div class="modal-dialog modal-xl modal-dialog-centered animate-slide">
       <div class="modal-content shadow-lg rounded-3">
-        <div
-          class="modal-header bg-success text-white d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
           <h5 class="modal-title" id="managerChatModalLabel">Chatbot</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <!-- tin nhắn  -->
-          <div
-            id="chatMessages"
-            class="border p-2 d-flex flex-column gap-2"
-            style="height: 480px; overflow-y: auto; background: #f8f9fa"
-          ></div>
+          <div id="chatMessages" class="border p-2 d-flex flex-column gap-2"
+            style="height: 480px; overflow-y: auto; background: #f8f9fa"></div>
 
           <!-- input và nút gửi -->
           <div class="mt-2 d-flex flex-row align-items-center gap-2">
-            <input
-              type="text"
-              id="chatInput"
-              class="form-control mr-2"
-              placeholder="Ask something..."
-            />
+            <input type="text" id="chatInput" class="form-control mr-2" placeholder="Ask something..." />
             <button class="btn btn-success" onclick="sendMessage()">
               Send
             </button>
@@ -188,21 +161,36 @@
     async function sendAutoManagerMessage(message) {
       appendMessage("user", message);
 
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: message,
-          projectId: currentProjectId ? currentProjectId : 1,
-        }),
-      });
+      try {
+        const response = await fetch("http://localhost:2100/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: message,
+            projectId: currentProjectId ? currentProjectId : 1,
+          }),
+        });
 
-      const history = await response.json();
-      const last = history[history.length - 1];
-      appendMessage(last.sender, last.content);
+        if (!response.ok) {
+          throw new Error("Server returned status " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (Array.isArray(data) && data.length > 0) {
+          const lastMsg = data[data.length - 1];
+          appendMessage("bot", lastMsg.content || lastMsg.message || "No response");
+        } else {
+          appendMessage("bot", "No response from bot");
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        appendMessage("bot", "**Error connecting to server.**");
+      }
     }
+
 
     async function sendMessage() {
       const input = document.getElementById("chatInput");
@@ -211,7 +199,7 @@
       appendMessage("user", messages);
       input.value = "";
       // Gửi tin nhắn đến server
-      const response = await fetch("/api/chat", {
+      const response = await fetch("http://localhost:2100/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
