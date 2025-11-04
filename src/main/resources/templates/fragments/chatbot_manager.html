@@ -188,7 +188,7 @@
     async function sendAutoManagerMessage(message) {
       appendMessage("user", message);
 
-      const response = await fetch("/chat/send", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +211,7 @@
       appendMessage("user", messages);
       input.value = "";
       // Gửi tin nhắn đến server
-      const response = await fetch("/chat/send", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
