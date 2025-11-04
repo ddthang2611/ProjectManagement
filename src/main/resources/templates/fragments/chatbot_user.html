@@ -156,24 +156,17 @@
       }
     }
 
-    function appendMessage(sender, content) {
-      const chatMessages = document.getElementById("chatMessages");
-
+    function appendUserMessage(sender, content) {
+      const chatMessages = document.getElementById("userChatMessages");
       const wrapper = document.createElement("div");
-      wrapper.classList.add("chat-message", sender);
+      wrapper.classList.add(sender === "user" ? "user-chat-message" : "bot-chat-message");
 
       const bubble = document.createElement("div");
       bubble.classList.add("message-bubble");
-
-      if (sender === "bot") {
-        bubble.innerHTML = marked.parse(content);
-      } else {
-        bubble.textContent = content;
-      }
+      bubble.textContent = content;
 
       wrapper.appendChild(bubble);
       chatMessages.appendChild(wrapper);
-
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   </script>
