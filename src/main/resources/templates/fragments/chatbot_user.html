@@ -1,0 +1,186 @@
+<!-- /templates/fragments/chatbot_user.html -->
+<div th:fragment="chatbot-user-modal(projectId, userId, versionId)">
+  <button class="btn btn-info" data-bs-toggle="modal" th:attr="data-bs-target='#userChatModal-' + ${projectId}"
+    th:attrappend=" data-project-id=${projectId}, data-user-id=${userId}, data-version-id=${versionId}"
+    onclick="openUserChat(this)">
+    Schedule Task
+  </button>
+
+  <div class="modal fade" th:id="'userChatModal-' + ${projectId}" tabindex="-1" aria-labelledby="userChatModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl modal-dialog-centered animate-slide">
+      <div class="modal-content shadow-lg rounded-3">
+        <div class="modal-header bg-info text-light">
+          <h5 class="modal-title" id="userChatModalLabel">User Chatbot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div id="userChatMessages" class="border p-2 d-flex flex-column gap-2"
+            style="height: 480px; overflow-y: auto; background: #f8f9fa;">
+          </div>
+
+          <div class="mt-2 d-flex flex-row align-items-center gap-2">
+            <input type="text" id="userChatInput" class="form-control mr-2" placeholder="Ask something...">
+            <button class="btn btn-info text-light" onclick="sendUserMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .user-chat-message {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .bot-chat-message {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .message-bubble {
+      padding: 10px 14px;
+      border-radius: 15px;
+      max-width: 75%;
+      word-wrap: break-word;
+    }
+
+    /* Tin nhắn của người dùng (màu vàng như cũ) */
+    .user-chat-message .message-bubble {
+      background-color: #31a0fa;
+      color: white;
+      border-radius: 15px 15px 0 15px;
+    }
+
+    /* Tin nhắn của chatbot (nền xám, bên trái) */
+    .bot-chat-message .message-bubble {
+      background-color: #e9ecef;
+      /* nền xám nhạt */
+      color: #333;
+      border-radius: 15px 15px 15px 0;
+      border: 1px solid #ccc;
+      /* đường viền mảnh */
+    }
+
+    #userChatMessages {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
+
+    .animate-slide {
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s ease-out;
+    }
+
+    .modal.show .animate-slide {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    if (typeof currentUserProjectId === "undefined") var currentUserProjectId = null;
+    if (typeof currentUserVersionId === "undefined") var currentUserVersionId = null;
+    if (typeof currentUserId === "undefined") var currentUserId = null;
+
+    const initMessage = "Schedule all task for me";
+
+    function openUserChat(button) {
+      currentUserProjectId = button.getAttribute("data-project-id");
+      currentUserVersionId = button.getAttribute("data-version-id");
+      currentUserId = button.getAttribute("data-user-id");
+
+      console.log("Open chat for project:", currentUserProjectId,
+        "version:", currentUserVersionId,
+        "user:", currentUserId);
+
+      sendAutoUserMessage(initMessage);
+    }
+
+    async function sendAutoUserMessage(message) {
+      if (!message || !currentUserProjectId || !currentUserId) return;
+
+      appendUserMessage("user", message);
+
+      try {
+        const res = await fetch("http://localhost:2100/api/v1/user/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            project_id: currentUserProjectId,
+            user_id: currentUserId,
+            message: message
+          })
+        });
+
+        const data = await res.json();
+
+        // API trả về List<ChatMessage>, lấy tin nhắn cuối cùng (bot trả lời)
+        if (Array.isArray(data) && data.length > 0) {
+          const lastMsg = data[data.length - 1];
+          appendUserMessage("bot", lastMsg.content || lastMsg.message || "No response");
+        } else {
+          appendUserMessage("bot", "No response from bot");
+        }
+      } catch (err) {
+        appendUserMessage("bot", "**Error connecting to server.**");
+        console.error(err);
+      }
+    }
+
+    async function sendUserMessage() {
+      const input = document.getElementById("userChatInput");
+      const message = input.value.trim();
+      if (!message || !currentUserProjectId || !currentUserId) return;
+
+      appendUserMessage("user", message);
+      input.value = "";
+
+
+      const res = await fetch("http://localhost:2100/api/v1/user/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project_id: currentUserProjectId,
+          user_id: currentUserId,
+          message: message
+        })
+      });
+      const data = await res.json();
+      // API trả về List<ChatMessage>, lấy tin nhắn cuối cùng (bot trả lời)
+      if (Array.isArray(data) && data.length > 0) {
+        const lastMsg = data[data.length - 1];
+        appendUserMessage("bot", lastMsg.content || lastMsg.message || "No response");
+      } else {
+        appendUserMessage("bot", "No response from bot");
+      }
+    }
+
+    function appendUserMessage(sender, content) {
+      const chatMessages = document.getElementById("userChatMessages");
+
+      const wrapper = document.createElement("div");
+      wrapper.classList.add(sender === "bot" ? "bot-chat-message" : "user-chat-message");
+
+      const bubble = document.createElement("div");
+      bubble.classList.add("message-bubble");
+
+      if (sender === "bot") {
+        bubble.innerHTML = marked.parse(content);
+      } else {
+        bubble.textContent = content;
+      }
+
+      wrapper.appendChild(bubble);
+      chatMessages.appendChild(wrapper);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+
+
+</div>
